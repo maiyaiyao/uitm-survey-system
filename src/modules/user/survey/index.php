@@ -134,7 +134,7 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
                         <div>
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb mb-2">
-                                    <li class="breadcrumb-item"><a href="dashboard.php" class="text-decoration-none text-muted">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-muted">Dashboard</a></li>
                                     <li class="breadcrumb-item active text-dark" aria-current="page">My Surveys</li>
                                 </ol>
                             </nav>

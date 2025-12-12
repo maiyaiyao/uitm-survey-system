@@ -324,10 +324,10 @@ function getStatusBadge($status) {
                                 </div>
                                 <div class="card-body">
                                     <div class="d-grid gap-2">
-                                        <a href="user/create.php" class="btn btn-outline-primary py-2">
+                                        <a href="user/form-user.php" class="btn btn-outline-primary py-2">
                                             <i class="bi bi-person-plus me-2"></i>Add New User
                                         </a>
-                                        <a href="survey/create.php" class="btn btn-outline-success py-2">
+                                        <a href="survey/form-survey.php" class="btn btn-outline-success py-2">
                                             <i class="bi bi-plus-circle me-2"></i>Create Survey
                                         </a>
                                         <a href="report/index.php" class="btn btn-outline-info py-2">

@@ -207,7 +207,7 @@ function getStatusBadge($status) {
                                     <span class="text-success font-weight-bold">
                                         <i class="bi bi-arrow-right"></i>
                                     </span>
-                                    <a href="my-audits.php" class="text-decoration-none text-muted stretched-link">View Tasks</a>
+                                    <a href="survey/index.php?tab=active" class="text-decoration-none text-muted stretched-link">View Tasks</a>
                                 </div>
                             </div>
                         </div>
@@ -300,7 +300,7 @@ function getStatusBadge($status) {
                                                         </td>
                                                         <td class="text-end pe-4">
                                                             <?php if($audit['status'] === 'Active'): ?>
-                                                                <a href="assessment.php?survey_id=<?php echo $audit['survey_ID']; ?>" 
+                                                                <a href="survey/assessment.php?survey_id=<?php echo $audit['survey_ID']; ?>" 
                                                                    class="btn btn-sm btn-primary px-3 rounded-3"
                                                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                                                     Start

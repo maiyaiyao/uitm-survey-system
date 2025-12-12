@@ -143,7 +143,7 @@ function getScoreLevelBadge($level) {
                     <!-- Breadcrumbs -->
                     <nav aria-label="breadcrumb" class="mb-4">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="dashboard.php"  class="text-decoration-none text-secondary">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="../dashboard.php"  class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item active text-dark" aria-current="page">Reports & Analytics</li>
                         </ol>
                     </nav>
