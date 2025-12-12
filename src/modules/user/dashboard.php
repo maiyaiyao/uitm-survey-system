@@ -328,7 +328,7 @@ function getStatusBadge($status) {
                                 </div>
                                 <div class="card-body">
                                     <div class="d-grid gap-3">
-                                        <a href="my-audits.php" class="btn btn-outline-primary py-3 text-start d-flex align-items-center">
+                                        <a href="survey/index.php?status=in_progress" class="btn btn-outline-primary py-3 text-start d-flex align-items-center">
                                             <div class="icon-shape bg-primary-subtle text-primary rounded-circle me-3" style="width: 40px; height: 40px;">
                                                 <i class="bi bi-play-fill"></i>
                                             </div>

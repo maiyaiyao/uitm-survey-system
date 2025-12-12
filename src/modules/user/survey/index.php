@@ -34,6 +34,9 @@ if ($tab === 'history') {
     // Active: User NOT completed AND Survey is Active
     $sql .= " AND (us.status != 'completed' AND s.status = 'Active')";
 }
+if (isset($_GET['status']) && $_GET['status'] === 'in_progress') {
+    $sql .= " AND us.status = 'in progress'";
+}
 
 // Search Logic
 if (!empty($search)) {
