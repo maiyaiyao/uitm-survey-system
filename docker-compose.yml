@@ -1,0 +1,66 @@
+services:
+  # Nginx Web Server
+  nginx:
+    image: nginx:alpine
+    container_name: uitm_nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php
+    networks:
+      - uitm_network
+
+  # PHP-FPM Service
+  php:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: uitm_php
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - uitm_network
+
+  # MariaDB Database
+  mysql:
+    image: mariadb:11.8.3
+    container_name: uitm_mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: survey_system
+      MYSQL_USER: audit_user
+      MYSQL_PASSWORD: audit_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - uitm_network
+
+  # phpMyAdmin
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: uitm_phpmyadmin
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: rootpassword
+      UPLOAD_LIMIT: 50M
+    depends_on:
+      - mysql
+    networks:
+      - uitm_network
+
+networks:
+  uitm_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
