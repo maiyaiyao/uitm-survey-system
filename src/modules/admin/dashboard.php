@@ -248,9 +248,8 @@ function getStatusBadge($status) {
                     </div>
 
                     <div class="row">
-                        <!-- Recent Surveys Table -->
                         <div class="col-lg-8">
-                            <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card border-0 shadow-sm rounded-4 h-100">
                                 <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0">Recent Surveys</h5>
                                     <a href="survey/index.php" class="btn btn-sm btn-outline-secondary">View All</a>
@@ -278,7 +277,8 @@ function getStatusBadge($status) {
                                                 </tr>
                                             <?php else: ?>
                                                 <?php foreach ($recent_surveys as $survey): ?>
-                                                    <tr>
+                                                    <tr onclick="window.location.href='survey/view-details.php?id=<?php echo $survey['survey_ID']; ?>';" 
+                                                        style="cursor: pointer;">
                                                         <td class="ps-4">
                                                             <div class="d-flex flex-column">
                                                                 <span class="fw-bold text-dark"><?php echo htmlspecialchars($survey['survey_name']); ?></span>
@@ -296,15 +296,15 @@ function getStatusBadge($status) {
                                                         <td class="text-center">
                                                             <?php echo getStatusBadge($survey['status']); ?>
                                                         </td>
-                                                        <td class="text-end pe-4">
+                                                        <td class="text-end pe-4" onclick="event.stopPropagation();">
                                                             <a href="survey/preview.php?id=<?php echo $survey['survey_ID']; ?>" 
-                                                               class="btn btn-sm btn-link text-dark px-2" 
-                                                               title="View Details">
+                                                            class="btn btn-sm btn-link text-dark px-2" 
+                                                            title="View Details">
                                                                 <i class="bi bi-eye fs-6"></i>
                                                             </a>
-                                                            <a href="survey/edit.php?id=<?php echo $survey['survey_ID']; ?>" 
-                                                               class="btn btn-sm btn-link text-primary px-2" 
-                                                               title="Edit Survey">
+                                                            <a href="survey/form-survey.php?id=<?php echo $survey['survey_ID']; ?>" 
+                                                            class="btn btn-sm btn-link text-primary px-2" 
+                                                            title="Edit Survey">
                                                                 <i class="bi bi-pencil-square fs-6"></i>
                                                             </a>
                                                         </td>
@@ -317,9 +317,8 @@ function getStatusBadge($status) {
                             </div>
                         </div>
 
-                        <!-- Quick Actions -->
                         <div class="col-lg-4">
-                            <div class="card border-0 shadow-sm rounded-4">
+                            <div class="card border-0 shadow-sm rounded-4 h-100">
                                 <div class="card-header bg-white border-bottom py-3 rounded-top-4">
                                     <h5 class="mb-0">Quick Actions</h5>
                                 </div>
