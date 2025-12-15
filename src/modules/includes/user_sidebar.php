@@ -81,6 +81,53 @@
         }
     }
 
+    /* Medium screens / Split screen (768px - 991px) - Auto-collapse sidebar */
+    @media (min-width: 768px) and (max-width: 991.98px) {
+        .sidebar {
+            width: 80px !important;
+            flex: 0 0 80px !important;
+        }
+        
+        .main-content-wrapper {
+            margin-left: 80px !important;
+            width: calc(100% - 80px) !important;
+        }
+        
+        /* Hide text elements on medium screens */
+        .sidebar .sidebar-brand-text,
+        .sidebar .nav-link span,
+        .sidebar .btn-logout span,
+        .sidebar .sidebar-brand small {
+            display: none !important;
+        }
+        
+        /* Center icons */
+        .sidebar .nav-link {
+            justify-content: center;
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+        .sidebar .nav-link-icon {
+            margin-right: 0;
+        }
+        
+        .sidebar .sidebar-brand {
+            justify-content: center;
+            padding: 1.5rem 0;
+            flex-direction: column;
+        }
+        
+        .sidebar .sidebar-brand-icon {
+            margin-right: 0;
+        }
+        
+        /* Hide toggle button on medium screens (always collapsed) */
+        #sidebarToggle {
+            display: none !important;
+        }
+    }
+
     /* --- STANDARD STYLES --- */
     .sidebar {
         position: fixed; 
