@@ -63,14 +63,13 @@ function getStatusBadge($status) {
     <title>User Dashboard - <?php echo APP_NAME; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <?php include_once __DIR__ . '/../includes/user_header.php'; ?>
     <style>
         /* --- Global Layout (Matching Admin) --- */
         html, body { 
             height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; 
         }
         
-        /* Sidebar Styles - Responsive behavior handled by responsive.css */
+        /* Sidebar Styles */
         .sidebar {
             position: fixed; top: 0; bottom: 0; left: 0;
             width: 270px; /* Fixed width matching Admin */
@@ -108,7 +107,11 @@ function getStatusBadge($status) {
             background: white; color: #764ba2;
         }
 
-        /* Responsive Sidebar - Handled by responsive.css */
+        /* Responsive Sidebar */
+        @media (max-width: 991.98px) {
+            .sidebar { position: relative; width: 100%; height: auto; }
+            .main-content-wrapper { margin-left: 0; width: 100%; }
+        }
 
         /* --- Stat Cards (Matching Admin) --- */
         .stat-card {
