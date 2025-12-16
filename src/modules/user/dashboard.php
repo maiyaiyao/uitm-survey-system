@@ -224,7 +224,7 @@ function getStatusBadge($status) {
                                     </div>
                                 </div>
                                 <div class="mt-3 mb-0 text-sm">
-                                    <a href="my-audits.php?status=Completed" class="text-decoration-none text-muted stretched-link">View History</a>
+                                    <a href="survey/index.php?tab=history" class="text-decoration-none text-muted stretched-link">View History</a>
                                 </div>
                             </div>
                         </div>

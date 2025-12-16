@@ -165,7 +165,7 @@ function getStatusBadge($status) {
                         </div>
                         
                         <div class="d-flex gap-2">
-                            <a href="survey/create.php" 
+                            <a href="survey/form-survey.php" 
                                 class="btn btn-primary shadow-sm px-4 py-2 rounded-3" 
                                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                 <i class="bi bi-plus-lg me-2"></i>Create Survey
