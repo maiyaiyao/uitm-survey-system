@@ -108,8 +108,13 @@ $flash = getFlashMessage();
 
                                         <div class="mb-4">
                                             <label for="sub_con_name" class="form-label fw-bold">Control Name / Description <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" id="sub_con_name" name="sub_con_name" rows="3" 
-                                                      placeholder="e.g. Information security roles and responsibilities" required></textarea>
+                                            
+                                            <textarea class="form-control" id="sub_con_name" name="sub_con_name" rows="3" maxlength="100"
+                                                    placeholder="e.g. Information security roles and responsibilities" required></textarea>
+                                                    
+                                            <div class="d-flex justify-content-end mt-1">
+                                                <small class="text-muted char-count" data-for="sub_con_name">100 characters remaining</small>
+                                            </div>
                                         </div>
 
                                         <div class="d-flex justify-content-end gap-2 pt-3 border-top">
@@ -129,5 +134,21 @@ $flash = getFlashMessage();
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.char-count');
+            counters.forEach(counter => {
+                const input = document.getElementById(counter.getAttribute('data-for'));
+                if (input) {
+                    const updateCount = () => {
+                        const remaining = input.getAttribute('maxlength') - input.value.length;
+                        counter.textContent = `${remaining} characters remaining`;
+                    };
+                    updateCount();
+                    input.addEventListener('input', updateCount);
+                }
+            });
+        });
+    </script>
 </body>
 </html>

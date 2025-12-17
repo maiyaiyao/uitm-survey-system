@@ -210,12 +210,16 @@ if (!function_exists('truncate')) {
 
                                         <div class="mb-4">
                                             <label class="form-label fw-bold-dark text-sm text-uppercase">Detailed Description <span class="text-danger">*</span></label>
-                                            <textarea name="details" class="form-control" rows="8" required 
+                                            <textarea name="details" id="details" class="form-control" rows="8" required maxlength="500" 
                                                 style="border-radius: 0.5rem;"
-                                                placeholder="Enter the specific requirements or criteria for this element at this level..."><?php echo htmlspecialchars($existing_data['details'] ?? ''); ?></textarea>
-                                            <div class="form-text mt-2">Provide a clear, detailed explanation of what is required to meet this score level.</div>
+                                                placeholder="Enter the specific requirements..."><?php echo htmlspecialchars($existing_data['details'] ?? ''); ?></textarea>
+                                                
+                                            <div class="d-flex justify-content-end mt-1">
+                                                <small class="text-muted char-count" data-for="details">500 characters remaining</small>
+                                            </div>
+                                            
+                                            <div class="form-text mt-2">Provide a clear, detailed explanation...</div>
                                         </div>
-
                                         <div class="d-flex justify-content-end gap-2 pt-3">
                                             <a href="index.php?element_id=<?php echo $element_id; ?>" class="btn btn-outline-secondary px-4 rounded-3">
                                                 Cancel
@@ -260,6 +264,19 @@ if (!function_exists('truncate')) {
                     }
                 });
             }
+
+            const counters = document.querySelectorAll('.char-count');
+            counters.forEach(counter => {
+                const input = document.getElementById(counter.getAttribute('data-for'));
+                if (input) {
+                    const updateCount = () => {
+                        const remaining = input.getAttribute('maxlength') - input.value.length;
+                        counter.textContent = `${remaining} characters remaining`;
+                    };
+                    updateCount(); // Run on load
+                    input.addEventListener('input', updateCount);
+                }
+            });
         });
     </script>
 </body>

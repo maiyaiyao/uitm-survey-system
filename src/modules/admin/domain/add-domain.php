@@ -145,9 +145,14 @@ $currentDir = basename(__DIR__); // 'domains'
                                         
                                         <div class="mb-4">
                                             <label for="domain_name" class="form-label">Domain Name <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control" id="domain_name" name="domain_name" required 
-                                                   placeholder="e.g., Pengurusan Keselamatan Maklumat">
-                                            <div class="form-text text-muted ms-1">Enter the full, descriptive name of the new domain.</div>
+                                            
+                                            <input type="text" class="form-control" id="domain_name" name="domain_name" required maxlength="100"
+                                                placeholder="e.g., Pengurusan Keselamatan Maklumat">
+                                                
+                                            <div class="d-flex justify-content-between mt-1">
+                                                <div class="form-text text-muted ms-1">Enter the full, descriptive name.</div>
+                                                <small class="text-muted char-count" data-for="domain_name">100 characters remaining</small>
+                                            </div>
                                         </div>
 
                                         <div class="d-flex justify-content-end gap-2 mt-5">
@@ -196,6 +201,18 @@ $currentDir = basename(__DIR__); // 'domains'
                 }
             });
         }
+        const counters = document.querySelectorAll('.char-count');
+        counters.forEach(counter => {
+            const input = document.getElementById(counter.getAttribute('data-for'));
+            if (input) {
+                const updateCount = () => {
+                    const remaining = input.getAttribute('maxlength') - input.value.length;
+                    counter.textContent = `${remaining} characters remaining`;
+                };
+                updateCount(); // Run on load
+                input.addEventListener('input', updateCount);
+            }
+        });
     });
 </script>
 </body>

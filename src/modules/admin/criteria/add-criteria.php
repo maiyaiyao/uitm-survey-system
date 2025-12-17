@@ -158,16 +158,18 @@ if (!function_exists('truncate')) {
                                 <div class="card-header bg-white border-bottom py-3 rounded-top-4">
                                     <h5 class="mb-0">Criteria Details</h5>
                                 </div>
-                                <div class="card-body p-4">
-                                    
+                                <div class="card-body p-4">                                 
                                     <form method="POST" id="addCriteriaForm">
                                         <div class="mb-4">
-                                            <label for="criteria_name" class="form-label fw-bold-dark text-sm text-uppercase">Criteria Name <span class="text-danger">*</span></label>
-                                            <textarea class="form-control" id="criteria_name" name="criteria_name" rows="3" required 
-                                                style="border-radius: 0.5rem;"
-                                                placeholder="e.g., Audit Scope, Penilaian Kematangan Pengurusan..."></textarea>
-                                            <div class="form-text mt-2">Enter the full, descriptive name of the new criteria.</div>
-                                        </div>
+                                        <label for="criteria_name" class="form-label fw-bold-dark text-sm text-uppercase">Criteria Name <span class="text-danger">*</span></label>                                        
+                                        <textarea class="form-control" id="criteria_name" name="criteria_name" rows="3" required maxlength="100"
+                                            style="border-radius: 0.5rem;"
+                                            placeholder="e.g., Audit Scope..."></textarea>                                     
+                                        <div class="d-flex justify-content-end mt-1">
+                                            <small class="text-muted char-count" data-for="criteria_name">100 characters remaining</small>
+                                        </div>                                       
+                                        <div class="form-text mt-2">Enter the full, descriptive name...</div>
+                                    </div>
 
                                         <div class="d-flex justify-content-end gap-2 pt-2">
                                             <a href="../criteria/view-criteria.php?id=<?php echo $domain_id; ?>" class="btn btn-outline-secondary px-4 rounded-3">
@@ -215,6 +217,19 @@ if (!function_exists('truncate')) {
                 }
             });
         }
+
+        const counters = document.querySelectorAll('.char-count');
+        counters.forEach(counter => {
+            const input = document.getElementById(counter.getAttribute('data-for'));
+            if (input) {
+                const updateCount = () => {
+                    const remaining = input.getAttribute('maxlength') - input.value.length;
+                    counter.textContent = `${remaining} characters remaining`;
+                };
+                updateCount(); // Run on load
+                input.addEventListener('input', updateCount);
+            }
+        });
     });
 </script>
 </body>
