@@ -1,6 +1,6 @@
 <?php
 /**
- * User/Auditor Dashboard
+ * User/Survey Dashboard
  * Aligned with Admin Dashboard Styling
  */
 
@@ -38,14 +38,14 @@ WHERE us.user_ID = :user_ID";
 
 $stats = $db->fetchOne($stats_sql, [':user_ID' => $user_ID]);
 
-// --- 3. Fetch Recent Assigned Audits (Limit 5 for Dashboard) ---
-$audits_sql = "SELECT s.*, us.status as user_survey_status
+// --- 3. Fetch Recent Assigned Surveys (Limit 4 for Dashboard) ---
+$recent_surveys_sql = "SELECT s.*, us.status as user_survey_status
         FROM survey s
         INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
         WHERE us.user_ID = :user_ID
-        ORDER BY s.start_date DESC LIMIT 5";
+        ORDER BY s.start_date DESC LIMIT 4";
 
-$audits = $db->fetchAll($audits_sql, [':user_ID' => $user_ID]);
+$recent_surveys = $db->fetchAll($recent_surveys_sql, [':user_ID' => $user_ID]);
 
 // Helper for Status Badges
 function getStatusBadge($status) {
@@ -196,7 +196,7 @@ function getStatusBadge($status) {
                             <div class="stat-card p-3">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Active Audits</p>
+                                        <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Active Surveys</p>
                                         <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $stats['active_surveys'] ?? 0; ?></h3>
                                     </div>
                                     <div class="icon-shape bg-primary text-white shadow text-center">
@@ -251,14 +251,14 @@ function getStatusBadge($status) {
                         <div class="col-lg-8">
                             <div class="card border-0 shadow-sm rounded-4 h-100">
                                 <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">My Assigned Audits</h5>
-                                    <a href="my-audits.php" class="btn btn-sm btn-outline-primary rounded-3">View All</a>
+                                    <h5 class="mb-0">My Assigned Surveys</h5>
+                                    <a href="survey/index.php" class="btn btn-sm btn-outline-primary rounded-3">View All</a>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
                                         <thead>
                                             <tr>
-                                                <th class="ps-4">Audit Name</th>
+                                                <th class="ps-4">Survey Name</th>
                                                 <th>Department</th>
                                                 <th>Due Date</th>
                                                 <th class="text-center">Status</th>
@@ -266,46 +266,47 @@ function getStatusBadge($status) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if (empty($audits)): ?>
+                                            <?php if (empty($recent_surveys)): ?>
                                                 <tr>
                                                     <td colspan="5" class="text-center py-5">
                                                         <div class="text-muted">
                                                             <i class="bi bi-inbox display-4 d-block mb-2"></i>
-                                                            No audits assigned currently.
+                                                            No surveys assigned currently.
                                                         </div>
                                                     </td>
                                                 </tr>
                                             <?php else: ?>
-                                                <?php foreach ($audits as $audit): ?>
+                                                <?php foreach ($recent_surveys as $row): ?>
                                                     <tr>
                                                         <td class="ps-4">
                                                             <div class="d-flex flex-column">
-                                                                <span class="fw-bold text-dark"><?php echo htmlspecialchars($audit['survey_name']); ?></span>
+                                                                <span class="fw-bold text-dark"><?php echo htmlspecialchars($row['survey_name']); ?></span>
+                                                                <small class="text-muted">ID: <?php echo htmlspecialchars($row['survey_ID']); ?></small>
                                                             </div>
                                                         </td>
                                                         <td>
                                                             <span class="text-secondary text-sm font-weight-bold">
-                                                                <?php echo htmlspecialchars($audit['department']); ?>
+                                                                <?php echo htmlspecialchars($row['department']); ?>
                                                             </span>
                                                         </td>
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <i class="bi bi-calendar-event me-2 text-muted"></i>
-                                                                <?php echo date('d M Y', strtotime($audit['end_date'])); ?>
+                                                                <?php echo date('d M Y', strtotime($row['end_date'])); ?>
                                                             </div>
                                                         </td>
                                                         <td class="text-center">
-                                                            <?php echo getStatusBadge($audit['status']); ?>
+                                                            <?php echo getStatusBadge($row['status']); ?>
                                                         </td>
                                                         <td class="text-end pe-4">
-                                                            <?php if($audit['status'] === 'Active'): ?>
-                                                                <a href="survey/assessment.php?survey_id=<?php echo $audit['survey_ID']; ?>" 
+                                                            <?php if($row['status'] === 'Active'): ?>
+                                                                <a href="survey/assessment.php?survey_id=<?php echo $row['survey_ID']; ?>" 
                                                                    class="btn btn-sm btn-primary px-3 rounded-3"
                                                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                                                     Start
                                                                 </a>
                                                             <?php else: ?>
-                                                                <a href="view-results.php?survey_id=<?php echo $audit['survey_ID']; ?>" 
+                                                                <a href="view-results.php?survey_id=<?php echo $row['survey_ID']; ?>" 
                                                                    class="btn btn-sm btn-outline-secondary px-3 rounded-3">
                                                                     View
                                                                 </a>
