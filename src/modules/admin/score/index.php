@@ -219,8 +219,9 @@ $criteria_name = $element['criteria_name'];
                     </div>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
-                        <div class="card-header bg-white border-bottom py-3 rounded-top-4">
+                        <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
                             <h5 class="mb-0">Score Descriptions</h5>
+                            <small class="text-muted"><?php echo count($scores); ?> records found</small>
                         </div>
 
                         <div class="table-responsive">

@@ -116,7 +116,10 @@ $flash = getFlashMessage();
                     <?php if ($flash): ?><div class="alert alert-<?php echo $flash['type']; ?>"><?php echo $flash['message']; ?></div><?php endif; ?>
 
                     <div class="card">
-                        <div class="card-header bg-white py-3"><h5 class="mb-0">Elements List</h5></div>
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Elements List</h5>
+                            <small class="text-muted"><?php echo count($all_elements); ?> records found</small>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-hover mb-0">
                                 <thead>

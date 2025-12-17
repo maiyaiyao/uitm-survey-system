@@ -239,7 +239,10 @@ $currentDir = basename(__DIR__);
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
                         <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">All Surveys List</h5>
+                            <div>
+                                <h5 class="mb-0 d-inline-block">All Surveys List</h5>
+                                <small class="text-muted ms-2">(<?php echo count($db_surveys); ?> records found)</small>
+                            </div>
                             <button class="btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
                                 <i class="bi bi-funnel me-1"></i>Filters
                             </button>

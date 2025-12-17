@@ -163,7 +163,8 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
                                     </li>
                                 </ul>
 
-                                <form method="GET" class="mb-2 mb-md-0 pb-2">
+                                <form method="GET" class="mb-2 mb-md-0 pb-2 d-flex align-items-center gap-2">
+                                    <small class="text-muted d-none d-md-block text-nowrap"><?php echo count($surveys); ?> records</small>
                                     <input type="hidden" name="tab" value="<?php echo htmlspecialchars($tab); ?>">
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
