@@ -50,7 +50,7 @@ if (!empty($search)) {
 // Ordering
 $sql .= " ORDER BY s.end_date ASC";
 
-// Renamed variable from $audits to $surveys
+// Execute Query
 $surveys = $db->fetchAll($sql, $params);
 
 // --- 3. Helper Functions ---
@@ -122,6 +122,16 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
         
         .btn-action { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; transition: transform 0.2s; }
         .btn-action:hover { opacity: 0.9; transform: translateY(-1px); color: white; }
+
+        /* Description Modal Trigger Styles */
+        .desc-text {
+            cursor: pointer;
+            color: #495057;
+            transition: color 0.2s;
+        }
+        .desc-text:hover {
+            color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -179,17 +189,18 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
                             <table class="table table-hover align-middle mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="ps-4" style="width: 35%;">Survey Details</th>
-                                        <th style="width: 20%;">Department</th>
-                                        <th style="width: 20%;">Timeline</th>
+                                        <th class="ps-4" style="width: 25%;">Survey Name</th>
+                                        <th style="width: 30%;">Description</th>
+                                        <th style="width: 15%;">Department</th>
+                                        <th style="width: 15%;">Timeline</th>
                                         <th class="text-center" style="width: 10%;">Status</th>
-                                        <th class="text-end pe-4" style="width: 15%;">Action</th>
+                                        <th class="text-end pe-4" style="width: 5%;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (empty($surveys)): ?>
                                         <tr>
-                                            <td colspan="5" class="text-center py-5">
+                                            <td colspan="6" class="text-center py-5">
                                                 <div class="text-muted">
                                                     <div class="mb-3"><i class="bi bi-clipboard-x display-4 opacity-25"></i></div>
                                                     <h5>No surveys found</h5>
@@ -202,10 +213,26 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
                                             <tr>
                                                 <td class="ps-4">
                                                     <div class="fw-bold text-dark"><?php echo htmlspecialchars($row['survey_name']); ?></div>
-                                                    <div class="small text-muted text-truncate" style="max-width: 300px;">
-                                                        <?php echo htmlspecialchars(truncate($row['survey_description'] ?? 'No description provided', 50)); ?>
+                                                </td>
+                                                
+                                                <td>
+                                                    <div class="desc-text" 
+                                                         data-bs-toggle="modal" 
+                                                         data-bs-target="#descriptionModal" 
+                                                         data-survey-title="<?php echo htmlspecialchars($row['survey_name']); ?>"
+                                                         data-survey-desc="<?php echo htmlspecialchars($row['survey_description']); ?>">
+                                                        <?php 
+                                                            $desc = $row['survey_description'] ?? 'No description provided';
+                                                            echo htmlspecialchars(mb_strimwidth($desc, 0, 50, "...")); 
+                                                        ?>
+                                                        <?php if(strlen($desc) > 50): ?>
+                                                            <small class="text-primary d-block mt-1 fw-bold" style="font-size: 0.75rem;">
+                                                                View Full
+                                                            </small>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </td>
+
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="icon-shape bg-light text-primary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width:32px; height:32px;">
@@ -239,6 +266,40 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
         </div>
     </div>
 
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-bottom">
+                    <h5 class="modal-title" id="modalSurveyTitle">Survey Description</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p id="modalSurveyDesc" class="text-muted mb-0" style="white-space: pre-wrap;"></p>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Description Modal Logic
+        const descModal = document.getElementById('descriptionModal');
+        if (descModal) {
+            descModal.addEventListener('show.bs.modal', event => {
+                // Button that triggered the modal
+                const trigger = event.relatedTarget;
+                // Extract info from data-* attributes
+                const title = trigger.getAttribute('data-survey-title');
+                const desc = trigger.getAttribute('data-survey-desc');
+                
+                // Update the modal's content.
+                document.getElementById('modalSurveyTitle').textContent = title;
+                document.getElementById('modalSurveyDesc').textContent = desc || 'No description provided.';
+            });
+        }
+    </script>
 </body>
 </html>

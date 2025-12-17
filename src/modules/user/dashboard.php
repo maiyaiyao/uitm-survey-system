@@ -281,7 +281,6 @@ function getStatusBadge($status) {
                                                         <td class="ps-4">
                                                             <div class="d-flex flex-column">
                                                                 <span class="fw-bold text-dark"><?php echo htmlspecialchars($audit['survey_name']); ?></span>
-                                                                <small class="text-muted">ID: <?php echo htmlspecialchars($audit['survey_ID']); ?></small>
                                                             </div>
                                                         </td>
                                                         <td>

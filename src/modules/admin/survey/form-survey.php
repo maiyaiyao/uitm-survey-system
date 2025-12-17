@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':cid' => $user_id_system, ':uid' => $user_id_system
             ]);
             
-            $success_msg = "Survey '{$post_data['survey_name']}' (ID: {$target_survey_id}) created successfully.";
+            $success_msg = "Survey '{$post_data['survey_name']}' created successfully.";
         }
 
         // === COMMON BRIDGE TABLE LOGIC ===

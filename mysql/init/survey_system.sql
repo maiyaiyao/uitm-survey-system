@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql:3306
--- Generation Time: Nov 28, 2025 at 12:40 AM
+-- Generation Time: Dec 17, 2025 at 07:30 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.3.26
 
@@ -35,46 +35,50 @@ CREATE TABLE `criteria` (
   `input_at` date DEFAULT NULL,
   `updated_id` varchar(10) DEFAULT NULL,
   `updated_at` date DEFAULT NULL,
-  `status` enum('Active','Inactive') DEFAULT 'Active'
+  `status` enum('Active','Inactive') DEFAULT 'Active',
+  `sub_con_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `criteria`
 --
 
-INSERT INTO `criteria` (`criteria_ID`, `domain_ID`, `criteria_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
-('AC001', 'AD001', 'Tadbir urus keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AC002', 'AD001', 'Pengurusan Atasan', NULL, NULL, NULL, NULL, 'Active'),
-('AC003', 'AD001', 'Polisi/prosedur Keselamatan Siber', NULL, NULL, NULL, NULL, 'Active'),
-('AC004', 'AD002', 'Pelan Penilaian Risiko', NULL, NULL, NULL, NULL, 'Active'),
-('AC005', 'AD002', 'Pelan Rawatan Risiko', NULL, NULL, NULL, NULL, 'Active'),
-('AC006', 'AD003', 'Standard dan amalan terbaik keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AC007', 'AD003', 'Pengauditan keselamatan siber ', NULL, NULL, NULL, NULL, 'Active'),
-('AC008', 'AD004', 'Pembangunan Kompetensi dan Kesedaran', NULL, NULL, NULL, NULL, 'Active'),
-('AC009', 'AD004', 'Kakitangan ICT: Latihan kompetensi, kesedaran, kepatuhan ', NULL, NULL, NULL, NULL, 'Active'),
-('AC010', 'AD005', 'Pengurusan Inventori aset', NULL, NULL, NULL, NULL, 'Active'),
-('AC011', 'AD005', 'Klasifikasi maklumat ', NULL, NULL, NULL, NULL, 'Active'),
-('AC012', 'AD006', 'Penguatkuasaan mekanisme pengesahan identiti', NULL, NULL, NULL, NULL, 'Active'),
-('AC013', 'AD006', 'Pengurusan capaian', NULL, NULL, NULL, NULL, 'Active'),
-('AC014', 'AD007', 'Kesedaran, kepatuhan', NULL, NULL, NULL, NULL, 'Active'),
-('AC015', 'AD007', 'Penilaian keberkesanan pihak ketiga', NULL, NULL, NULL, NULL, 'Active'),
-('AC016', 'AD007', 'Keperluan kumpulan pakar dan pakar bidang', NULL, NULL, NULL, NULL, 'Active'),
-('AC017', 'AD008', 'Kawalan keselamatan infrastruktur rangkaian dan sistem ', NULL, NULL, NULL, NULL, 'Active'),
-('AC018', 'AD008', 'Kesediaan pusat operasi keselamatan (SOC)', NULL, NULL, NULL, NULL, 'Active'),
-('AC019', 'AD009', 'Pelan insiden keselamatan siber ', NULL, NULL, NULL, NULL, 'Active'),
-('AC020', 'AD009', 'Simulasi pelan insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AC021', 'AD010', 'Prosedur pengurusan ancaman dan kerentanan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AC022', 'AD010', 'Teknologi bagi pengurusan ancaman dan kerentanan', NULL, NULL, NULL, NULL, 'Active'),
-('AC023', 'AD011', 'Pelan kesinambungan perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active'),
-('AC024', 'AD011', 'Simulasi ', NULL, NULL, NULL, NULL, 'Active'),
-('AC025', 'AD012', 'test test criteria edit 21', '4', '2025-11-10', '4', '2025-11-13', 'Active'),
-('AC026', 'AD012', 'testing 222', '4', '2025-11-10', NULL, NULL, 'Active'),
-('AC027', 'AD012', 'aaaa', '4', '2025-11-10', NULL, '2025-11-13', 'Active'),
-('AC028', 'AD013', 'criteria testing 3333', '4', '2025-11-13', '4', '2025-11-14', 'Active'),
-('AC029', 'AD013', 'criteria testing 1233322', '4', '2025-11-14', NULL, NULL, 'Active'),
-('AC030', 'AD013', 'lalalallala', '4', '2025-11-14', NULL, NULL, 'Active'),
-('AC031', 'AD013', 'amamamamma', '4', '2025-11-14', NULL, NULL, 'Active'),
-('AC032', 'AD014', 'criteria domain 1', '4', '2025-11-26', NULL, NULL, 'Active');
+INSERT INTO `criteria` (`criteria_ID`, `domain_ID`, `criteria_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`, `sub_con_ID`) VALUES
+('AC001', 'AD001', 'Tadbir urus keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC002', 'AD001', 'Pengurusan Atasan', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC003', 'AD001', 'Polisi/prosedur Keselamatan Siber', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC004', 'AD002', 'Pelan Penilaian Risiko', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC005', 'AD002', 'Pelan Rawatan Risiko', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC006', 'AD003', 'Standard dan amalan terbaik keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC007', 'AD003', 'Pengauditan keselamatan siber ', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC008', 'AD004', 'Pembangunan Kompetensi dan Kesedaran', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC009', 'AD004', 'Kakitangan ICT: Latihan kompetensi, kesedaran, kepatuhan ', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC010', 'AD005', 'Pengurusan Inventori aset', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC011', 'AD005', 'Klasifikasi maklumat ', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC012', 'AD006', 'Penguatkuasaan mekanisme pengesahan identiti', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC013', 'AD006', 'Pengurusan capaian', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC014', 'AD007', 'Kesedaran, kepatuhan', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC015', 'AD007', 'Penilaian keberkesanan pihak ketiga', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC016', 'AD007', 'Keperluan kumpulan pakar dan pakar bidang', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC017', 'AD008', 'Kawalan keselamatan infrastruktur rangkaian dan sistem ', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC018', 'AD008', 'Kesediaan pusat operasi keselamatan (SOC)', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC019', 'AD009', 'Pelan insiden keselamatan siber ', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC020', 'AD009', 'Simulasi pelan insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC021', 'AD010', 'Prosedur pengurusan ancaman dan kerentanan keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC022', 'AD010', 'Teknologi bagi pengurusan ancaman dan kerentanan', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC023', 'AD011', 'Pelan kesinambungan perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC024', 'AD011', 'Simulasi ', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AC025', 'AD012', 'test test criteria edit 21', '4', '2025-11-10', '4', '2025-11-13', 'Active', NULL),
+('AC026', 'AD012', 'criteria lala', '4', '2025-11-10', '4', '2025-12-02', 'Active', NULL),
+('AC027', 'AD012', 'aaaa', '4', '2025-11-10', NULL, '2025-11-13', 'Active', NULL),
+('AC028', 'AD013', 'criteria testing 3333000', '4', '2025-11-13', '4', '2025-12-02', 'Inactive', NULL),
+('AC029', 'AD013', 'criteria testing 1233', '4', '2025-11-14', '4', '2025-12-02', 'Active', NULL),
+('AC030', 'AD013', 'lalalallaladaa', '4', '2025-11-14', '4', '2025-12-02', 'Active', NULL),
+('AC031', 'AD013', 'amamamamma', '4', '2025-11-14', NULL, NULL, 'Active', NULL),
+('AC032', 'AD014', 'criteria domain 1', '4', '2025-11-26', NULL, NULL, 'Inactive', NULL),
+('AC033', 'AD015', 'criteria december', '4', '2025-12-02', NULL, NULL, 'Active', NULL),
+('AC034', 'AD014', 'criteria 2 domain 1', '4', '2025-12-04', '4', '2025-12-08', 'Active', NULL),
+('AC035', 'AD014', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4444444444444444444444444444444444444', '4', '2025-12-17', NULL, NULL, 'Active', NULL);
 
 --
 -- Triggers `criteria`
@@ -91,6 +95,19 @@ CREATE TRIGGER `trg_criteria_id` BEFORE INSERT ON `criteria` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `criteria_control`
+--
+
+CREATE TABLE `criteria_control` (
+  `link_ID` int(11) NOT NULL,
+  `criteria_ID` varchar(10) NOT NULL,
+  `sub_con_ID` varchar(10) NOT NULL,
+  `linked_at` datetime DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -113,7 +130,7 @@ CREATE TABLE `domain` (
 --
 
 INSERT INTO `domain` (`domain_ID`, `domain_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
-('AD001', 'Tadbir Urus', NULL, NULL, '4', '2025-11-17', 'Inactive'),
+('AD001', 'Tadbir Urus', NULL, NULL, '4', '2025-11-17', 'Active'),
 ('AD002', 'Pengurusan Risiko', NULL, NULL, '4', '2025-11-07', 'Active'),
 ('AD003', 'Pematuhan dan Pengauditan', NULL, NULL, NULL, NULL, 'Active'),
 ('AD004', 'Keselamatan Sumber Manusia', NULL, NULL, NULL, NULL, 'Active'),
@@ -125,8 +142,11 @@ INSERT INTO `domain` (`domain_ID`, `domain_name`, `input_id`, `input_at`, `updat
 ('AD010', 'Pengurusan Ancaman Dan Kerentanan', NULL, NULL, NULL, NULL, 'Active'),
 ('AD011', 'Pengurusan Kesinambungan Perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active'),
 ('AD012', 'test domain 2', '4', '2025-11-07', '4', '2025-11-07', 'Active'),
-('AD013', 'testing 10 220', '4', '2025-11-13', '4', '2025-11-14', 'Active'),
-('AD014', 'domain test 12223334445555555', '4', '2025-11-26', '4', '2025-11-27', 'Active');
+('AD013', 'domain 10', '4', '2025-11-13', '12', '2025-12-08', 'Active'),
+('AD014', 'domain test 12223334445555555', '4', '2025-11-26', '4', '2025-11-27', 'Active'),
+('AD015', 'domain december 1', '4', '2025-12-02', '4', '2025-12-02', 'Inactive'),
+('AD016', 'Pengurusan Kod', '4', '2025-12-15', NULL, NULL, 'Active'),
+('AD017', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '4', '2025-12-17', NULL, NULL, 'Active');
 
 --
 -- Triggers `domain`
@@ -222,11 +242,13 @@ INSERT INTO `element` (`element_ID`, `criteria_ID`, `element_name`, `input_id`, 
 ('AE055', 'AC020', 'Tindak balas dan proses pemulihan daripada insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
 ('AE056', 'AC028', 'element 1101269875555', '4', '2025-11-14', '4', '2025-11-14', 'Active'),
 ('AE057', 'AC028', 'element 555', '4', '2025-11-14', NULL, NULL, 'Active'),
-('AE058', 'AC028', 'element 2025', '4', '2025-11-14', NULL, '2025-11-14', 'Active'),
+('AE058', 'AC028', 'element 2025', '4', '2025-11-14', NULL, '2025-12-04', 'Inactive'),
 ('AE059', 'AC025', 'element 1', '4', '2025-11-25', NULL, '2025-11-26', 'Active'),
-('AE060', 'AC026', 'element 2', '4', '2025-11-25', NULL, NULL, 'Active'),
-('AE061', 'AC027', 'element', '4', '2025-11-25', NULL, NULL, 'Active'),
-('AE062', 'AC032', 'element criteria 1', '4', '2025-11-26', NULL, NULL, 'Active');
+('AE060', 'AC026', 'element 2', '4', '2025-11-25', NULL, '2025-12-04', 'Inactive'),
+('AE061', 'AC027', 'element 1234567890', '4', '2025-11-25', '4', '2025-12-04', 'Active'),
+('AE062', 'AC032', 'element criteria 1', '4', '2025-11-26', NULL, NULL, 'Active'),
+('AE063', 'AC026', 'element 2i', '4', '2025-12-04', NULL, NULL, 'Active'),
+('AE064', 'AC033', 'element criteria december', '4', '2025-12-08', NULL, NULL, 'Active');
 
 --
 -- Triggers `element`
@@ -267,12 +289,61 @@ CREATE TABLE `password_reset_tokens` (
 CREATE TABLE `response` (
   `response_ID` varchar(10) NOT NULL,
   `element_ID` varchar(10) NOT NULL,
+  `survey_ID` varchar(50) DEFAULT NULL,
   `se_ID` varchar(10) DEFAULT NULL,
   `user_ID` int(11) NOT NULL,
   `score` int(11) DEFAULT NULL,
   `input_at` date DEFAULT NULL,
   `updated_at` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `response`
+--
+
+INSERT INTO `response` (`response_ID`, `element_ID`, `survey_ID`, `se_ID`, `user_ID`, `score`, `input_at`, `updated_at`) VALUES
+('RS004', 'AE028', NULL, 'ASA136', 12, 1, '2025-12-09', '2025-12-16'),
+('RS005', 'AE029', NULL, 'ASA141', 12, 1, '2025-12-09', '2025-12-16'),
+('RS006', 'AE030', NULL, 'ASA147', 12, 2, '2025-12-09', '2025-12-16'),
+('RS007', 'AE031', NULL, 'ASA153', 12, 3, '2025-12-09', '2025-12-16'),
+('RS008', 'AE032', NULL, 'ASA159', 12, 4, '2025-12-09', '2025-12-16'),
+('RS009', 'AE049', NULL, 'ASA246', 12, 1, '2025-12-09', '2025-12-16'),
+('RS010', 'AE054', NULL, 'ASA251', 12, 1, '2025-12-09', '2025-12-16'),
+('RS011', 'AE050', NULL, 'ASA256', 12, 1, '2025-12-09', '2025-12-16'),
+('RS012', 'AE025', NULL, 'ASA123', 13, 3, '2025-12-15', '2025-12-15'),
+('RS013', 'AE026', NULL, 'ASA128', 13, 3, '2025-12-15', '2025-12-15'),
+('RS014', 'AE027', NULL, 'ASA133', 13, 3, '2025-12-15', '2025-12-15'),
+('RS015', 'AE028', NULL, 'ASA138', 13, 3, '2025-12-15', '2025-12-15'),
+('RS016', 'AE029', NULL, 'ASA143', 13, 3, '2025-12-15', '2025-12-15'),
+('RS017', 'AE030', NULL, 'ASA148', 13, 3, '2025-12-15', '2025-12-15'),
+('RS018', 'AE031', NULL, 'ASA153', 13, 3, '2025-12-15', '2025-12-15'),
+('RS019', 'AE032', NULL, 'ASA158', 13, 3, '2025-12-15', '2025-12-15'),
+('RS020', 'AE049', NULL, NULL, 13, 3, '2025-12-15', '2025-12-15'),
+('RS021', 'AE054', NULL, NULL, 13, 3, '2025-12-15', '2025-12-15'),
+('RS022', 'AE050', NULL, NULL, 13, 3, '2025-12-15', '2025-12-15'),
+('RS023', 'AE001', NULL, 'ASA001', 10, 1, '2025-12-16', NULL),
+('RS024', 'AE002', NULL, 'ASA009', 10, 4, '2025-12-16', NULL),
+('RS025', 'AE003', NULL, 'ASA014', 10, 4, '2025-12-16', NULL),
+('RS026', 'AE004', NULL, 'ASA016', 10, 1, '2025-12-16', NULL),
+('RS027', 'AE005', NULL, 'ASA021', 10, 1, '2025-12-16', NULL),
+('RS028', 'AE006', NULL, 'ASA027', 10, 2, '2025-12-16', NULL),
+('RS029', 'AE007', NULL, 'ASA031', 10, 1, '2025-12-16', NULL),
+('RS030', 'AE008', NULL, 'ASA038', 10, 3, '2025-12-16', NULL),
+('RS031', 'AE009', NULL, 'ASA044', 10, 4, '2025-12-16', NULL),
+('RS032', 'AE010', NULL, 'ASA050', 10, 5, '2025-12-16', NULL),
+('RS033', 'AE025', NULL, 'ASA122', 12, 2, '2025-12-16', '2025-12-16'),
+('RS034', 'AE026', NULL, 'ASA126', 12, 1, '2025-12-16', '2025-12-16'),
+('RS035', 'AE027', NULL, 'ASA131', 12, 1, '2025-12-16', '2025-12-16'),
+('RS036', 'AE011', 'SV006', 'ASA051', 10, 1, '2025-12-16', '2025-12-16'),
+('RS037', 'AE012', 'SV006', 'ASA056', 10, 1, '2025-12-16', '2025-12-16'),
+('RS038', 'AE013', 'SV006', 'ASA061', 10, 1, '2025-12-16', '2025-12-16'),
+('RS039', 'AE014', 'SV006', 'ASA066', 10, 1, '2025-12-16', '2025-12-16'),
+('RS040', 'AE025', 'SV006', 'ASA122', 10, 2, '2025-12-16', '2025-12-16'),
+('RS041', 'AE026', 'SV006', 'ASA127', 10, 2, '2025-12-16', '2025-12-16'),
+('RS042', 'AE027', 'SV006', 'ASA132', 10, 2, '2025-12-16', '2025-12-16'),
+('RS043', 'AE025', 'SV005', 'ASA121', 10, 1, '2025-12-16', '2025-12-16'),
+('RS044', 'AE026', 'SV005', 'ASA126', 10, 1, '2025-12-16', '2025-12-16'),
+('RS045', 'AE027', 'SV005', 'ASA131', 10, 1, '2025-12-16', '2025-12-16');
 
 --
 -- Triggers `response`
@@ -350,12 +421,9 @@ INSERT INTO `score` (`score_ID`, `score_level`, `desc_level`, `input_id`, `input
 ('AS002', 2, 'Permulaan', NULL, NULL, NULL, NULL, 'Active'),
 ('AS003', 3, 'Ditakrif', NULL, NULL, NULL, NULL, 'Active'),
 ('AS004', 4, 'Diurus', NULL, NULL, NULL, NULL, 'Active'),
-('AS005', 5, 'Dioptimum', NULL, NULL, NULL, NULL, 'Active'),
+('AS005', 5, 'Dioptimumm', NULL, NULL, '4', '2025-12-08', 'Active'),
 ('AS006', 1, 'Ad-Hoc', NULL, NULL, NULL, NULL, 'Active'),
-('AS007', 2, 'Dilaksana', NULL, NULL, NULL, NULL, 'Active'),
-('AS008', 3, 'Ditakrif', NULL, NULL, NULL, NULL, 'Active'),
-('AS009', 4, 'Diurus', NULL, NULL, NULL, NULL, 'Active'),
-('AS010', 5, 'Dioptimum', NULL, NULL, NULL, NULL, 'Active');
+('AS007', 2, 'Dilaksana', NULL, NULL, NULL, NULL, 'Active');
 
 --
 -- Triggers `score`
@@ -567,116 +635,53 @@ INSERT INTO `score_element` (`se_ID`, `element_ID`, `score_ID`, `details`, `inpu
 ('ASA170', 'AE034', 'AS005', 'Amalan terbaik dalam keperluan keselamatan siber kontrak, dengan fleksibiliti bagi mengurangkan ancaman dan meminimakan risiko pihak ketiga.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA171', 'AE035', 'AS006', 'Tiada penilaian formal; bergantung kepada penilaian secara ad-hoc atau tidak formal.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA172', 'AE035', 'AS007', 'Penilaian asas dijalankan tetapi mungkin kurang mendalam atau konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA173', 'AE035', 'AS008', 'Penilaian asas dijalankan tetapi mungkin kurang mendalam atau konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA174', 'AE035', 'AS009', 'Pemantauan berterusan dan proaktif terhadap amalan keselamatan siber pihak ketiga, dengan penilaian semula berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA175', 'AE035', 'AS010', 'Proses penilaian yang canggih, termasuk alat pemantauan secara sistematik dan integrasi sistem pengurusan pihak ketiga.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA176', 'AE036', 'AS006', 'Tiada proses rasmi bagi penglibatan kumpulan pakar atau pakar bidang.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA177', 'AE036', 'AS007', '•	Usaha untuk penglibatan kumpulan pakar atau pakar bidang tidak konsisten.\r\n•	Tidak mempunyai proses yang formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA178', 'AE036', 'AS008', '•	Proses penglibatan kumpulan pakar atau pakar lapangan itu tidak digunakan secara konsisten atau didokumenkan dengan baik.\r\n•	Penglibatan pakar berlaku mengikut keperluan, tetapi terdapat ruang untuk penambahbaikan dari segi konsistensi dan keberkesanan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA179', 'AE036', 'AS009', '•	Proses yang jelas dalam penglibatan kumpulan pakar atau pakar bidang, dan bimbingan mereka disepadukan ke dalam proses membuat keputusan keselamatan siber.\r\n•	Penglibatan dengan pakar adalah tetap dan sistematik, dengan saluran yang mantap untuk perkongsian maklumat dan perkhidmatan perundingan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA180', 'AE036', 'AS010', '•	Proses melibatkan pakar dioptimumkan untuk kecekapan dan keberkesanan, dengan mekanisme disediakan bagi mendapatkan maklum balas. \r\n•	Peningkatan kualiti perkhidmatan perundingan yang disediakan secara berterusan.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA181', 'AE037', 'AS006', 'Kawalan keselamatan formal tidak ada atau minima; bergantung kepada tetapan asas atau ‘default setting’.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA182', 'AE037', 'AS007', 'Kawalan keselamatan asas di tempat tetapi tidak menyeluruh atau sepenuhnya bersepadu.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA183', 'AE037', 'AS008', 'Satu set kawalan keselamatan yang ditakrifkan dengan baik dilaksanakan, merangkumi aspek keselamatan rangkaian dan sistem yang kritikal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA184', 'AE037', 'AS009', 'Kawalan keselamatan yang dikaji semula dan dikemas kini secara berkala dengan pengurusan dan pengawasan aktif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA185', 'AE037', 'AS010', 'Kawalan keselamatan yang canggih dan adaptif, menggabungkan amalan keselamatan dan teknologi terkini.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA186', 'AE038', 'AS006', 'Prosedur khusus yang tidak ada atau minima untuk konfigurasi selamat; bergantung kepada tetapan asas atau (default setting).', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA187', 'AE038', 'AS007', 'Beberapa langkah untuk konfigurasi selamat digunakan, tetapi mungkin kurang mengikut ketelitian atau', NULL, NULL, NULL, NULL, 'Active'),
-('ASA188', 'AE038', 'AS008', 'Prosedur mengikut piawaian untuk konfigurasi selamat dan pengurusan aset IT.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA189', 'AE038', 'AS009', 'Kajian semula dan kemas kini berkala terhadap konfigurasi keselamatan, dengan pengawasan pengurusan yang kukuh.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA190', 'AE038', 'AS010', 'Pengurusan konfigurasi dinamik dan automatik, menyesuaikan diri dengan landskap keselamatan yang berubah.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA191', 'AE039', 'AS006', 'Langkah keselamatan infrastruktur rangkaian dan sistem dipantau tanpa proses formal.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA192', 'AE039', 'AS007', 'Langkah keselamatan dan infrastruktu infrastruktur rangkaian dan sistem dipantau, tetapi tidak secara mendalam.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA193', 'AE039', 'AS008', 'Proses yang berstruktur untuk pemantauan berterusan tetapi mungkin tidak merangkumi semua kawalan keselamatan infrastruktur rangkaian dan sistem kritikal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA194', 'AE039', 'AS009', 'Pemantauan berterusan yang menyeluruh dan berkesan semua kawalan keselamatan infrastruktur rangkaian dan sistem.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA195', 'AE039', 'AS010', 'Pemantauan berterusan yang proaktif dan canggih, dengan penambahbaikan dan penyesuaian berterusan kepada ancaman dan teknologi baru.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA196', 'AE040', 'AS006', 'Kemas kini perisian dan perkakasan jarang atau diabaikan, menyebabkan sistem terdedah kepada kelemahan keselamatan yang diketahui.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA197', 'AE040', 'AS007', '•	Terdapat beberapa usaha untuk menggunakan kemas kini, tetapi ia tidak teratur atau reaktif.\r\n•	Terdapat kelewatan dalam mengatasi kelemahan kritikal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA198', 'AE040', 'AS008', 'Proses kemaskini dan kemas kini yang berkala dan sistematik, mengikut jadual yang ditakrifkan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA199', 'AE040', 'AS009', 'Pemantauan proaktif dan berterusan terhadap kelemahan dengan kemas kini dan kemaskini yang tepat pada masanya.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA200', 'AE040', 'AS010', 'Pengurusan kemaskini yang canggih, secara automatik, memastikan tindak balas masa nyata terhadap kelemahan.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA201', 'AE041', 'AS006', 'Tiada proses formal; penggunaan teknologi baru adalah reaktif.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA202', 'AE041', 'AS007', 'Beberapa penilaian teknologi baru mungkin tidak teratur atau kurang pendekatan strategik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA203', 'AE041', 'AS008', 'Satu proses yang ditakrifkan untuk menilai dan mempertimbangkan penggunaan teknologi baru.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA204', 'AE041', 'AS009', 'Penilaian berkala dan strategik mengenai teknologi yang sedang berkembang.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA205', 'AE041', 'AS010', 'Pendekatan proaktif dan canggih dalam memanfaatkan teknologi yang sedang berkembang, proses integrasi dengan lancar untuk meningkatkan kedudukan keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA206', 'AE042', 'AS006', 'Tiada keupayaan SOC formal, pemantauan ancaman yang reaktif atau tidak wujud.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA207', 'AE042', 'AS007', 'Fungsi SOC asas ada tetapi terhad dalam skop atau keberkesanan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA208', 'AE042', 'AS008', 'SOC yang ditakrifkan dengan proses pemantauan dan pengesanan yang berstruktur mempunyai had dalam liputan atau pengesanan ancaman yang canggih.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA209', 'AE042', 'AS009', 'SOC yang dikendalikan dengan baik dan menyediakan pemantauan menyeluruh serta pengesanan ancaman dengan penambahbaikan berterusan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA210', 'AE042', 'AS010', 'Keupayaan SOC bertaraf dunia dengan penyesuaian berterusan kepada ancaman yang muncul dan integrasi teknologi dan amalan yang canggih.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA211', 'AE043', 'AS006', 'Perisian dan perkakasan keselamatan maklumat tidak wujud atau sudah oudated. Peruntukan minimum dalam menaik taraf atau memperoleh teknologi baharu.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA212', 'AE043', 'AS007', 'Beberapa alatan dan perkakasan keselamatan maklumat asas telah disediakan, tetapi ia tidak dikemas kini dengan kemajuan terkini dalam teknologi keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA213', 'AE043', 'AS008', 'Proses rasmi untuk memilih dan melaksanakan perisian dan perkakasan keselamatan maklumat terkini, berdasarkan amalan terbaik industri dan penilaian risiko.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA214', 'AE043', 'AS009', '•	Perisian dan perkakasan keselamatan maklumat dipantau dan diselenggara secara aktif. \r\n•	Kemas kini dan peningkatan yang kerap untuk memastikan ia kekal berkesan terhadap ancaman yang muncul.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA215', 'AE043', 'AS010', 'Penggunaan teknologi keselamatan maklumat termaju, termasuk sistem pengesanan ancaman lanjutan, analitik dipacu AI dan mekanisme tindak balas automatik, untuk mempertahankan secara proaktif daripada ancaman siber.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA216', 'AE044', 'AS006', 'Tiada rancangan tindak balas insiden formal dan tindak balas.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA217', 'AE044', 'AS007', 'Rancangan tindak balas kejadian asas wujud tetapi tidak lengkap atau dikemaskini secara berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA218', 'AE044', 'AS008', 'Satu pelan tindak balas kejadian yang ditakrifkan telah disediakan, walaupun tidak diuji sepenuhnya atau sepenuhnya diintegrasikan bagi seluruh universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA219', 'AE044', 'AS009', 'Rancangan tindak balas kejadian yang dikendalikan dengan baik, diuji secara berkala, dan dikemaskini yang merangkumi semua aspek penting.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA220', 'AE044', 'AS010', 'Peningkatan berterusan dan pengoptimuman rancangan tindak balas insiden. ', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA221', 'AE045', 'AS006', 'Peranan dan tanggungjawab tidak ditakrifkan dengan jelas, menyebabkan kekeliruan semasa insiden.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA222', 'AE045', 'AS007', 'Peranan asas ditakrifkan tetapi kurang jelas atau lengkap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA223', 'AE045', 'AS008', 'Peranan dan tanggungjawab yang jelas dan diperincikan tetapi tidak sepenuhnya disampaikan atau difahami oleh seluruh pasukan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA224', 'AE045', 'AS009', 'Peranan dan tanggungjawab yang ditakrifkan dengan jelas dan difahami, dengan latihan dan kemaskini yang berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA225', 'AE045', 'AS010', 'Penilaian berterusan dan penyempurnaan peranan dan tanggungjawab untuk menyesuaikan diri dengan landskap keselamatan siber yang berkembang.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA226', 'AE055', 'AS006', 'Masa tindak balas dan pemulihan insiden yang lambat atau tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA227', 'AE055', 'AS007', 'Mekanisme tindak balas insiden yang asas, tetapi kurang cepat atau cekap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA228', 'AE055', 'AS008', 'Protokol insiden tindak balas dan pemulihan yang ditetapkan, tetapi keberkesanannya mungkin berbeza.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA229', 'AE055', 'AS009', 'Tindak balas dan pemulihan dari insiden secara tepat dan berkesan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA230', 'AE055', 'AS010', 'Peningkatan masa insiden tindak balas dan pemulihan berterusan yang dioptimumkan, dengan menggunakan alat dan teknik yang canggih.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA231', 'AE046', 'AS006', 'Pengurusan insiden yang tidak konsisten atau ditambah baik, melalui proses pengekalan, pemusnahan dan usaha pemulihan.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA232', 'AE046', 'AS007', 'Pengurusan asas insiden tetapi kurang menyeluruh atau cekap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA233', 'AE046', 'AS008', 'Prosedur yang ditakrifkan untuk pengurusan insiden, tetapi keberkesanan berbeza.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA234', 'AE046', 'AS009', 'Pengendalian insiden yang berkesan dan terurus, termasuk pengekalan, pemusnahan dan usaha pemulihan tepat pada masanya.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA235', 'AE046', 'AS010', 'Penyempurnaan dan peningkatan berterusan dalam proses pengurusan insiden, menggabungkan amalan terbaik dan pembelajaran dari insiden lampau.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA236', 'AE047', 'AS006', 'Tindak balas insiden yang perlahan atau tidak konsisten terhadap insiden dan amaran.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA237', 'AE047', 'AS007', 'Prosedur penyiasatan dan peningkatan asas insiden ada, tetapi lambat atau tidak cekap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA238', 'AE047', 'AS008', 'Proses yang berstruktur untuk menyiasat dan meningkatkan insiden tetapi kurang cepat atau menyeluruh.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA239', 'AE047', 'AS009', 'Penyiasatan dan peningkatan insiden yang cekap dan berkesan, dengan kajian berkala untuk penambahbaikan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA240', 'AE047', 'AS010', 'Penambahbaikan dan pengoptimuman berterusan dalam pengendalian insiden, dengan proses penyiasatan dan peningkatan yang cepat dan sangat berkesan.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA241', 'AE048', 'AS006', 'Tiada proses formal untuk mengkaji dan belajar dari insiden.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA242', 'AE048', 'AS007', 'Proses ulasan asas telah diletakkan, tetapi tidak teliti atau bersistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA243', 'AE048', 'AS008', 'Satu proses yang ditakrifkan untuk pembelajaran dan kajian insiden tetapi kurang mendalam.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA244', 'AE048', 'AS009', 'Pembelajaran yang berkesan mengenai insiden secara menyeluruh diintegrasikan secara berkala ke dalam perancangan masa depan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA245', 'AE048', 'AS010', 'Peningkatan berterusan dalam keupayaan tindak balas insiden, mengintegrasikan amalan dan teknologi terkini, serta pembelajaran dari setiap insiden.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA246', 'AE049', 'AS006', 'Tiada keperluan pengurusan rasmi bagi ancaman dan kelemahan keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA247', 'AE049', 'AS007', 'Beberapa keperluan pengurusan yang disediakan, tetapi ia tidak diformalkan atau digunakan secara konsisten di seluruh universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA248', 'AE049', 'AS008', 'Proses yang jelas dan formal untuk mengurus ancaman dan kelemahan keselamatan siber, termasuk penilaian risiko, pelan tindak balas insiden dan prosedur pemulihan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA249', 'AE049', 'AS009', '•	Keperluan pengurusan untuk ancaman dan kelemahan keselamatan siber dikuatkuasakan dan dipantau secara aktif. \r\n•	Semakan dan kemas kini yang kerap untuk memastikan keberkesanan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA250', 'AE049', 'AS010', '•	Keperluan pengurusan terus diperbaiki dan dioptimumkan berdasarkan  ancaman yang muncul. \r\n•	Proses adalah sangat cekap dan disepadukan ke dalam keseluruhan strategi keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA251', 'AE054', 'AS006', '•	Pengurusan ancaman dan keretanan tidak wujud atau sedikit. \r\n•	Sedikit kesedaran atau keutamaan terhadap aktiviti ini.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA252', 'AE054', 'AS007', 'Pengiktirafan tentang keperluan untuk pengurusan ancaman dan kerentanan, tetapi ia tidak dijalankan secara teratur atau sistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA253', 'AE054', 'AS008', 'Proses rasmi untuk ancaman keselamatan siber dan penilaian kerentanan biasa, termasuk imbasan dan penilaian berjadual.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA254', 'AE054', 'AS009', '•	Pengurusan ancaman dan kelemahan dijalankan secara tetap mengikut jadual yang ditetapkan.\r\n•	Penemuan ditangani dengan segera dan dipulihkan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA255', 'AE054', 'AS010', '•	Proses pengurusan ancaman dan kerentanan sentiasa diperhalusi dan dioptimumkan.\r\n•	Terdapat pemantauan masa nyata dan tindak balas proaktif terhadap ancaman yang muncul.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA256', 'AE050', 'AS006', 'Pihak universiti tidak mempunyai kesedaran atau pelaburan dalam teknologi keselamatan siber terkini untuk pengurusan ancaman dan kerentanan.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA257', 'AE050', 'AS007', 'Beberapa teknologi keselamatan siber asas telah disediakan, tetapi tidak dikemas kini dengan kemajuan terkini.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA258', 'AE050', 'AS008', 'Keperluan dan rancangan untuk menerima pakai teknologi keselamatan siber terkini untuk pengurusan ancaman dan kelemahan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA259', 'AE050', 'AS009', 'Universiti secara aktif menilai dan mengguna pakai teknologi keselamatan siber terkini, termasuk sistem pengesanan ancaman lanjutan dan alat pengimbasan kerentanan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA260', 'AE050', 'AS010', 'Universiti ini memanfaatkan teknologi dan alatan keselamatan siber termaju untuk mengurus ancaman dan kelemahan dengan berkesan, dengan tumpuan pada automasi dan penyepaduan.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA261', 'AE051', 'AS006', 'Pengurusan kesinambungan perkhidmatan ICT tidak diformalkan dan tiada keperluan khusus disediakan. ', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA262', 'AE051', 'AS007', 'Sedikit kesedaran tentang kepentingan kesinambungan perkhidmatan ICT, tetapi keperluan formal adalah  kurang atau tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA263', 'AE051', 'AS008', 'Keperluan pengurusan kesinambungan perkhidmatan ICT yang jelas dan formal, termasuk dasar, prosedur dan peranan/ tanggungjawab.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA264', 'AE051', 'AS009', '•	Keperluan pengurusan kesinambungan perkhidmatan ICT dikuatkuasakan dan dipantau secara aktif. \r\n•	Terdapat penilaian dan kemas kini yang kerap bagi memastikan penjajaran dengan keperluan universiti.', NULL, NULL, NULL, NULL, 'Active');
-INSERT INTO `score_element` (`se_ID`, `element_ID`, `score_ID`, `details`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
-('ASA265', 'AE051', 'AS010', '•	Proses pengurusan kesinambungan perkhidmatan ICT terus diperhalusi dan dioptimumkan berdasarkan pengajaran dan risiko yang muncul. \r\n•	Ia disepadukan ke dalam keseluruhan strategi pengurusan risiko.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA266', 'AE052', 'AS006', '•	Pelan tidak disemak atau dikemas kini secara kerap. \r\n•	Tiada proses formal disediakan untuk semakan.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA267', 'AE052', 'AS007', 'Pengiktirafan tentang keperluan untuk semakan pelan, tetapi ia tidak dijalankan secara teratur atau sistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA268', 'AE052', 'AS008', 'Keperluan rasmi untuk semakan berkala dan kemas kini pelan, termasuk selang semakan yang ditetapkan dan pihak yang bertanggungjawab.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA269', 'AE052', 'AS009', '•	Pelan disemak secara tetap mengikut jadual yang ditetapkan.\r\n•	Penemuan daripada ulasan ditangani dengan segera dan digabungkan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA270', 'AE052', 'AS010', '•	Proses semakan pelan terus diperbaiki dan dioptimumkan.\r\n•	Terdapat pemantauan masa nyata dan pelarasan proaktif terhadap keadaan yang berubah-ubah.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA271', 'AE052', 'AS006', 'Simulasi pelan tidak dijalankan dan terdapat sedikit kesedaran tentang kepentingannya.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA272', 'AE052', 'AS007', 'Beberapa simulasi pelan dijalankan, tetapi ia jarang berlaku atau tidak formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA273', 'AE052', 'AS008', 'Keperluan rasmi untuk latihan simulasi berkala bagi pelan, termasuk objektif simulasi yang ditetapkan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA274', 'AE052', 'AS009', '•	Simulasi pelan dijalankan secara tetap mengikut jadual yang ditetapkan. \r\n•	Dapatan daripada simulasi digunakan untuk meningkatkan keberkesanan rancangan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA275', 'AE052', 'AS010', '•	Proses simulasi pelan diperhalusi dan dioptimumkan secara berterusan.\r\n•	Pelan tersebut disepadukan ke dalam keseluruhan pelan latihan dan kesediaan simulasi.', NULL, NULL, NULL, NULL, 'Active'),
 ('ASA276', 'AE059', 'AS001', 'level 1 score test', '4', '2025-11-26', '4', '2025-11-26', 'Active'),
 ('ASA277', 'AE059', 'AS002', 'aaaa', '4', '2025-11-26', NULL, NULL, 'Active'),
 ('ASA278', 'AE062', 'AS001', 'Mekanisme pengesahan lemah atau tidak konsisten dikuatkuasakan.', '4', '2025-11-26', '4', '2025-11-26', 'Active'),
 ('ASA279', 'AE062', 'AS002', 'Pelaksanaan asas kaedah pengesahan yang lebih kukuh, tetapi tidak komprehensif atau dikuatkuasakan untuk semua sumber sensitif.', '4', '2025-11-26', '4', '2025-11-26', 'Active'),
-('ASA280', 'AE062', 'AS003', 'Polisi dan prosedur yang ditakrifkan untuk pengesahan yang kukuh sedia ada, tetapi tidak diintegrasikan sepenuhnya dengan semua sistem atau dikuatkuasakan secara konsisten.', '4', '2025-11-26', NULL, NULL, 'Active'),
-('ASA281', 'AE062', 'AS004', 'Kaedah pengesahan yang kuat seperti pengesahan multi-faktor dilaksanakan sepenuhnya dan dikelola di semua sumber sensitif.', '4', '2025-11-26', NULL, NULL, 'Active');
+('ASA280', 'AE062', 'AS003', 'Polisi dan prosedur yang ditakrifkan untuk pengesahan yang kukuh sedia ada, tetapi tidak diintegrasikan sepenuhnya dengan semua sistem atau dikuatkuasakan secara konsisten.', '4', '2025-11-26', '4', '2025-12-02', 'Active'),
+('ASA281', 'AE062', 'AS004', 'Kaedah pengesahan yang kuat seperti pengesahan multi-faktor dilaksanakan sepenuhnya dan dikelola di semua sumber sensitif.', '4', '2025-11-26', NULL, NULL, 'Active'),
+('ASA282', 'AE061', 'AS006', '123454', '4', '2025-12-05', '4', '2025-12-05', 'Active');
 
 --
 -- Triggers `score_element`
@@ -835,6 +840,32 @@ INSERT INTO `sub_con` (`sec_ID`, `sub_con_ID`, `sub_con_name`) VALUES
 ('A8', 'A.8.8', 'Management of technical vulnerabilities'),
 ('A8', 'A.8.9', 'Configuration management');
 
+--
+-- Triggers `sub_con`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_generate_control_id` BEFORE INSERT ON `sub_con` FOR EACH ROW BEGIN
+    DECLARE next_num INT;
+    DECLARE prefix VARCHAR(20);
+
+    SET prefix = NEW.sec_ID; 
+
+    SELECT MAX(CAST(SUBSTRING_INDEX(sub_con_ID, '.', -1) AS UNSIGNED))
+    INTO next_num
+    FROM sub_con
+    WHERE sec_ID = prefix;
+
+    IF next_num IS NULL THEN
+        SET next_num = 1;
+    ELSE
+        SET next_num = next_num + 1;
+    END IF;
+
+    SET NEW.sub_con_ID = CONCAT(prefix, '.', next_num);
+END
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -992,10 +1023,12 @@ CREATE TABLE `survey` (
 
 INSERT INTO `survey` (`survey_ID`, `survey_name`, `department`, `start_date`, `end_date`, `status`, `survey_description`, `created_by`, `created_at`, `updated_id`, `updated_by`) VALUES
 ('SV001', 'Survey 1', 'jabatan digital', '2025-11-21 10:00:00', '2025-11-21 15:08:00', 'Completed', 'testing survey 1', '4', '2025-11-21 00:00:00', '4', '2025-11-21'),
-('SV002', 'survey 2', 'FSKM', '2025-11-21 15:21:00', '2025-11-22 15:21:00', 'Draft', 'test survey 2', '4', '2025-11-21 00:00:00', '4', '2025-11-21'),
+('SV002', 'survey 2', 'FSKM', '2025-11-21 15:21:00', '2025-12-17 15:21:00', 'Active', 'test survey 2', '4', '2025-11-21 00:00:00', '4', '2025-12-09'),
 ('SV003', 'test', 'hea', '2025-11-24 14:35:00', '2025-11-26 11:35:00', 'Archived', 'testing testing', '4', '2025-11-24 00:00:00', '4', '2025-11-26'),
-('SV004', 'test 2', 'kolej dahlia', '2025-11-30 14:59:00', '2025-12-05 14:59:00', 'Active', 'testing 1234555', '4', '2025-11-24 00:00:00', '4', '2025-11-24'),
-('SV005', 'blabla bla', 'kokoko', '2025-11-25 15:23:00', '2025-11-27 14:23:00', 'Completed', 'lalalalal', '4', '2025-11-25 14:23:43', '4', '2025-11-25');
+('SV004', 'test 232', 'kolej dahlia', '2025-11-30 14:59:00', '2025-12-15 14:59:00', 'Completed', 'testing 1234555', '4', '2025-11-24 00:00:00', '4', '2025-12-16'),
+('SV005', 'status test', 'FSKM', '2025-12-16 08:46:00', '2025-12-17 08:46:00', 'Completed', 'status test for survey', '4', '2025-12-16 08:47:01', '4', '2025-12-16'),
+('SV006', 'response', 'FSKM', '2025-12-16 10:25:00', '2025-12-17 10:25:00', 'Completed', 'response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing', '4', '2025-12-16 10:25:57', '4', '2025-12-16'),
+('SV007', 'description survey test', 'FSKM', '2025-12-17 14:51:00', '2025-12-19 14:51:00', 'Active', 'enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter', '4', '2025-12-17 14:53:49', '4', '2025-12-17');
 
 -- --------------------------------------------------------
 
@@ -1018,19 +1051,6 @@ INSERT INTO `survey_domain` (`survey_domain_id`, `survey_id`, `domain_id`) VALUE
 (42, 'SV001', 'AD008'),
 (43, 'SV001', 'AD011'),
 (44, 'SV001', 'AD007'),
-(45, 'SV002', 'AD004'),
-(46, 'SV002', 'AD003'),
-(47, 'SV002', 'AD010'),
-(48, 'SV002', 'AD005'),
-(49, 'SV002', 'AD006'),
-(50, 'SV002', 'AD009'),
-(51, 'SV002', 'AD008'),
-(52, 'SV002', 'AD002'),
-(53, 'SV002', 'AD001'),
-(66, 'SV004', 'AD010'),
-(67, 'SV004', 'AD005'),
-(68, 'SV004', 'AD006'),
-(93, 'SV005', 'AD012'),
 (94, 'SV003', 'AD004'),
 (95, 'SV003', 'AD003'),
 (96, 'SV003', 'AD010'),
@@ -1042,7 +1062,24 @@ INSERT INTO `survey_domain` (`survey_domain_id`, `survey_id`, `domain_id`) VALUE
 (102, 'SV003', 'AD007'),
 (103, 'SV003', 'AD002'),
 (104, 'SV003', 'AD001'),
-(105, 'SV003', 'AD013');
+(105, 'SV003', 'AD013'),
+(138, 'SV002', 'AD004'),
+(139, 'SV002', 'AD003'),
+(140, 'SV002', 'AD010'),
+(141, 'SV002', 'AD005'),
+(142, 'SV002', 'AD006'),
+(143, 'SV002', 'AD009'),
+(144, 'SV002', 'AD008'),
+(145, 'SV002', 'AD002'),
+(146, 'SV002', 'AD001'),
+(165, 'SV004', 'AD010'),
+(166, 'SV004', 'AD005'),
+(167, 'SV004', 'AD006'),
+(169, 'SV005', 'AD005'),
+(173, 'SV006', 'AD005'),
+(174, 'SV006', 'AD002'),
+(175, 'SV007', 'AD014'),
+(176, 'SV007', 'AD009');
 
 -- --------------------------------------------------------
 
@@ -1073,9 +1110,14 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_ID`, `primary_email`, `password`, `google_sub_id`, `full_name`, `department`, `status`, `email_verified`, `last_login`, `created_at`, `updated_at`, `user_organization`, `user_position`, `user_phone_company`, `user_handphone_no`) VALUES
-(4, 'admin@uitm.edu.my', '$2y$10$UTKIVYNidiMD1AFK7jT79.PSK5vnDObgjMRM/QXfOJK8AWwqC5zBa', NULL, 'System Administrator', NULL, 'Active', 'Verified', '2025-11-28 08:39:23', '2025-10-29 06:29:06', '2025-11-28 08:39:23', NULL, NULL, NULL, NULL),
-(10, 'ali@gmail.com', '$2y$10$jI0046HbGA46J5.74k2z2utCruGzwm8MPXb7zfnvNUsXkXouLV.dq', NULL, 'ali bin abuu', 'FSKM', 'Inactive', '', '2025-11-24 00:45:34', '2025-11-12 01:36:41', '2025-11-24 00:45:34', 'UiTM', 'Manager', '', '+60182396060'),
-(12, '2023864212@student.uitm.edu.my', NULL, '110380624589280730990', 'IYLIA MAISARAH MOHD KHAIROL', '', 'Active', 'Verified', '2025-11-24 00:25:52', '2025-11-21 08:46:20', '2025-11-24 00:32:13', '', '', '', '+60182396090');
+(4, 'admin@uitm.edu.my', '$2y$10$UTKIVYNidiMD1AFK7jT79.PSK5vnDObgjMRM/QXfOJK8AWwqC5zBa', NULL, 'System Administrator', NULL, 'Active', 'Verified', '2025-12-17 14:51:02', '2025-10-29 06:29:06', '2025-12-17 14:51:02', NULL, NULL, NULL, NULL),
+(10, 'ali@gmail.com', '$2y$10$F2iHe.T65eU3qFrACN8BwOpEnwvVlG/JfzM68mHSKXu03bR0rfR6u', NULL, 'ali bin abuu', 'FSKM', 'Active', '', '2025-12-17 14:50:23', '2025-11-12 01:36:41', '2025-12-17 14:50:23', 'UiTM', 'Manager', '', '+60182396060'),
+(12, '2023864212@student.uitm.edu.my', '$2y$10$DEMeUh70OgYal7oSzY5hdOOgHGej7c4vTzfDj3LE5NdobA2AUMIL2', '110380624589280730990', 'IYLIA MAISARAH MOHD KHAIROL', '', 'Active', 'Verified', '2025-12-17 11:44:17', '2025-11-21 08:46:20', '2025-12-17 11:44:17', '', '', '', '+60182396090'),
+(13, 'abu.bakar@student.uitm.edu.my', '$2y$10$7RXFWqkQbMZLo6AGAm03AO7Fke9oj2fhoeMZ8HyugWY20SfI/Hj5C', NULL, 'Abu Bakar', 'FSR', 'Active', 'Verified', '2025-12-15 12:55:28', '2025-12-10 08:18:52', '2025-12-15 12:55:28', 'UiTM', 'Student', NULL, '+60123456789'),
+(14, 'siti.aminah@uitm.edu.my', '$2y$10$zh/p1t6Fj234oORkAfVk6O7J/QbHo6P0RmmXgL0BQypHTU4m.zSjC', NULL, 'Siti Aminah', 'FSKM', 'Active', 'Verified', '2025-12-10 16:26:14', '2025-12-10 08:18:52', '2025-12-10 16:26:14', 'UiTM', 'Lecturer', '0355442000', '+60134567890'),
+(15, 'chong.wei@uitm.edu.my', '$2y$10$YHuTyDyNfSpuc6fW4njiM.aoR7G0idYfagakcgVTfPSIHfTZOBKHm', NULL, 'Chong Wei', 'Business Management', 'Active', 'Verified', '2025-12-12 11:01:37', '2025-12-10 08:18:52', '2025-12-12 11:01:37', 'UiTM', 'Senior Lecturer', '0355443000', '+60145678901'),
+(16, 'devi.muthu@uitm.edu.my', '$2y$10$RHAXuIP9g8oslfXkvRbAfegIym351W3i/vNmkyhRZGgHmeIYx0MJe', NULL, 'Devi Muthu', 'Academy of Language Studies', 'Active', 'Verified', NULL, '2025-12-10 08:18:52', '2025-12-10 08:25:32', 'UiTM', 'Coordinator', NULL, '+60156789012'),
+(17, 'salsabilashamsul896@gmail.com', '$2y$10$kvv2rkjbzbDsCjMYud.on.m.uw7.RipWNFFA8Ca4FNDbI9J/NXv0y', NULL, 'Salsabila Shamsul', 'FSKM', 'Active', '', '2025-12-15 13:07:48', '2025-12-15 13:07:35', '2025-12-15 13:07:48', 'UiTM', 'Student', '', '+60182037159');
 
 -- --------------------------------------------------------
 
@@ -1097,8 +1139,13 @@ CREATE TABLE `user_role` (
 
 INSERT INTO `user_role` (`user_role_ID`, `user_ID`, `role_ID`, `assigned_at`, `assigned_by`) VALUES
 (2, 4, 1, '2025-10-29 07:56:49', NULL),
-(3, 10, 2, '2025-11-12 01:36:41', 'System'),
-(4, 12, 2, '2025-11-24 00:26:20', 'Google');
+(3, 10, 2, '2025-12-03 10:57:42', 'System'),
+(4, 12, 2, '2025-12-09 10:42:25', 'Google'),
+(5, 13, 2, '2025-12-10 08:18:52', 'System'),
+(6, 15, 2, '2025-12-10 08:18:52', 'System'),
+(7, 16, 2, '2025-12-10 08:18:52', 'System'),
+(8, 14, 2, '2025-12-10 08:18:52', 'System'),
+(9, 17, 2, '2025-12-15 13:07:35', 'System');
 
 -- --------------------------------------------------------
 
@@ -1110,8 +1157,72 @@ CREATE TABLE `user_survey` (
   `user_survey_ID` varchar(10) NOT NULL,
   `survey_ID` varchar(50) DEFAULT NULL,
   `user_ID` int(11) DEFAULT NULL,
-  `status` enum('in progress','completed','expired') DEFAULT 'in progress'
+  `status` enum('Pending','In progress','Completed','Expired') DEFAULT 'Pending'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `user_survey`
+--
+
+INSERT INTO `user_survey` (`user_survey_ID`, `survey_ID`, `user_ID`, `status`) VALUES
+('US00003', 'SV002', 10, 'In progress'),
+('US00004', 'SV002', 12, 'In progress'),
+('US00005', 'SV002', 4, 'Pending'),
+('US00006', 'SV004', 12, 'Completed'),
+('US00007', 'SV004', 10, 'Pending'),
+('US00008', 'SV004', 13, 'Completed'),
+('US00009', 'SV004', 15, 'Pending'),
+('US00010', 'SV004', 16, 'Pending'),
+('US00011', 'SV004', 14, 'Pending'),
+('US00012', 'SV004', 4, 'Pending'),
+('US00013', 'SV005', 13, 'Pending'),
+('US00014', 'SV005', 10, 'Completed'),
+('US00015', 'SV005', 15, 'Pending'),
+('US00016', 'SV005', 16, 'Pending'),
+('US00017', 'SV005', 12, 'Completed'),
+('US00018', 'SV005', 17, 'Pending'),
+('US00019', 'SV005', 14, 'Pending'),
+('US00020', 'SV005', 4, 'Pending'),
+('US00021', 'SV006', 13, 'Pending'),
+('US00022', 'SV006', 10, 'Completed'),
+('US00023', 'SV006', 15, 'Pending'),
+('US00024', 'SV006', 16, 'Pending'),
+('US00025', 'SV006', 12, 'Pending'),
+('US00026', 'SV006', 17, 'Pending'),
+('US00027', 'SV006', 14, 'Pending'),
+('US00028', 'SV006', 4, 'Pending'),
+('US00029', 'SV007', 13, 'Pending'),
+('US00030', 'SV007', 10, 'Pending'),
+('US00031', 'SV007', 15, 'Pending'),
+('US00032', 'SV007', 16, 'Pending'),
+('US00033', 'SV007', 12, 'Pending'),
+('US00034', 'SV007', 17, 'Pending'),
+('US00035', 'SV007', 14, 'Pending'),
+('US00036', 'SV007', 4, 'Pending');
+
+--
+-- Triggers `user_survey`
+--
+DELIMITER $$
+CREATE TRIGGER `trg_generate_user_survey_id` BEFORE INSERT ON `user_survey` FOR EACH ROW BEGIN
+    DECLARE last_id VARCHAR(10);
+    DECLARE next_num INT DEFAULT 1;
+
+    -- 1. Find the highest current ID (e.g., 'US00005')
+    SELECT MAX(user_survey_ID) INTO last_id FROM user_survey;
+
+    -- 2. If an ID exists, extract the number and add 1
+    IF last_id IS NOT NULL THEN
+        -- SUBSTRING(last_id, 3) removes the 'US' prefix
+        SET next_num = CAST(SUBSTRING(last_id, 3) AS UNSIGNED) + 1;
+    END IF;
+
+    -- 3. Set the new ID (e.g., 'US' + '00006')
+    -- LPAD ensures it always has enough zeros to look consistent
+    SET NEW.user_survey_ID = CONCAT('US', LPAD(next_num, 5, '0'));
+END
+$$
+DELIMITER ;
 
 --
 -- Indexes for dumped tables
@@ -1122,7 +1233,16 @@ CREATE TABLE `user_survey` (
 --
 ALTER TABLE `criteria`
   ADD PRIMARY KEY (`criteria_ID`),
-  ADD KEY `domain_ID` (`domain_ID`);
+  ADD KEY `domain_ID` (`domain_ID`),
+  ADD KEY `criteria_sub_con_FK` (`sub_con_ID`);
+
+--
+-- Indexes for table `criteria_control`
+--
+ALTER TABLE `criteria_control`
+  ADD PRIMARY KEY (`link_ID`),
+  ADD KEY `fk_link_criteria` (`criteria_ID`),
+  ADD KEY `fk_link_control` (`sub_con_ID`);
 
 --
 -- Indexes for table `domain`
@@ -1152,7 +1272,8 @@ ALTER TABLE `response`
   ADD PRIMARY KEY (`response_ID`),
   ADD KEY `sa_ID` (`se_ID`),
   ADD KEY `response_user_fk` (`user_ID`),
-  ADD KEY `element_ID_fk` (`element_ID`);
+  ADD KEY `element_ID_fk` (`element_ID`),
+  ADD KEY `idx_response_survey` (`survey_ID`);
 
 --
 -- Indexes for table `result_domain`
@@ -1249,6 +1370,12 @@ ALTER TABLE `user_survey`
 --
 
 --
+-- AUTO_INCREMENT for table `criteria_control`
+--
+ALTER TABLE `criteria_control`
+  MODIFY `link_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
@@ -1264,19 +1391,19 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `survey_domain`
 --
 ALTER TABLE `survey_domain`
-  MODIFY `survey_domain_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=106;
+  MODIFY `survey_domain_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `user_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `user_role_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `user_role_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
@@ -1287,6 +1414,13 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `criteria`
   ADD CONSTRAINT `criteria_ibfk_1` FOREIGN KEY (`domain_ID`) REFERENCES `domain` (`domain_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `criteria_control`
+--
+ALTER TABLE `criteria_control`
+  ADD CONSTRAINT `fk_link_control` FOREIGN KEY (`sub_con_ID`) REFERENCES `sub_con` (`sub_con_ID`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_link_criteria` FOREIGN KEY (`criteria_ID`) REFERENCES `criteria` (`criteria_ID`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `element`
@@ -1305,6 +1439,7 @@ ALTER TABLE `password_reset_tokens`
 --
 ALTER TABLE `response`
   ADD CONSTRAINT `element_ID_fk` FOREIGN KEY (`element_ID`) REFERENCES `element` (`element_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_response_to_survey` FOREIGN KEY (`survey_ID`) REFERENCES `survey` (`survey_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `response_ibfk_1` FOREIGN KEY (`se_ID`) REFERENCES `score_element` (`se_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_ID_fk` FOREIGN KEY (`user_ID`) REFERENCES `user` (`user_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
