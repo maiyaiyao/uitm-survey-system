@@ -200,7 +200,7 @@ $flash = getFlashMessage();
                                     <div class="d-flex gap-4 text-sm">
                                         <div>
                                             <small class="text-uppercase text-muted fw-bold d-block">Status</small>
-                                            <span class="fw-bold text-<?php echo $assignment['status'] === 'completed' ? 'success' : 'warning'; ?>">
+                                            <span class="fw-bold text-<?php echo $assignment['status'] === 'Completed' ? 'success' : 'warning'; ?>">
                                                 <?php echo strtoupper($assignment['status']); ?>
                                             </span>
                                         </div>

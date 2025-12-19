@@ -46,7 +46,7 @@ $participants = $db->fetchAll("
 
 // Calculate Stats
 $total_participants = count($participants);
-$completed_count = count(array_filter($participants, fn($p) => $p['completion_status'] === 'completed'));
+$completed_count = count(array_filter($participants, fn($p) => $p['completion_status'] === 'Completed'));
 $completion_rate = ($total_participants > 0) ? round(($completed_count / $total_participants) * 100) : 0;
 
 // Helper: Status Badge
@@ -280,9 +280,9 @@ $flash = getFlashMessage();
                                                             </td>
                                                             <td class="small text-muted"><?php echo htmlspecialchars($p['primary_email']); ?></td>
                                                             <td class="text-end pe-4">
-                                                                <?php if($p['completion_status'] == 'completed'): ?>
+                                                                <?php if($p['completion_status'] == 'Completed'): ?>
                                                                     <span class="badge bg-success"><i class="bi bi-check-lg"></i> Done</span>
-                                                                <?php elseif($p['completion_status'] == 'in progress'): ?>
+                                                                <?php elseif($p['completion_status'] == 'In progress'): ?>
                                                                     <span class="badge bg-warning text-dark">In Progress</span>
                                                                 <?php else: ?>
                                                                     <span class="badge bg-secondary">Pending</span>

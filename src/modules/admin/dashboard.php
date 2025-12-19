@@ -20,11 +20,11 @@ try {
     $total_active = $stmt_active->fetchColumn();
 
     // 3. Draft Surveys
-    $stmt_draft = $pdo->query("SELECT COUNT(*) FROM survey WHERE status = 'draft'");
+    $stmt_draft = $pdo->query("SELECT COUNT(*) FROM survey WHERE status = 'Draft'");
     $total_draft = $stmt_draft->fetchColumn();
 
     // 4. Completed Surveys
-    $stmt_completed = $pdo->query("SELECT COUNT(*) FROM survey WHERE status = 'completed'");
+    $stmt_completed = $pdo->query("SELECT COUNT(*) FROM survey WHERE status = 'Completed'");
     $total_completed = $stmt_completed->fetchColumn();
 
     // 5. Fetch Recent Surveys (Expanded query for the table)

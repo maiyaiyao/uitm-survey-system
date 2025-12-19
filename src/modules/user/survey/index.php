@@ -29,13 +29,13 @@ $params = [':user_ID' => $user_ID];
 // Tab Logic
 if ($tab === 'history') {
     // History: User completed OR Survey is archived/completed by admin
-    $sql .= " AND (us.status = 'completed' OR s.status IN ('Completed', 'Archived'))";
+    $sql .= " AND (us.status = 'Completed' OR s.status IN ('Completed', 'Archived'))";
 } else {
     // Active: User NOT completed AND Survey is Active
-    $sql .= " AND (us.status != 'completed' AND s.status = 'Active')";
+    $sql .= " AND (us.status != 'Completed' AND s.status = 'Active')";
 }
-if (isset($_GET['status']) && $_GET['status'] === 'in_progress') {
-    $sql .= " AND us.status = 'in progress'";
+if (isset($_GET['status']) && $_GET['status'] === 'In_progress') {
+    $sql .= " AND us.status = 'In progress'";
 }
 
 // Search Logic
@@ -59,7 +59,7 @@ function getBadge($user_status, $survey_status, $end_date) {
     $due = new DateTime($end_date);
     
     // 1. Check User Status
-    if ($user_status === 'completed') {
+    if ($user_status === 'Completed') {
         return '<span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Completed</span>';
     }
     
@@ -74,7 +74,7 @@ function getBadge($user_status, $survey_status, $end_date) {
     }
     
     // 4. Default Progress Status
-    if ($user_status === 'in progress') {
+    if ($user_status === 'In progress') {
         return '<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">In Progress</span>';
     }
     
@@ -83,13 +83,13 @@ function getBadge($user_status, $survey_status, $end_date) {
 
 function getActionBtn($user_status, $survey_status, $survey_id) {
     // If completed or closed, show "View"
-    if ($user_status === 'completed' || $survey_status !== 'Active') {
+    if ($user_status === 'Completed' || $survey_status !== 'Active') {
         return '<a href="view-results.php?id=' . $survey_id . '" class="btn btn-sm btn-outline-secondary px-3"><i class="bi bi-eye me-1"></i> View</a>';
     }
     
     // Otherwise show "Start" or "Continue"
-    $label = ($user_status === 'in progress') ? 'Continue' : 'Start';
-    $icon = ($user_status === 'in progress') ? 'bi-play-fill' : 'bi-clipboard-check';
+    $label = ($user_status === 'In progress') ? 'Continue' : 'Start';
+    $icon = ($user_status === 'In progress') ? 'bi-play-fill' : 'bi-clipboard-check';
     
     return '<a href="assessment.php?survey_id=' . $survey_id . '" class="btn btn-sm btn-primary px-3 shadow-sm btn-action">
                 <i class="bi ' . $icon . ' me-1"></i> ' . $label . '
