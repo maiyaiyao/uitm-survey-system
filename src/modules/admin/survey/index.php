@@ -66,9 +66,9 @@ try {
         $params[':status'] = $_GET['status'];
     }
 
-    $sql .= " ORDER BY (CASE WHEN s.status = 'Archived' THEN 1 ELSE 0 END) ASC, s.created_at DESC";
+    $sql .= " ORDER BY (CASE WHEN s.status = 'Archived' THEN 1 ELSE 0 END) ASC, s.updated_by DESC, s.created_at DESC";
 
-    $db_surveys = $db->fetchAll($sql, $params);
+    $db_surveys = $db->fetchAll($sql, $params); 
     
     // (Domain data fetching removed)
 
