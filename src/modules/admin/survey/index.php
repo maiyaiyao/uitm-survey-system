@@ -372,11 +372,6 @@ $currentDir = basename(__DIR__);
                                                 
                                                 <td class="text-end pe-4" onclick="event.stopPropagation();">
                                                     <div class="d-flex justify-content-end gap-1" style="overflow-x: auto;">
-                                                        <a href="view-details.php?id=<?php echo htmlspecialchars($survey['survey_ID']); ?>" 
-                                                           class="btn btn-sm btn-link text-dark px-2" 
-                                                           title="View">
-                                                            <i class="bi bi-eye fs-6"></i>
-                                                        </a>
                                                         <a href="form-survey.php?id=<?php echo htmlspecialchars($survey['survey_ID']); ?>" 
                                                            class="btn btn-sm btn-link text-primary px-2" 
                                                            title="Edit">
