@@ -210,12 +210,12 @@ if (!function_exists('truncate')) {
 
                                         <div class="mb-4">
                                             <label class="form-label fw-bold-dark text-sm text-uppercase">Detailed Description <span class="text-danger">*</span></label>
-                                            <textarea name="details" id="details" class="form-control" rows="8" required maxlength="500" 
+                                            <textarea name="details" id="details" class="form-control" rows="8" required maxlength="5000" 
                                                 style="border-radius: 0.5rem;"
                                                 placeholder="Enter the specific requirements..."><?php echo htmlspecialchars($existing_data['details'] ?? ''); ?></textarea>
                                                 
                                             <div class="d-flex justify-content-end mt-1">
-                                                <small class="text-muted char-count" data-for="details">500 characters remaining</small>
+                                                <small class="text-muted char-count" data-for="details">5000 characters remaining</small>
                                             </div>
                                             
                                             <div class="form-text mt-2">Provide a clear, detailed explanation...</div>

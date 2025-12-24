@@ -19,7 +19,7 @@ define('APP_VERSION', '1.0.0');
 define('APP_ENV', 'development'); // change to 'production' when live
 
 // URL Configuration
-define('BASE_URL', 'http://localhost:8080');
+define('BASE_URL', 'http://10.0.177.242:8080');
 define('ASSETS_URL', BASE_URL . '/assets');
 
 // Path Configuration
