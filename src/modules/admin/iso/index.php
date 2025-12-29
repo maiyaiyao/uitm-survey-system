@@ -13,7 +13,11 @@ $params = [];
 if ($active_tab === 'sections') {
     // Fetch Sections
     $sql = "SELECT * FROM section WHERE 1=1";
-    if ($search) { $sql .= " AND (sec_name LIKE :s OR sec_ID LIKE :s)"; $params[':s'] = "%$search%"; }
+    if ($search) {
+        $sql .= " AND (sec_name LIKE :s1 OR sec_ID LIKE :s2)"; 
+        $params[':s1'] = "%$search%";
+        $params[':s2'] = "%$search%";
+    }
     $sql .= " ORDER BY sec_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
@@ -21,7 +25,12 @@ if ($active_tab === 'sections') {
     // Fetch Requirements (Sub_Req) linked to Sections
     $sql = "SELECT sr.*, s.sec_name FROM sub_req sr 
             JOIN section s ON sr.sec_ID = s.sec_ID WHERE 1=1";
-    if ($search) { $sql .= " AND (sr.sub_req_name LIKE :s OR sr.sub_req_ID LIKE :s)"; $params[':s'] = "%$search%"; }
+    if ($search) {
+        $sql .= " AND (sr.sub_req_name LIKE :s1 OR sr.sub_req_ID LIKE :s2)"; 
+        $params[':s1'] = "%$search%";
+        $params[':s2'] = "%$search%"; 
+        
+    }
     $sql .= " ORDER BY sr.sub_req_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
@@ -29,7 +38,11 @@ if ($active_tab === 'sections') {
     // Fetch Controls (Sub_Con) linked to Sections
     $sql = "SELECT sc.*, s.sec_name FROM sub_con sc 
             JOIN section s ON sc.sec_ID = s.sec_ID WHERE 1=1";
-    if ($search) { $sql .= " AND (sc.sub_con_name LIKE :s OR sc.sub_con_ID LIKE :s)"; $params[':s'] = "%$search%"; }
+    if ($search) {
+        $sql .= " AND (sc.sub_con_name LIKE :s1 OR sc.sub_con_ID LIKE :s2)"; 
+        $params[':s1'] = "%$search%";
+        $params[':s2'] = "%$search%";
+    }
     $sql .= " ORDER BY sc.sub_con_ID ASC";
     $data = $db->fetchAll($sql, $params);
 }
