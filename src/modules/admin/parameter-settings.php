@@ -146,15 +146,15 @@ $current_user = getCurrentUser();
                         </div>
 
                         <div class="col-md-6 col-xl-3">
-                            <a href="control/index.php" class="text-decoration-none">
+                            <a href="iso/index.php" class="text-decoration-none">
                                 <div class="card hub-card p-4">
                                     <div class="hub-icon-box bg-secondary-subtle text-secondary">
                                         <i class="bi bi-shield-check"></i>
                                     </div>
-                                    <h5 class="fw-bold text-dark">ISO Controls</h5>
-                                    <p class="text-muted small mb-3">Map internal criteria to ISO 27001 Annex A controls.</p>
+                                    <h5 class="fw-bold text-dark">ISO Standards</h5>
+                                    <p class="text-muted small mb-3">Manage ISO Sections, Requirements (Clauses), and Annex A Controls.</p>
                                     <div class="d-flex align-items-center justify-content-between mt-auto">
-                                        <span class="badge bg-light text-dark border">Manage Links</span>
+                                        <span class="badge bg-light text-dark border">Manage Standards </span>
                                         <i class="bi bi-arrow-right text-secondary"></i>
                                     </div>
                                 </div>

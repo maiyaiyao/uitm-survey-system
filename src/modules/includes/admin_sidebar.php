@@ -21,7 +21,7 @@
     $is_element_active = is_module_active($current_page, '/element/');
     $is_score_active = is_module_active($current_page, '/score/');
     $is_settings_main_active = str_contains($current_page, 'parameter-settings.php');
-    $is_control_active = is_module_active($current_page, '/control/');
+    $is_control_active = is_module_active($current_page, '/iso/');
     
 
     // Expand if any child is active OR if the main settings page is active
@@ -341,7 +341,7 @@
                         <a class="nav-link <?php echo $is_score_active; ?>" href="<?php echo BASE_URL; ?>/modules/admin/score/levels.php">
                             <i class="bi bi-circle-fill me-2" style="font-size: 6px;"></i> <span>Global Levels</span>
                         </a>
-                        <a class="nav-link <?php echo $is_control_active; ?>" href="<?php echo BASE_URL; ?>/modules/admin/control/index.php">
+                        <a class="nav-link <?php echo $is_control_active; ?>" href="<?php echo BASE_URL; ?>/modules/admin/iso/index.php">
                             <i class="bi bi-circle-fill me-2" style="font-size: 6px;"></i> <span>ISO Controls</span>
                         </a>
                     </nav>
