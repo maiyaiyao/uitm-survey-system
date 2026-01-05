@@ -5,10 +5,9 @@ requireRole(['admin']);
 $db = new Database();
 $active_tab = $_GET['tab'] ?? 'sections';
 $search = $_GET['search'] ?? '';
-$filter = $_GET['filter'] ?? ''; // New Filter Variable
+$filter = $_GET['filter'] ?? '';
 
 // --- Fetch Filter Options (All Sections) ---
-// We need this list to populate the "Parent Section" dropdown
 $all_sections = $db->fetchAll("SELECT * FROM section ORDER BY 
     CASE WHEN sec_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END,
     CAST(sec_ID AS UNSIGNED), sec_ID ASC");
@@ -19,71 +18,51 @@ $params = [];
 // --- Logic for Fetching Data based on Tab ---
 if ($active_tab === 'sections') {
     $sql = "SELECT * FROM section WHERE 1=1";
-    
-    // Search
     if ($search) {
         $sql .= " AND (sec_name LIKE :s1 OR sec_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-    
-    // Filter by Type (Requirement vs Control)
     if ($filter) {
         $sql .= " AND type = :filter";
         $params[':filter'] = $filter;
     }
-
     $sql .= " ORDER BY CASE WHEN sec_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END, CAST(sec_ID AS UNSIGNED), sec_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'requirements') {
     $sql = "SELECT sr.*, s.sec_name FROM sub_req sr 
             JOIN section s ON sr.sec_ID = s.sec_ID WHERE 1=1";
-
     if ($search) {
         $sql .= " AND (sr.sub_req_name LIKE :s1 OR sr.sub_req_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-
-    // Filter by Parent Section ID
     if ($filter) {
         $sql .= " AND sr.sec_ID = :filter";
         $params[':filter'] = $filter;
     }
-
     $sql .= " ORDER BY CASE WHEN sr.sub_req_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END, CAST(sr.sub_req_ID AS UNSIGNED), sr.sub_req_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'controls') {
     $sql = "SELECT sc.*, s.sec_name FROM sub_con sc 
             JOIN section s ON sc.sec_ID = s.sec_ID WHERE 1=1";
-
     if ($search) {
         $sql .= " AND (sc.sub_con_name LIKE :s1 OR sc.sub_con_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-
-    // Filter by Parent Section ID
     if ($filter) {
         $sql .= " AND sc.sec_ID = :filter";
         $params[':filter'] = $filter;
     }
-
-    // Custom sorting for A.5.1, A.5.10 etc.
     $sql .= " ORDER BY 
               SUBSTRING_INDEX(sc.sub_con_ID, '.', 1),
               CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(sc.sub_con_ID, '.', 2), '.', -1) AS UNSIGNED),
               CAST(SUBSTRING_INDEX(sc.sub_con_ID, '.', -1) AS UNSIGNED) ASC";
     $data = $db->fetchAll($sql, $params);
 }
-
-// Helper to get singular name for button
-$entityName = 'Item';
-if ($active_tab === 'sections') $entityName = 'Section';
-elseif ($active_tab === 'requirements') $entityName = 'Requirement';
-elseif ($active_tab === 'controls') $entityName = 'Control';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -100,15 +79,7 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
         @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
         
         /* Table Styles */
-        .table th {
-            font-weight: 700;
-            background-color: #9d83b7ff;
-            border-bottom: 2px solid #f0f2f5;
-            color: black;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            padding: 1rem;
-        }
+        .table th { font-weight: 700; background-color: #9d83b7ff; border-bottom: 2px solid #f0f2f5; color: black; text-transform: uppercase; font-size: 0.75rem; padding: 1rem; }
         .table td { padding: 1rem; vertical-align: middle; color: #67748e; font-size: 0.875rem; }
         .table-hover tbody tr:hover { background-color: #f8f9fa; }
 
@@ -142,6 +113,23 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                         </ol>
                     </nav>
 
+                    <?php 
+                    $msg = getFlashMessage();
+                    if ($msg): 
+                        // Map 'error' to 'danger' for Bootstrap, keep others (like 'success') as is
+                        $alertClass = ($msg['type'] === 'error') ? 'danger' : $msg['type'];
+                    ?>
+                        <div class="alert alert-<?php echo $alertClass; ?> alert-dismissible fade show shadow-sm" role="alert">
+                            <?php if($msg['type'] === 'success'): ?>
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                            <?php else: ?>
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <?php endif; ?>
+                            
+                            <?php echo $msg['message']; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    <?php endif; ?>
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                         <div>
                             <h3 class="fw-bold mb-1">ISO 27001 Standards</h3>
