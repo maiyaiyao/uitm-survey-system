@@ -268,7 +268,16 @@ if ($active_tab === 'sections') {
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="text-end pe-4">
-                                                    <a href="#" class="btn btn-sm btn-link text-primary" title="Edit">
+                                                    <a href="<?php 
+                                                        if ($active_tab === 'sections') {
+                                                            echo 'edit-section.php?id=' . htmlspecialchars($row['sec_ID']);
+                                                        } elseif ($active_tab === 'requirements') {
+                                                            echo 'edit-requirement.php?id=' . htmlspecialchars($row['sub_req_ID']);
+                                                        } else {
+                                                            // Assumes 'controls'
+                                                            echo 'edit-control.php?id=' . htmlspecialchars($row['sub_con_ID']);
+                                                        }
+                                                        ?>" class="btn btn-sm btn-link text-primary" title="Edit">
                                                         <i class="bi bi-pencil-square fs-6"></i>
                                                     </a>
                                                     <a href="#" class="btn btn-sm btn-link text-danger" title="Delete">
