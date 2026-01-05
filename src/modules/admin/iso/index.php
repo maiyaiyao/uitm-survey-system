@@ -5,67 +5,77 @@ requireRole(['admin']);
 $db = new Database();
 $active_tab = $_GET['tab'] ?? 'sections';
 $search = $_GET['search'] ?? '';
+$filter = $_GET['filter'] ?? ''; // New Filter Variable
 
-// --- Logic for Fetching Data based on Tab ---
+// --- Fetch Filter Options (All Sections) ---
+// We need this list to populate the "Parent Section" dropdown
+$all_sections = $db->fetchAll("SELECT * FROM section ORDER BY 
+    CASE WHEN sec_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END,
+    CAST(sec_ID AS UNSIGNED), sec_ID ASC");
+
 $data = [];
 $params = [];
 
+// --- Logic for Fetching Data based on Tab ---
 if ($active_tab === 'sections') {
-    // Fetch Sections
     $sql = "SELECT * FROM section WHERE 1=1";
+    
+    // Search
     if ($search) {
-        $sql .= " AND (sec_name LIKE :s1 OR sec_ID LIKE :s2)"; 
+        $sql .= " AND (sec_name LIKE :s1 OR sec_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-   $sql .= "
-        ORDER BY
-        CASE
-            WHEN sec_ID REGEXP '^[0-9]+$' THEN 0
-            ELSE 1
-        END,
-        CAST(sec_ID AS UNSIGNED),
-        sec_ID ASC
-        ";
+    
+    // Filter by Type (Requirement vs Control)
+    if ($filter) {
+        $sql .= " AND type = :filter";
+        $params[':filter'] = $filter;
+    }
+
+    $sql .= " ORDER BY CASE WHEN sec_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END, CAST(sec_ID AS UNSIGNED), sec_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'requirements') {
-    // Fetch Requirements (Sub_Req) linked to Sections
     $sql = "SELECT sr.*, s.sec_name FROM sub_req sr 
             JOIN section s ON sr.sec_ID = s.sec_ID WHERE 1=1";
+
     if ($search) {
-        $sql .= " AND (sr.sub_req_name LIKE :s1 OR sr.sub_req_ID LIKE :s2)"; 
+        $sql .= " AND (sr.sub_req_name LIKE :s1 OR sr.sub_req_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
-        $params[':s2'] = "%$search%"; 
-        
+        $params[':s2'] = "%$search%";
     }
-    $sql .= " 
-    ORDER BY
-    CASE 
-        WHEN sr.sub_req_ID REGEXP '^[0-9]+$' THEN 0
-        ELSE 1
-    END,
-    CAST(sr.sub_req_ID AS UNSIGNED),
-    sr.sub_req_ID ASC";
+
+    // Filter by Parent Section ID
+    if ($filter) {
+        $sql .= " AND sr.sec_ID = :filter";
+        $params[':filter'] = $filter;
+    }
+
+    $sql .= " ORDER BY CASE WHEN sr.sub_req_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END, CAST(sr.sub_req_ID AS UNSIGNED), sr.sub_req_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'controls') {
-    // Fetch Controls (Sub_Con) linked to Sections
     $sql = "SELECT sc.*, s.sec_name FROM sub_con sc 
             JOIN section s ON sc.sec_ID = s.sec_ID WHERE 1=1";
+
     if ($search) {
-        $sql .= " AND (sc.sub_con_name LIKE :s1 OR sc.sub_con_ID LIKE :s2)"; 
+        $sql .= " AND (sc.sub_con_name LIKE :s1 OR sc.sub_con_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
-    } 
-    $sql .= " 
-    ORDER BY 
-    SUBSTRING_INDEX(sc.sub_con_ID, '.', 1),
-    
-    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(sc.sub_con_ID, '.', 2), '.', -1) AS UNSIGNED),
-    
-    CAST(SUBSTRING_INDEX(sc.sub_con_ID, '.', -1) AS UNSIGNED) ASC
-";
+    }
+
+    // Filter by Parent Section ID
+    if ($filter) {
+        $sql .= " AND sc.sec_ID = :filter";
+        $params[':filter'] = $filter;
+    }
+
+    // Custom sorting for A.5.1, A.5.10 etc.
+    $sql .= " ORDER BY 
+              SUBSTRING_INDEX(sc.sub_con_ID, '.', 1),
+              CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(sc.sub_con_ID, '.', 2), '.', -1) AS UNSIGNED),
+              CAST(SUBSTRING_INDEX(sc.sub_con_ID, '.', -1) AS UNSIGNED) ASC";
     $data = $db->fetchAll($sql, $params);
 }
 
@@ -89,10 +99,10 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
         .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
         @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
         
-        /* Table Styles (Matching your Domain/Control pages) */
+        /* Table Styles */
         .table th {
             font-weight: 700;
-            background-color: #9d83b7ff; /* Specific purple from your system */
+            background-color: #9d83b7ff;
             border-bottom: 2px solid #f0f2f5;
             color: black;
             text-transform: uppercase;
@@ -104,27 +114,13 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
 
         /* Custom Tabs Styling */
         .nav-tabs { border-bottom: 2px solid #e9ecef; }
-        .nav-tabs .nav-link {
-            border: none;
-            color: #6c757d;
-            font-weight: 600;
-            padding: 1rem 1.5rem;
-            transition: all 0.2s;
-        }
+        .nav-tabs .nav-link { border: none; color: #6c757d; font-weight: 600; padding: 1rem 1.5rem; transition: all 0.2s; }
         .nav-tabs .nav-link:hover { color: #5e72e4; }
-        .nav-tabs .nav-link.active {
-            color: #5e72e4;
-            border-bottom: 3px solid #5e72e4;
-            background: transparent;
-        }
+        .nav-tabs .nav-link.active { color: #5e72e4; border-bottom: 3px solid #5e72e4; background: transparent; }
 
         /* Card & Button Styles */
         .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); }
-        .btn-gradient-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            color: white;
-        }
+        .btn-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; }
         .btn-gradient-primary:hover { color: white; opacity: 0.9; }
     </style>
 </head>
@@ -152,9 +148,35 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                             <p class="text-muted mb-0">Manage Sections, Requirements (Clauses), and Annex A Controls.</p>
                         </div>
                         
-                        <div class="d-flex gap-2">
-                            <form method="GET" class="d-flex">
+                        <div class="d-flex gap-2 align-items-center">
+                            
+                            <form method="GET" class="d-flex gap-2">
                                 <input type="hidden" name="tab" value="<?php echo htmlspecialchars($active_tab); ?>">
+                                
+                                <select name="filter" class="form-select border-0 shadow-sm" style="max-width: 200px;" onchange="this.form.submit()">
+                                    <option value="">All <?php echo ($active_tab === 'sections') ? 'Types' : 'Sections'; ?></option>
+                                    
+                                    <?php if ($active_tab === 'sections'): ?>
+                                        <option value="Requirement" <?php echo ($filter === 'Requirement') ? 'selected' : ''; ?>>Requirement</option>
+                                        <option value="Control" <?php echo ($filter === 'Control') ? 'selected' : ''; ?>>Control</option>
+                                    
+                                    <?php else: ?>
+                                        <?php foreach ($all_sections as $sec): ?>
+                                            <?php 
+                                            $showOption = false;
+                                            if ($active_tab === 'requirements' && $sec['type'] === 'Requirement') $showOption = true;
+                                            if ($active_tab === 'controls' && $sec['type'] === 'Control') $showOption = true;
+                                            
+                                            if ($showOption): 
+                                            ?>
+                                                <option value="<?php echo $sec['sec_ID']; ?>" <?php echo ($filter === $sec['sec_ID']) ? 'selected' : ''; ?>>
+                                                    <?php echo $sec['sec_ID'] . ' - ' . $sec['sec_name']; ?>
+                                                </option>
+                                            <?php endif; ?>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </select>
+
                                 <div class="input-group shadow-sm">
                                     <input type="text" name="search" class="form-control border-0" 
                                         placeholder="Search..." 
@@ -162,8 +184,8 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                                     <button class="btn btn-white bg-white border-0" type="submit">
                                         <i class="bi bi-search text-primary"></i>
                                     </button>
-                                    <?php if(!empty($search)): ?>
-                                        <a href="index.php?tab=<?php echo $active_tab; ?>" class="btn btn-white bg-white border-0 text-danger">
+                                    <?php if(!empty($search) || !empty($filter)): ?>
+                                        <a href="index.php?tab=<?php echo $active_tab; ?>" class="btn btn-white bg-white border-0 text-danger" title="Clear Filters">
                                             <i class="bi bi-x-circle"></i>
                                         </a>
                                     <?php endif; ?>
@@ -172,7 +194,7 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
 
                             <a href="add-<?php echo substr($active_tab, 0, -1); ?>.php" 
                                class="btn btn-gradient-primary shadow-sm px-4 py-2 rounded-3">
-                                <i class="bi bi-plus-lg me-2"></i>Add <?php echo $entityName; ?>
+                                <i class="bi bi-plus-lg me-2"></i>Add
                             </a>
                         </div>
                     </div>
@@ -185,12 +207,12 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <?php echo $active_tab === 'requirements' ? 'active' : ''; ?>" href="?tab=requirements">
-                                <i class="bi bi-list-task me-2"></i>Requirements (Clauses)
+                                <i class="bi bi-list-task me-2"></i>Requirements
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <?php echo $active_tab === 'controls' ? 'active' : ''; ?>" href="?tab=controls">
-                                <i class="bi bi-shield-lock me-2"></i>Annex A Controls
+                                <i class="bi bi-shield-lock me-2"></i>Controls
                             </a>
                         </li>
                     </ul>
@@ -272,7 +294,6 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                             </table>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
