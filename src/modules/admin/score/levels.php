@@ -64,9 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Fetch all levels for the list
 $levels = $db->fetchAll("SELECT * FROM score ORDER BY score_level ASC");
 
-// Determine Back Link
-$back_link = isset($_GET['element_id']) ? "index.php?element_id=" . $_GET['element_id'] : "../domain/index.php";
-$back_text = isset($_GET['element_id']) ? "Back to Element" : "Back to Settings";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -118,11 +115,6 @@ $back_text = isset($_GET['element_id']) ? "Back to Element" : "Back to Settings"
                         <div>
                             <h3 class="fw-bold mb-0">Global Score Levels</h3>
                             <p class="text-muted mb-0">Define the standard scoring scale (1-10, etc.) used across the system.</p>
-                        </div>
-                        <div>
-                            <a href="<?php echo $back_link; ?>" class="btn btn-outline-secondary px-3 shadow-sm rounded-3">
-                                <i class="bi bi-arrow-left me-2"></i><?php echo $back_text; ?> 
-                            </a>
                         </div>
                     </div>
 

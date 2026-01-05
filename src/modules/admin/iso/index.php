@@ -18,7 +18,15 @@ if ($active_tab === 'sections') {
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-    $sql .= " ORDER BY sec_ID ASC";
+   $sql .= "
+        ORDER BY
+        CASE
+            WHEN sec_ID REGEXP '^[0-9]+$' THEN 0
+            ELSE 1
+        END,
+        CAST(sec_ID AS UNSIGNED),
+        sec_ID ASC
+        ";
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'requirements') {
@@ -31,7 +39,14 @@ if ($active_tab === 'sections') {
         $params[':s2'] = "%$search%"; 
         
     }
-    $sql .= " ORDER BY sr.sub_req_ID ASC";
+    $sql .= " 
+    ORDER BY
+    CASE 
+        WHEN sr.sub_req_ID REGEXP '^[0-9]+$' THEN 0
+        ELSE 1
+    END,
+    CAST(sr.sub_req_ID AS UNSIGNED),
+    sr.sub_req_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'controls') {
@@ -42,8 +57,15 @@ if ($active_tab === 'sections') {
         $sql .= " AND (sc.sub_con_name LIKE :s1 OR sc.sub_con_ID LIKE :s2)"; 
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
-    }
-    $sql .= " ORDER BY sc.sub_con_ID ASC";
+    } 
+    $sql .= " 
+    ORDER BY 
+    SUBSTRING_INDEX(sc.sub_con_ID, '.', 1),
+    
+    CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(sc.sub_con_ID, '.', 2), '.', -1) AS UNSIGNED),
+    
+    CAST(SUBSTRING_INDEX(sc.sub_con_ID, '.', -1) AS UNSIGNED) ASC
+";
     $data = $db->fetchAll($sql, $params);
 }
 
@@ -183,9 +205,12 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                                 <thead>
                                     <tr>
                                         <th class="ps-4" style="width: 15%;">ID</th>
-                                        <th style="width: 50%;">Name / Description</th>
+                                        <th style="width: 50%;">Name</th>
                                         <?php if($active_tab !== 'sections'): ?>
-                                            <th>Parent Section</th>
+                                            <th>Section</th>
+                                        <?php endif; ?>
+                                        <?php if($active_tab == 'sections'): ?>
+                                            <th>Type</th>
                                         <?php endif; ?>
                                         <th class="text-end pe-4">Actions</th>
                                     </tr>
@@ -214,7 +239,6 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                                                             <?php 
                                                             if ($active_tab === 'sections') {
                                                                 echo htmlspecialchars($row['sec_name']);
-                                                                echo '<span class="badge bg-light text-secondary border ms-2">'.htmlspecialchars($row['type']).'</span>';
                                                             }
                                                             elseif ($active_tab === 'requirements') echo htmlspecialchars($row['sub_req_name']);
                                                             else echo htmlspecialchars($row['sub_con_name']);
@@ -222,13 +246,17 @@ elseif ($active_tab === 'controls') $entityName = 'Control';
                                                         </span>
                                                     </div>
                                                 </td>
-                                                <?php if($active_tab !== 'sections'): ?>
-                                                    <td>
+                                                <td>
+                                                    <?php if ($active_tab !== 'sections'): ?>
                                                         <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
                                                             <?php echo htmlspecialchars($row['sec_ID'] . ' - ' . $row['sec_name']); ?>
                                                         </span>
-                                                    </td>
-                                                <?php endif; ?>
+                                                    
+                                                    <?php elseif ($active_tab === 'sections'): ?>
+                                                        <?php echo '<span class="badge bg-light text-secondary border ms-2">'.htmlspecialchars($row['type']).'</span>'; ?>
+                                                        
+                                                    <?php endif; ?>
+                                                </td>
                                                 <td class="text-end pe-4">
                                                     <a href="#" class="btn btn-sm btn-link text-primary" title="Edit">
                                                         <i class="bi bi-pencil-square fs-6"></i>
