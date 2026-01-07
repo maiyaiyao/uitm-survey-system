@@ -182,85 +182,74 @@ if ($active_tab === 'sections') {
                     </ul>
 
                     <div class="card border-0 shadow-sm rounded-4">
-                        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><?php echo ucfirst($active_tab); ?> List</h5>
-                            <small class="text-muted"><?php echo count($data); ?> records found</small>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="ps-4" style="width: 15%;">ID</th>
-                                        <th style="width: 50%;">Name</th>
-                                        <?php if($active_tab !== 'sections'): ?>
-                                            <th>Section</th>
-                                        <?php endif; ?>
-                                        <?php if($active_tab == 'sections'): ?>
-                                            <th>Type</th>
-                                        <?php endif; ?>
-                                        <th class="text-end pe-4">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (empty($data)): ?>
-                                        <tr>
-                                            <td colspan="4" class="text-center py-5 text-muted">
-                                                <i class="bi bi-inbox display-4 d-block mb-2"></i> No records found for this tab.
-                                            </td>
-                                        </tr>
-                                    <?php else: ?>
-                                        <?php foreach ($data as $row): 
-                                            // 1. ENCODE ROW DATA TO JSON
-                                            $jsonData = htmlspecialchars(json_encode($row), ENT_QUOTES, 'UTF-8');
-                                        ?>
-                                            <tr class="cursor-pointer" onclick="openViewModal(this)" data-row="<?php echo $jsonData; ?>">
-                                                <td class="ps-4 fw-bold text-dark">
-                                                    <?php 
-                                                    if ($active_tab === 'sections') echo htmlspecialchars($row['sec_ID']);
-                                                    elseif ($active_tab === 'requirements') echo htmlspecialchars($row['sub_req_ID']);
-                                                    else echo htmlspecialchars($row['sub_con_ID']);
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex flex-column">
-                                                        <span class="fw-semibold text-secondary">
-                                                            <?php 
-                                                            if ($active_tab === 'sections') echo htmlspecialchars($row['sec_name']);
-                                                            elseif ($active_tab === 'requirements') echo htmlspecialchars($row['sub_req_name']);
-                                                            else echo htmlspecialchars($row['sub_con_name']);
-                                                            ?>
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <?php if ($active_tab !== 'sections'): ?>
-                                                        <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle">
-                                                            <?php echo htmlspecialchars($row['sec_ID'] . ' - ' . $row['sec_name']); ?>
-                                                        </span>
-                                                    <?php elseif ($active_tab === 'sections'): ?>
-                                                        <?php echo '<span class="badge bg-light text-secondary border ms-2">'.htmlspecialchars($row['type']).'</span>'; ?>
-                                                    <?php endif; ?>
-                                                </td>
-                                                
-                                                <td class="text-end pe-4" onclick="event.stopPropagation()">
-                                                    <a href="<?php 
-                                                        if ($active_tab === 'sections') echo 'edit-section.php?id=' . htmlspecialchars($row['sec_ID']);
-                                                        elseif ($active_tab === 'requirements') echo 'edit-requirement.php?id=' . htmlspecialchars($row['sub_req_ID']);
-                                                        else echo 'edit-control.php?id=' . htmlspecialchars($row['sub_con_ID']);
-                                                    ?>" class="btn btn-sm btn-link text-primary" title="Edit">
-                                                        <i class="bi bi-pencil-square fs-6"></i>
-                                                    </a>
-                                                    <a href="#" class="btn btn-sm btn-link text-danger" title="Delete">
-                                                        <i class="bi bi-trash fs-6"></i>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><?php echo ucfirst($active_tab); ?> List</h5>
+        <small class="text-muted"><?php echo count($data); ?> records found</small>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead>
+                <tr>
+                    <th class="ps-4" style="width: 15%;">ID</th>
+                    <th style="width: 45%;">Name</th>
+                    <th class="text-center">Mapping</th>
+                    <th class="text-end pe-4">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($data)): ?>
+                    <tr>
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                            No records found.
+                        </td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($data as $row): ?>
+                        <?php
+                            // Determine IDs and Types for the Mapping Link
+                            $mapType = '';
+                            $mapID = '';
+                            $itemName = '';
+
+                            if ($active_tab === 'sections') {
+                                $mapType = 'section';
+                                $mapID = $row['sec_ID'];
+                                $itemName = $row['sec_name'];
+                            } elseif ($active_tab === 'requirements') {
+                                $mapType = 'requirement';
+                                $mapID = $row['sub_req_ID'];
+                                $itemName = $row['sub_req_name'];
+                            } elseif ($active_tab === 'controls') {
+                                $mapType = 'control';
+                                $mapID = $row['sub_con_ID'];
+                                $itemName = $row['sub_con_name'];
+                            }
+                        ?>
+                        <tr>
+                            <td class="ps-4 fw-bold text-dark"><?php echo htmlspecialchars($mapID); ?></td>
+                            <td>
+                                <span class="fw-semibold text-secondary"><?php echo htmlspecialchars($itemName); ?></span>
+                            </td>
+                            
+                            <td class="text-center">
+                                <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
+                                   class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    <i class="bi bi-link-45deg me-1"></i> Map to Internal
+                                </a>
+                            </td>
+
+                            <td class="text-end pe-4">
+                                <a href="#" class="btn btn-sm btn-link text-primary" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                <a href="#" class="btn btn-sm btn-link text-danger" title="Delete"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
                 </div>
             </div>
         </div>
