@@ -17,7 +17,11 @@ $params = [];
 
 // --- Logic for Fetching Data based on Tab ---
 if ($active_tab === 'sections') {
-    $sql = "SELECT * FROM section WHERE 1=1";
+    // ADDED: (SELECT COUNT(*) ...) to check if any domains are linked
+    $sql = "SELECT section.*, 
+            (SELECT COUNT(*) FROM domain d WHERE d.sec_ID = section.sec_ID) as mapped_count 
+            FROM section WHERE 1=1";
+            
     if ($search) {
         $sql .= " AND (sec_name LIKE :s1 OR sec_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
@@ -31,8 +35,12 @@ if ($active_tab === 'sections') {
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'requirements') {
-    $sql = "SELECT sr.*, s.sec_name FROM sub_req sr 
+    // ADDED: Check if criteria_ID is not null
+    $sql = "SELECT sr.*, s.sec_name,
+            (CASE WHEN sr.criteria_ID IS NOT NULL THEN 1 ELSE 0 END) as is_mapped
+            FROM sub_req sr 
             JOIN section s ON sr.sec_ID = s.sec_ID WHERE 1=1";
+
     if ($search) {
         $sql .= " AND (sr.sub_req_name LIKE :s1 OR sr.sub_req_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
@@ -46,8 +54,12 @@ if ($active_tab === 'sections') {
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'controls') {
-    $sql = "SELECT sc.*, s.sec_name FROM sub_con sc 
+    // ADDED: (SELECT COUNT(*) ...) to check if it exists in element_control bridge table
+    $sql = "SELECT sc.*, s.sec_name,
+            (SELECT COUNT(*) FROM element_control ec WHERE ec.sub_con_ID = sc.sub_con_ID) as mapped_count 
+            FROM sub_con sc 
             JOIN section s ON sc.sec_ID = s.sec_ID WHERE 1=1";
+
     if ($search) {
         $sql .= " AND (sc.sub_con_name LIKE :s1 OR sc.sub_con_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
@@ -232,11 +244,35 @@ if ($active_tab === 'sections') {
                                 <span class="fw-semibold text-secondary"><?php echo htmlspecialchars($itemName); ?></span>
                             </td>
                             
+                            <?php
+                                // Determine Mapped Status based on the SQL update we did earlier
+                                $isMapped = false;
+                                if ($active_tab === 'requirements') {
+                                    // For Requirements, check the 'is_mapped' flag (1 or 0)
+                                    $isMapped = ($row['is_mapped'] == 1);
+                                } else {
+                                    // For Sections/Controls, check if 'mapped_count' is greater than 0
+                                    $isMapped = ($row['mapped_count'] > 0);
+                                }
+                            ?>
+
                             <td class="text-center">
-                                <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
-                                   class="btn btn-sm btn-outline-primary rounded-pill px-3">
-                                    <i class="bi bi-link-45deg me-1"></i> Map to Internal
-                                </a>
+                                <?php if ($isMapped): ?>
+                                    <div class="mb-1">
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                            <i class="bi bi-check-circle-fill me-1"></i> Mapped
+                                        </span>
+                                    </div>
+                                    <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
+                                    class="btn btn-sm btn-link text-decoration-none text-muted" style="font-size: 0.8rem;">
+                                    Edit Link
+                                    </a>
+                                <?php else: ?>
+                                    <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
+                                    class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
+                                        <i class="bi bi-link-45deg me-1"></i> Map Now
+                                    </a>
+                                <?php endif; ?>
                             </td>
 
                             <td class="text-end pe-4">

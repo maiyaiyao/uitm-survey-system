@@ -28,8 +28,8 @@ if ($type === 'section') {
     // Fetch Mapped Domains
     $mappedItems = $db->fetchAll("SELECT domain_ID as link_id, domain_ID as display_id, domain_name as display_name FROM domain WHERE sec_ID = :id", [':id' => $id]);
     
-    // Fetch Available Domains (All active domains)
-    $availableItems = $db->fetchAll("SELECT domain_ID as id, domain_name as name FROM domain WHERE status = 'Active' ORDER BY domain_ID ASC");
+    // Fetch Available Domains (Active & Not assigned to any section)
+    $availableItems = $db->fetchAll("SELECT domain_ID as id, domain_name as name FROM domain WHERE status = 'Active' AND sec_ID IS NULL ORDER BY domain_ID ASC");
 
 } elseif ($type === 'requirement') {
     $targetItem = $db->fetchOne("SELECT sub_req_ID as id, sub_req_name as name, 'Requirement' as label FROM sub_req WHERE sub_req_ID = :id", [':id' => $id]);
@@ -67,28 +67,39 @@ if (!$targetItem) {
 }
 
 // ---------------------------------------------------------
+// DETERMINE LOCK STATUS
+// ---------------------------------------------------------
+// Rule: Requirements are 1-to-1. If already mapped, lock the add form.
+$isLocked = false;
+if ($type === 'requirement' && count($mappedItems) > 0) {
+    $isLocked = true;
+}
+
+// ---------------------------------------------------------
 // FORM SUBMISSION HANDLER
 // ---------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // ADD / UPDATE MAPPING
     if (isset($_POST['add_mapping'])) {
+        // Security check: Prevent adding if locked
+        if ($isLocked) {
+            setFlashMessage("error", "Action blocked: This item is already mapped.");
+            header("Location: map_iso.php?type=$type&id=" . urlencode($id));
+            exit;
+        }
+
         $selectedID = $_POST['selected_id'];
 
         if ($type === 'section') {
-            // Update Domain to point to this Section
             $db->query("UPDATE domain SET sec_ID = :sec WHERE domain_ID = :dom", [':sec' => $id, ':dom' => $selectedID]);
             setFlashMessage("success", "Domain linked successfully.");
 
         } elseif ($type === 'requirement') {
-            // Update Sub Req to point to Criteria
-            // Note: Since sub_req has the FK, we update the current ISO row
             $db->query("UPDATE sub_req SET criteria_ID = :crit WHERE sub_req_ID = :req", [':crit' => $selectedID, ':req' => $id]);
             setFlashMessage("success", "Criteria linked successfully.");
 
         } elseif ($type === 'control') {
-            // Insert into link table
-            // Check duplicate first
             $exists = $db->fetchOne("SELECT id FROM element_control WHERE sub_con_ID = :con AND element_ID = :elem", [':con' => $id, ':elem' => $selectedID]);
             if (!$exists) {
                 $db->query("INSERT INTO element_control (sub_con_ID, element_ID) VALUES (:con, :elem)", [':con' => $id, ':elem' => $selectedID]);
@@ -103,16 +114,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // REMOVE MAPPING
     if (isset($_POST['remove_mapping'])) {
-        $linkID = $_POST['link_id']; // For Control, this is the PK. For others, it's the ID of the mapped item.
+        $linkID = $_POST['link_id']; 
 
         if ($type === 'section') {
-            // Unlink Domain
             $db->query("UPDATE domain SET sec_ID = NULL WHERE domain_ID = :dom", [':dom' => $linkID]);
         } elseif ($type === 'requirement') {
-            // Unlink Criteria (Set FK in sub_req to NULL)
             $db->query("UPDATE sub_req SET criteria_ID = NULL WHERE sub_req_ID = :req", [':req' => $id]);
         } elseif ($type === 'control') {
-            // Delete from link table
             $db->query("DELETE FROM element_control WHERE id = :pk", [':pk' => $linkID]);
         }
         setFlashMessage("success", "Mapping removed.");
@@ -158,12 +166,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </a>
                     </div>
 
-                    <?php 
-                    $msg = getFlashMessage();
-                    if ($msg): 
-                        $alertClass = ($msg['type'] === 'error') ? 'danger' : $msg['type'];
-                    ?>
-                        <div class="alert alert-<?php echo $alertClass; ?> alert-dismissible fade show" role="alert">
+                    <?php if ($msg = getFlashMessage()): ?>
+                        <div class="alert alert-<?php echo ($msg['type'] === 'error') ? 'danger' : $msg['type']; ?> alert-dismissible fade show">
                             <?php echo $msg['message']; ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
@@ -183,37 +187,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <div class="card-header bg-white py-3">
                                     <h6 class="mb-0 fw-bold">Link to Internal Structure</h6>
                                 </div>
-                                <div class="card-body">
-                                    <form method="POST">
-                                        <input type="hidden" name="add_mapping" value="1">
-                                        
-                                        <div class="mb-3">
-                                            <label class="form-label text-muted small fw-bold">Select 
-                                                <?php 
-                                                    if($type == 'section') echo 'Domain';
-                                                    elseif($type == 'requirement') echo 'Criteria';
-                                                    else echo 'Element'; 
-                                                ?>
-                                            </label>
-                                            <select name="selected_id" class="form-select" required>
-                                                <option value="">-- Choose --</option>
-                                                <?php foreach ($availableItems as $item): ?>
-                                                    <option value="<?php echo $item['id']; ?>">
-                                                        <?php echo htmlspecialchars($item['id'] . ' - ' . $item['name']); ?>
-                                                    </option>
-                                                <?php endforeach; ?>
-                                            </select>
-                                            <div class="form-text">
-                                                Select the internal item to link with this ISO <?php echo $type; ?>.
+                                <div class="card-body d-flex flex-column justify-content-center">
+                                    
+                                    <?php if ($isLocked): ?>
+                                        <div class="text-center py-4">
+                                            <div class="mb-3 text-warning">
+                                                <i class="bi bi-lock-fill display-1"></i>
                                             </div>
+                                            <h5 class="fw-bold text-secondary">Mapping Locked</h5>
+                                            <p class="text-muted small px-3">
+                                                This requirement is already mapped to a Criteria.<br>
+                                                To change it, please remove the existing link from the "Current Links" table first.
+                                            </p>
                                         </div>
+                                    <?php else: ?>
+                                        <form method="POST">
+                                            <input type="hidden" name="add_mapping" value="1">
+                                            
+                                            <div class="mb-3">
+                                                <label class="form-label text-muted small fw-bold">Select 
+                                                    <?php 
+                                                        if($type == 'section') echo 'Domain';
+                                                        elseif($type == 'requirement') echo 'Criteria';
+                                                        else echo 'Element'; 
+                                                    ?>
+                                                </label>
+                                                <select name="selected_id" class="form-select" required>
+                                                    <option value="">-- Choose --</option>
+                                                    <?php foreach ($availableItems as $item): ?>
+                                                        <option value="<?php echo $item['id']; ?>">
+                                                            <?php echo htmlspecialchars($item['id'] . ' - ' . $item['name']); ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <div class="form-text">
+                                                    Select the internal item to link with this ISO <?php echo $type; ?>.
+                                                </div>
+                                            </div>
 
-                                        <div class="d-grid">
-                                            <button type="submit" class="btn btn-primary">
-                                                <i class="bi bi-link-45deg"></i> Add Mapping
-                                            </button>
-                                        </div>
-                                    </form>
+                                            <div class="d-grid">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <i class="bi bi-link-45deg"></i> Add Mapping
+                                                </button>
+                                            </div>
+                                        </form>
+                                    <?php endif; ?>
+
                                 </div>
                             </div>
                         </div>
