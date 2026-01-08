@@ -17,7 +17,6 @@ $params = [];
 
 // --- Logic for Fetching Data based on Tab ---
 if ($active_tab === 'sections') {
-    // ADDED: (SELECT COUNT(*) ...) to check if any domains are linked
     $sql = "SELECT section.*, 
             (SELECT COUNT(*) FROM domain d WHERE d.sec_ID = section.sec_ID) as mapped_count 
             FROM section WHERE 1=1";
@@ -35,7 +34,6 @@ if ($active_tab === 'sections') {
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'requirements') {
-    // ADDED: Check if criteria_ID is not null
     $sql = "SELECT sr.*, s.sec_name,
             (CASE WHEN sr.criteria_ID IS NOT NULL THEN 1 ELSE 0 END) as is_mapped
             FROM sub_req sr 
@@ -54,7 +52,6 @@ if ($active_tab === 'sections') {
     $data = $db->fetchAll($sql, $params);
 
 } elseif ($active_tab === 'controls') {
-    // ADDED: (SELECT COUNT(*) ...) to check if it exists in element_control bridge table
     $sql = "SELECT sc.*, s.sec_name,
             (SELECT COUNT(*) FROM element_control ec WHERE ec.sub_con_ID = sc.sub_con_ID) as mapped_count 
             FROM sub_con sc 
@@ -107,7 +104,11 @@ if ($active_tab === 'sections') {
         .btn-gradient-primary:hover { color: white; opacity: 0.9; }
 
         /* Helper for Clickable Rows */
-        .cursor-pointer { cursor: pointer; }
+        .iso-row { cursor: pointer; transition: background-color 0.2s; }
+        .iso-row:hover { background-color: #f1f3f9 !important; }
+        
+        /* Prevent the 'Actions' column buttons from triggering the row click */
+        .no-click { cursor: default; }
     </style>
 </head>
 <body>
@@ -194,122 +195,143 @@ if ($active_tab === 'sections') {
                     </ul>
 
                     <div class="card border-0 shadow-sm rounded-4">
-    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-        <h5 class="mb-0"><?php echo ucfirst($active_tab); ?> List</h5>
-        <small class="text-muted"><?php echo count($data); ?> records found</small>
-    </div>
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-            <thead>
-                <tr>
-                    <th class="ps-4" style="width: 15%;">ID</th>
-                    <th style="width: 45%;">Name</th>
-                    <th class="text-center">Mapping</th>
-                    <th class="text-end pe-4">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (empty($data)): ?>
-                    <tr>
-                        <td colspan="4" class="text-center py-5 text-muted">
-                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
-                            No records found.
-                        </td>
-                    </tr>
-                <?php else: ?>
-                    <?php foreach ($data as $row): ?>
-                        <?php
-                            // Determine IDs and Types for the Mapping Link
-                            $mapType = '';
-                            $mapID = '';
-                            $itemName = '';
+                        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><?php echo ucfirst($active_tab); ?> List</h5>
+                            <small class="text-muted"><?php echo count($data); ?> records found</small>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-4" style="width: 15%;">ID</th>
+                                        <th style="width: 45%;">Name</th>
+                                        <th class="text-center">Mapping</th>
+                                        <th class="text-end pe-4">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if (empty($data)): ?>
+                                        <tr>
+                                            <td colspan="4" class="text-center py-5 text-muted">
+                                                <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                                No records found.
+                                            </td>
+                                        </tr>
+                                    <?php else: ?>
+                                        <?php foreach ($data as $row): ?>
+                                            <?php
+                                                // Prepare Variables
+                                                $mapType = '';
+                                                $mapID = '';
+                                                $itemName = '';
 
-                            if ($active_tab === 'sections') {
-                                $mapType = 'section';
-                                $mapID = $row['sec_ID'];
-                                $itemName = $row['sec_name'];
-                            } elseif ($active_tab === 'requirements') {
-                                $mapType = 'requirement';
-                                $mapID = $row['sub_req_ID'];
-                                $itemName = $row['sub_req_name'];
-                            } elseif ($active_tab === 'controls') {
-                                $mapType = 'control';
-                                $mapID = $row['sub_con_ID'];
-                                $itemName = $row['sub_con_name'];
-                            }
-                        ?>
-                        <tr>
-                            <td class="ps-4 fw-bold text-dark"><?php echo htmlspecialchars($mapID); ?></td>
-                            <td>
-                                <span class="fw-semibold text-secondary"><?php echo htmlspecialchars($itemName); ?></span>
-                            </td>
-                            
-                            <?php
-                                // Determine Mapped Status based on the SQL update we did earlier
-                                $isMapped = false;
-                                if ($active_tab === 'requirements') {
-                                    // For Requirements, check the 'is_mapped' flag (1 or 0)
-                                    $isMapped = ($row['is_mapped'] == 1);
-                                } else {
-                                    // For Sections/Controls, check if 'mapped_count' is greater than 0
-                                    $isMapped = ($row['mapped_count'] > 0);
-                                }
-                            ?>
+                                                if ($active_tab === 'sections') {
+                                                    $mapType = 'section';
+                                                    $mapID = $row['sec_ID'];
+                                                    $itemName = $row['sec_name'];
+                                                } elseif ($active_tab === 'requirements') {
+                                                    $mapType = 'requirement';
+                                                    $mapID = $row['sub_req_ID'];
+                                                    $itemName = $row['sub_req_name'];
+                                                } elseif ($active_tab === 'controls') {
+                                                    $mapType = 'control';
+                                                    $mapID = $row['sub_con_ID'];
+                                                    $itemName = $row['sub_con_name'];
+                                                }
+                                                
+                                                // Determine Mapped Status
+                                                $isMapped = false;
+                                                if ($active_tab === 'requirements') {
+                                                    $isMapped = ($row['is_mapped'] == 1);
+                                                } else {
+                                                    $isMapped = ($row['mapped_count'] > 0);
+                                                }
+                                            ?>
+                                            
+                                            <tr class="iso-row" onclick="viewDetails('<?php echo $mapType; ?>', '<?php echo $mapID; ?>', event)">
+                                                <td class="ps-4 fw-bold text-dark"><?php echo htmlspecialchars($mapID); ?></td>
+                                                <td>
+                                                    <span class="fw-semibold text-secondary"><?php echo htmlspecialchars($itemName); ?></span>
+                                                </td>
+                                                
+                                                <td class="text-center no-click" onclick="event.stopPropagation()">
+                                                    <?php if ($isMapped): ?>
+                                                        <div class="mb-1">
+                                                            <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                                                <i class="bi bi-check-circle-fill me-1"></i> Mapped
+                                                            </span>
+                                                        </div>
+                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
+                                                        class="btn btn-sm btn-link text-decoration-none text-muted" style="font-size: 0.8rem;">
+                                                        Edit Link
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
+                                                        class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
+                                                            <i class="bi bi-link-45deg me-1"></i> Map Now
+                                                        </a>
+                                                    <?php endif; ?>
+                                                </td>
 
-                            <td class="text-center">
-                                <?php if ($isMapped): ?>
-                                    <div class="mb-1">
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
-                                            <i class="bi bi-check-circle-fill me-1"></i> Mapped
-                                        </span>
-                                    </div>
-                                    <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
-                                    class="btn btn-sm btn-link text-decoration-none text-muted" style="font-size: 0.8rem;">
-                                    Edit Link
-                                    </a>
-                                <?php else: ?>
-                                    <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
-                                    class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
-                                        <i class="bi bi-link-45deg me-1"></i> Map Now
-                                    </a>
-                                <?php endif; ?>
-                            </td>
-
-                            <td class="text-end pe-4">
-                                <a href="edit-<?php echo $mapType; ?>.php?id=<?php echo urlencode($mapID); ?>" 
-                                    class="btn btn-sm btn-link text-primary" 
-                                    title="Edit">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a href="#" class="btn btn-sm btn-link text-danger" title="Delete"><i class="bi bi-trash"></i></a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+                                                <td class="text-end pe-4 no-click" onclick="event.stopPropagation()">
+                                                    <a href="edit-<?php echo $mapType; ?>.php?id=<?php echo urlencode($mapID); ?>" 
+                                                        class="btn btn-sm btn-link text-primary" 
+                                                        title="Edit">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                    <a href="#" class="btn btn-sm btn-link text-danger" title="Delete"><i class="bi bi-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="isoDetailsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title fw-bold" id="viewModalTitle">Details</h5>
+            <div class="modal-content border-0 shadow rounded-4">
+                <div class="modal-header bg-white border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold text-primary" id="modalTypeTitle">ISO Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body pt-3 pb-4">
-                    <table class="table table-bordered mb-0">
-                        <tbody id="modalContent">
-                            </tbody>
-                    </table>
+                <div class="modal-body p-4">
+                    
+                    <div id="modalLoader" class="text-center py-4">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+
+                    <div id="modalContent" style="display:none;">
+                        <h2 class="mb-3 fw-bold" id="modalItemId"></h2>
+                        <p class="text-muted mb-4 lead" id="modalItemName" style="font-size: 1.1rem;"></p>
+                        
+                        <div class="card bg-light border-0 rounded-3">
+                            <div class="card-body">
+                                <h6 class="fw-bold text-uppercase small text-muted mb-3">
+                                    <i class="bi bi-link-45deg me-1"></i> Mapped Internal Items
+                                </h6>
+                                <ul id="modalMappingsList" class="list-group list-group-flush rounded-3">
+                                    </ul>
+                                <div id="modalNoMappings" class="text-center text-muted small py-2" style="display:none;">
+                                    No mappings found.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
-                <div class="modal-footer border-top-0 pt-0">
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                <div class="modal-footer border-top-0">
+                    <a href="#" id="modalMapBtn" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil-square"></i> Manage Mappings
+                    </a>
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -318,41 +340,62 @@ if ($active_tab === 'sections') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Pass the active tab to JS so we know how to format the fields
-        const activeTab = "<?php echo $active_tab; ?>";
-
-        function openViewModal(rowElement) {
-            // Get the data from the attribute
-            const data = JSON.parse(rowElement.dataset.row);
-            const content = document.getElementById('modalContent');
-            const title = document.getElementById('viewModalTitle');
-            
-            let html = '';
-
-            if (activeTab === 'sections') {
-                title.innerText = `Section: ${data.sec_ID}`;
-                html += `<tr><th class="bg-light" style="width: 30%">ID</th><td>${data.sec_ID}</td></tr>`;
-                html += `<tr><th class="bg-light">Name</th><td>${data.sec_name}</td></tr>`;
-                html += `<tr><th class="bg-light">Type</th><td>${data.type}</td></tr>`;
-            } 
-            else if (activeTab === 'requirements') {
-                title.innerText = `Requirement: ${data.sub_req_ID}`;
-                html += `<tr><th class="bg-light" style="width: 30%">ID</th><td>${data.sub_req_ID}</td></tr>`;
-                html += `<tr><th class="bg-light">Description</th><td>${data.sub_req_name}</td></tr>`;
-                html += `<tr><th class="bg-light">Section</th><td>${data.sec_ID} - ${data.sec_name}</td></tr>`;
-            } 
-            else if (activeTab === 'controls') {
-                title.innerText = `Control: ${data.sub_con_ID}`;
-                html += `<tr><th class="bg-light" style="width: 30%">ID</th><td>${data.sub_con_ID}</td></tr>`;
-                html += `<tr><th class="bg-light">Control Name</th><td>${data.sub_con_name}</td></tr>`;
-                html += `<tr><th class="bg-light">Category</th><td>${data.sec_ID} - ${data.sec_name}</td></tr>`;
-            }
-
-            content.innerHTML = html;
-
+        function viewDetails(type, id, event) {
             // Show Modal
-            const modal = new bootstrap.Modal(document.getElementById('viewModal'));
+            const modalEl = document.getElementById('isoDetailsModal');
+            const modal = new bootstrap.Modal(modalEl);
             modal.show();
+
+            // Reset UI to Loading State
+            document.getElementById('modalLoader').style.display = 'block';
+            document.getElementById('modalContent').style.display = 'none';
+            document.getElementById('modalMappingsList').innerHTML = '';
+            
+            // Fetch Data from Backend
+            fetch(`get_iso_details.php?type=${type}&id=${encodeURIComponent(id)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        alert(data.error);
+                        return;
+                    }
+
+                    // Populate Main Details
+                    document.getElementById('modalTypeTitle').textContent = data.type + ' Details';
+                    document.getElementById('modalItemId').textContent = data.item.id;
+                    document.getElementById('modalItemName').textContent = data.item.name;
+
+                    // Populate Mappings
+                    const listContainer = document.getElementById('modalMappingsList');
+                    const noMapMsg = document.getElementById('modalNoMappings');
+                    
+                    if (data.mappings.length > 0) {
+                        noMapMsg.style.display = 'none';
+                        data.mappings.forEach(map => {
+                            const li = document.createElement('li');
+                            li.className = 'list-group-item bg-white d-flex justify-content-between align-items-center';
+                            li.innerHTML = `
+                                <span>${map.name}</span>
+                                <span class="badge bg-light text-dark border">${map.id}</span>
+                            `;
+                            listContainer.appendChild(li);
+                        });
+                    } else {
+                        noMapMsg.style.display = 'block';
+                    }
+
+                    // Update "Manage Mapping" button link
+                    const mapBtn = document.getElementById('modalMapBtn');
+                    mapBtn.href = `map_iso.php?type=${type}&id=${id}`;
+
+                    // Show Content / Hide Loader
+                    document.getElementById('modalLoader').style.display = 'none';
+                    document.getElementById('modalContent').style.display = 'block';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('modalLoader').innerHTML = '<p class="text-danger">Failed to load details.</p>';
+                });
         }
     </script>
 </body>
