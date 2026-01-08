@@ -229,7 +229,11 @@
             </div>
 
             <div class="nav-item">
-                <a class="nav-link <?php echo is_user_nav_active($current_page, '/user/survey/index.php'); ?> <?php echo is_user_nav_active($current_page, '/assessment.php'); ?>" 
+                <?php 
+                    // Check if URL contains '/user/survey/' OR if it is '/assessment.php'
+                    $is_survey_active = (strpos($current_page, '/user/survey/') !== false || strpos($current_page, '/assessment.php') !== false) ? 'active' : '';
+                ?>
+                <a class="nav-link <?php echo $is_survey_active; ?>" 
                 href="<?php echo BASE_URL; ?>/modules/user/survey/index.php" title="My Surveys">
                     <div class="nav-link-icon"><i class="bi bi-clipboard-check-fill"></i></div>
                     <span>My Surveys</span>
