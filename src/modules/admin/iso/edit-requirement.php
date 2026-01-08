@@ -10,7 +10,7 @@ if (!$id) {
     exit;
 }
 
-$req = $db->fetchAll("SELECT * FROM sub_req WHERE sub_req_ID = :id", [':id' => $id]);
+$req = $db->fetchOne("SELECT * FROM sub_req WHERE sub_req_ID = :id", [':id' => $id]);
 if (!$req) {
     setFlashMessage('error', 'Requirement not found.');
     header('Location: index.php?tab=requirements');
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <input type="text" class="form-control" value="<?php echo htmlspecialchars($req['sub_req_ID'] ?? ''); ?>" disabled>
                                 </div>
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Parent Section</label>
+                                    <label class="form-label fw-bold">Requirement Category (Section) </label>
                                     <select name="sec_ID" class="form-select" required>
                                         <?php foreach ($sections as $sec): ?>
                                             <option value="<?php echo htmlspecialchars($sec['sec_ID']); ?>" 

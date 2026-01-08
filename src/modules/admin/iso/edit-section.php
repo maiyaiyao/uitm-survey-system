@@ -11,7 +11,7 @@ if (!$id) {
     exit;
 }
 
-$section = $db->fetchAll("SELECT * FROM section WHERE sec_ID = :id", [':id' => $id]);
+$section = $db->fetchOne("SELECT * FROM section WHERE sec_ID = :id", [':id' => $id]);
 if (!$section) {
     setFlashMessage('error', 'Section not found.');
     header('Location: index.php?tab=sections');

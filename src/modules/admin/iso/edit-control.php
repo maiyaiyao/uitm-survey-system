@@ -10,13 +10,15 @@ if (!$id) {
     exit;
 }
 
-$con = $db->fetchAll("SELECT * FROM sub_con WHERE sub_con_ID = :id", [':id' => $id]);
+// Fetch the Control data
+$con = $db->fetchOne("SELECT * FROM sub_con WHERE sub_con_ID = :id", [':id' => $id]);
 if (!$con) {
     setFlashMessage('error', 'Control not found.');
     header('Location: index.php?tab=controls');
     exit;
 }
 
+// Fetch Sections for the dropdown (Filtered by Control type)
 $sections = $db->fetchAll("SELECT * FROM section WHERE type = 'Control' ORDER BY sec_ID ASC");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
