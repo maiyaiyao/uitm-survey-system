@@ -1,7 +1,7 @@
 <?php
 /**
  * View Survey Results
- * Read-only report of the user's submitted assessment.
+ * Redesigned to match system styling.
  */
 
 require_once '../../../config/config.php';
@@ -33,7 +33,7 @@ if (!$assignment) {
 
 // --- 2. Data Fetching ---
 
-// Fetch Hierarchical Data (Domain -> Criteria -> Element)
+// Fetch Hierarchical Data
 $sql_structure = "
     SELECT 
         d.domain_ID, d.domain_name,
@@ -51,8 +51,7 @@ $sql_structure = "
 
 $raw_structure = $db->fetchAll($sql_structure, [':sid' => $survey_id]);
 
-// Fetch User Responses with Details
-// We join response -> score_element -> score to get the text descriptions of what they chose
+// Fetch User Responses
 $sql_responses = "
     SELECT 
         r.element_ID, 
@@ -64,17 +63,16 @@ $sql_responses = "
     FROM response r
     LEFT JOIN score_element se ON r.se_ID = se.se_ID
     LEFT JOIN score s ON se.score_ID = s.score_ID
-    WHERE r.user_ID = :uid
+    WHERE r.user_ID = :uid AND r.survey_ID = :sid
 ";
-$raw_responses = $db->fetchAll($sql_responses, [':uid' => $current_user_id]);
+$raw_responses = $db->fetchAll($sql_responses, [':uid' => $current_user_id, ':sid' => $survey_id]);
 
-// Map responses by element_ID for easy lookup
 $user_responses = [];
 foreach ($raw_responses as $resp) {
     $user_responses[$resp['element_ID']] = $resp;
 }
 
-// Group Structure Data
+// Group Data
 $report_data = [];
 foreach ($raw_structure as $row) {
     $d_id = $row['domain_ID'];
@@ -94,23 +92,21 @@ foreach ($raw_structure as $row) {
         ];
     }
     
-    // Attach user response if exists
     $response = $user_responses[$e_id] ?? null;
-    
     $report_data[$d_id]['criteria'][$c_id]['elements'][$e_id] = [
         'name' => $row['element_name'],
         'response' => $response
     ];
 }
 
-// Calculate Stats
+// Stats
 $total_elements = count($raw_structure);
-$answered_elements = count(array_intersect(array_column($raw_structure, 'element_ID'), array_keys($user_responses)));
+$answered_elements = count($user_responses);
 $completion_rate = ($total_elements > 0) ? round(($answered_elements / $total_elements) * 100) : 0;
 
-// Helper for Score Badge Color
 function getScoreColor($score) {
-    if ($score >= 4) return 'success';
+    if ($score >= 5) return 'success';
+    if ($score >= 4) return 'primary';
     if ($score == 3) return 'info';
     if ($score == 2) return 'warning';
     return 'danger';
@@ -122,40 +118,50 @@ $flash = getFlashMessage();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Results: <?php echo htmlspecialchars($assignment['survey_name']); ?> - <?php echo APP_NAME; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        /* Global Layout */
-        html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
+        /* Global System Styling */
+        html, body { height: 100%; background-color: #f8f9fa; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
-        @media (max-width: 991.98px) { .sidebar { position: relative; width: 100%; height: auto; } .main-content-wrapper { margin-left: 0; width: 100%; } }
+        @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
         
-        /* Result Specifics */
-        .response-card {
-            border-left: 4px solid transparent;
-            transition: all 0.2s;
-        }
-        .response-card.score-5, .response-card.score-4 { border-left-color: #198754; } /* Green */
-        .response-card.score-3 { border-left-color: #0dcaf0; } /* Cyan */
-        .response-card.score-2 { border-left-color: #ffc107; } /* Yellow */
-        .response-card.score-1 { border-left-color: #dc3545; } /* Red */
-        .response-card.no-score { border-left-color: #adb5bd; border-style: dashed; }
+        /* Cards */
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.05); }
+        .card-header-clean { background: transparent; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1.5rem; }
 
-        .score-badge-large {
-            width: 45px; height: 45px;
+        /* Typography */
+        .domain-title { font-weight: 800; color: #32325d; letter-spacing: -0.5px; font-size: 1.5rem; }
+        .criteria-badge { background-color: #e9ecef; color: #495057; font-size: 0.75rem; font-weight: 700; padding: 5px 10px; border-radius: 8px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
+
+        /* Result Specifics */
+        .score-circle-lg {
+            width: 50px; height: 50px;
+            border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 50%; font-size: 1.2rem; font-weight: bold;
-            color: white;
+            font-size: 1.25rem; font-weight: 800; color: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
+        /* Important: Handles the bullet points from database */
+        .result-detail-text {
+            white-space: pre-wrap; 
+            color: #525f7f;
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        .btn-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; }
+        .btn-gradient-primary:hover { opacity: 0.9; color: white; }
+
         /* Print Styles */
         @media print {
             .sidebar, .btn-print, .breadcrumb, .no-print { display: none !important; }
             .main-content-wrapper { margin-left: 0 !important; width: 100% !important; }
             .card { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
             body { background-color: white !important; }
+            .container-fluid { padding: 0 !important; }
         }
     </style>
 </head>
@@ -178,51 +184,62 @@ $flash = getFlashMessage();
                             </ol>
                         </nav>
                         <div class="d-flex gap-2">
-                            <button onclick="window.print()" class="btn btn-outline-primary btn-print">
+                            <button onclick="window.print()" class="btn btn-white shadow-sm btn-print text-primary border-0">
                                 <i class="bi bi-printer me-2"></i> Print Report
                             </button>
-                            <a href="index.php" class="btn btn-secondary btn-print">Back</a>
+                            <a href="index.php" class="btn btn-secondary btn-print rounded-pill px-4">Back</a>
                         </div>
                     </div>
 
                     <?php if ($flash): ?>
-                        <div class="alert alert-<?php echo $flash['type']; ?> no-print"><?php echo $flash['message']; ?></div>
+                        <div class="alert alert-<?php echo $flash['type']; ?> no-print rounded-4 border-0 shadow-sm mb-4"><?php echo $flash['message']; ?></div>
                     <?php endif; ?>
 
-                    <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card mb-5 border-0 shadow-sm rounded-4">
                         <div class="card-body p-4">
                             <div class="row align-items-center">
-                                <div class="col-md-8">
-                                    <span class="badge bg-primary-subtle text-primary-emphasis mb-2"><?php echo htmlspecialchars($assignment['department']); ?></span>
-                                    <h2 class="fw-bold mb-2"><?php echo htmlspecialchars($assignment['survey_name']); ?></h2>
-                                    <p class="text-muted mb-3"><?php echo htmlspecialchars($assignment['survey_description']); ?></p>
+                                <div class="col-lg-8">
+                                    <span class="badge bg-light text-primary border mb-2"><?php echo htmlspecialchars($assignment['department']); ?></span>
+                                    <h2 class="fw-bold mb-2 text-dark"><?php echo htmlspecialchars($assignment['survey_name']); ?></h2>
+                                    <p class="text-muted mb-4"><?php echo htmlspecialchars($assignment['survey_description']); ?></p>
                                     
-                                    <div class="d-flex gap-4 text-sm">
-                                        <div>
-                                            <small class="text-uppercase text-muted fw-bold d-block">Status</small>
-                                            <span class="fw-bold text-<?php echo $assignment['status'] === 'Completed' ? 'success' : 'warning'; ?>">
-                                                <?php echo strtoupper($assignment['status']); ?>
-                                            </span>
+                                    <div class="d-flex flex-wrap gap-4 text-sm">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-light rounded-circle p-2 text-primary"><i class="bi bi-info-circle-fill"></i></div>
+                                            <div>
+                                                <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Status</small>
+                                                <span class="fw-bold text-<?php echo $assignment['status'] === 'Completed' ? 'success' : 'warning'; ?>">
+                                                    <?php echo strtoupper($assignment['status']); ?>
+                                                </span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <small class="text-uppercase text-muted fw-bold d-block">Due Date</small>
-                                            <span class="fw-bold"><?php echo date('d M Y', strtotime($assignment['end_date'])); ?></span>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-light rounded-circle p-2 text-primary"><i class="bi bi-calendar-event-fill"></i></div>
+                                            <div>
+                                                <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Due Date</small>
+                                                <span class="fw-bold text-dark"><?php echo date('d M Y', strtotime($assignment['end_date'])); ?></span>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <small class="text-uppercase text-muted fw-bold d-block">Completion</small>
-                                            <span class="fw-bold"><?php echo $completion_rate; ?>%</span>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="bg-light rounded-circle p-2 text-primary"><i class="bi bi-graph-up-arrow"></i></div>
+                                            <div>
+                                                <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Completion</small>
+                                                <span class="fw-bold text-dark"><?php echo $completion_rate; ?>%</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 text-center d-none d-md-block border-start">
-                                    <div class="text-muted small mb-2">Overall Progress</div>
+                                <div class="col-lg-4 text-center d-none d-lg-block border-start">
                                     <div class="position-relative d-inline-block">
-                                        <svg width="100" height="100" viewBox="0 0 36 36">
-                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#eee" stroke-width="3" />
-                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="<?php echo ($completion_rate == 100) ? '#198754' : '#0d6efd'; ?>" stroke-width="3" stroke-dasharray="<?php echo $completion_rate; ?>, 100" />
+                                        <svg width="120" height="120" viewBox="0 0 36 36">
+                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f0f2f5" stroke-width="2" />
+                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
+                                                  fill="none" stroke="<?php echo ($completion_rate == 100) ? '#2dce89' : '#5e72e4'; ?>" 
+                                                  stroke-width="2" stroke-dasharray="<?php echo $completion_rate; ?>, 100" />
                                         </svg>
-                                        <div class="position-absolute top-50 start-50 translate-middle fw-bold fs-4">
-                                            <?php echo $completion_rate; ?>%
+                                        <div class="position-absolute top-50 start-50 translate-middle text-center">
+                                            <div class="h3 fw-bold mb-0 text-dark"><?php echo $completion_rate; ?>%</div>
+                                            <div class="small text-muted" style="font-size: 0.65rem;">COMPLETE</div>
                                         </div>
                                     </div>
                                 </div>
@@ -230,82 +247,68 @@ $flash = getFlashMessage();
                         </div>
                     </div>
 
-                    <div class="results-container">
-                        <?php if (empty($report_data)): ?>
-                            <div class="alert alert-info text-center p-5">
-                                <h4>No data available</h4>
-                                <p>This survey does not appear to have any questions configured.</p>
-                            </div>
-                        <?php else: ?>
-                            
-                            <?php foreach ($report_data as $d_id => $domain): ?>
-                                <div class="card border-0 shadow-sm rounded-4 mb-4 break-inside-avoid">
-                                    <div class="card-header bg-white border-bottom py-3">
-                                        <h5 class="mb-0 text-primary">
-                                            <i class="bi bi-layers-fill me-2"></i> <?php echo htmlspecialchars($domain['name']); ?>
-                                        </h5>
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <?php foreach ($domain['criteria'] as $c_id => $criteria): ?>
-                                            <div class="p-4 border-bottom last-no-border">
-                                                <h6 class="fw-bold text-secondary text-uppercase mb-3 small tracking-wide">
-                                                    <?php echo htmlspecialchars($criteria['name']); ?>
-                                                </h6>
+                    <?php if (empty($report_data)): ?>
+                        <div class="text-center p-5 card shadow-sm rounded-4">
+                            <h4 class="text-muted">No questions found.</h4>
+                        </div>
+                    <?php else: ?>
+                        
+                        <?php foreach ($report_data as $d_id => $domain): ?>
+                            <div class="mb-5 break-inside-avoid">
+                                <h3 class="domain-title mb-4 ps-2 border-start border-4 border-primary"><?php echo htmlspecialchars($domain['name']); ?></h3>
 
-                                                <?php foreach ($criteria['elements'] as $e_id => $element): 
-                                                    $resp = $element['response'];
-                                                    $score = $resp['score'] ?? 0;
-                                                    $color = getScoreColor($score);
-                                                    $bg_class = $score > 0 ? "score-{$score}" : "no-score";
-                                                ?>
-                                                    <div class="card response-card <?php echo $bg_class; ?> bg-light mb-3 border-0">
-                                                        <div class="card-body d-flex gap-3 align-items-start">
-                                                            <div class="flex-shrink-0">
-                                                                <?php if ($score > 0): ?>
-                                                                    <div class="score-badge-large bg-<?php echo $color; ?>">
-                                                                        <?php echo $score; ?>
-                                                                    </div>
-                                                                <?php else: ?>
-                                                                    <div class="score-badge-large bg-secondary text-white-50">
-                                                                        ?
-                                                                    </div>
-                                                                <?php endif; ?>
+                                <?php foreach ($domain['criteria'] as $c_id => $criteria): ?>
+                                    <div class="card mb-4 rounded-4 shadow-sm border-0">
+                                        <div class="card-header-clean">
+                                            <span class="criteria-badge"><i class="bi bi-tag-fill me-1"></i> Criteria</span>
+                                            <h5 class="mb-0 fw-bold text-dark"><?php echo htmlspecialchars($criteria['name']); ?></h5>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <?php foreach ($criteria['elements'] as $e_id => $element): 
+                                                $resp = $element['response'];
+                                                $score = $resp['score'] ?? 0;
+                                                $color = getScoreColor($score);
+                                            ?>
+                                                <div class="p-4 border-bottom last-no-border">
+                                                    <h6 class="fw-bold text-dark mb-3"><?php echo htmlspecialchars($element['name']); ?></h6>
+                                                    
+                                                    <div class="bg-light p-3 rounded-3 d-flex gap-3 align-items-start">
+                                                        <?php if ($score > 0): ?>
+                                                            <div class="score-circle-lg bg-<?php echo $color; ?> flex-shrink-0">
+                                                                <?php echo $score; ?>
                                                             </div>
-                                                            <div class="flex-grow-1">
-                                                                <h6 class="fw-bold mb-1 text-dark"><?php echo htmlspecialchars($element['name']); ?></h6>
+                                                            <div>
+                                                                <div class="fw-bold text-<?php echo $color; ?> text-uppercase small mb-1">
+                                                                    <?php echo htmlspecialchars($resp['selected_level_desc'] ?? "Level $score"); ?>
+                                                                </div>
                                                                 
-                                                                <?php if ($score > 0): ?>
-                                                                    <div class="mt-2">
-                                                                        <span class="badge bg-white text-<?php echo $color; ?> border border-<?php echo $color; ?> mb-1">
-                                                                            <?php echo htmlspecialchars($resp['selected_level_desc'] ?? "Level $score"); ?>
-                                                                        </span>
-                                                                        <p class="mb-0 text-secondary small">
-                                                                            <?php echo nl2br(htmlspecialchars($resp['selected_detail'] ?? 'No detail provided for this level.')); ?>
-                                                                        </p>
-                                                                    </div>
-                                                                    <div class="mt-2 text-muted" style="font-size: 0.75rem;">
-                                                                        <i class="bi bi-clock me-1"></i> Answered: <?php echo date('d M Y, h:i A', strtotime($resp['input_at'])); ?>
-                                                                    </div>
-                                                                <?php else: ?>
-                                                                    <p class="text-danger small mb-0 mt-2"><i class="bi bi-exclamation-circle me-1"></i> Not answered</p>
-                                                                <?php endif; ?>
+                                                                <div class="result-detail-text"><?php echo htmlspecialchars(trim($resp['selected_detail'] ?? 'No detail provided.')); ?></div>
+                                                                
+                                                                <div class="mt-2 text-muted" style="font-size: 0.75rem;">
+                                                                    <i class="bi bi-clock me-1"></i> Submitted: <?php echo date('d M Y, h:i A', strtotime($resp['input_at'])); ?>
+                                                                </div>
                                                             </div>
-                                                        </div>
+                                                        <?php else: ?>
+                                                            <div class="score-circle-lg bg-secondary text-white-50 flex-shrink-0">?</div>
+                                                            <div class="align-self-center text-muted fst-italic">
+                                                                Not answered.
+                                                            </div>
+                                                        <?php endif; ?>
                                                     </div>
-                                                <?php endforeach; ?>
-                                            </div>
-                                        <?php endforeach; ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
                                     </div>
-                                </div>
-                            <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endforeach; ?>
 
-                        <?php endif; ?>
-                    </div>
+                    <?php endif; ?>
 
                     <div class="d-none d-print-block text-center mt-5 pt-5 border-top">
                         <p class="text-muted small">
-                            Report generated on <?php echo date('d M Y, h:i A'); ?> by <?php echo htmlspecialchars($current_user['full_name']); ?>.<br>
-                            UiTM ISO 27001 Audit System.
+                            Report generated on <?php echo date('d M Y, h:i A'); ?>.<br>
+                            <?php echo APP_NAME; ?> - User Result Report.
                         </p>
                     </div>
 
