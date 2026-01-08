@@ -276,7 +276,11 @@ if ($active_tab === 'sections') {
                             </td>
 
                             <td class="text-end pe-4">
-                                <a href="#" class="btn btn-sm btn-link text-primary" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                                <a href="edit-<?php echo $mapType; ?>.php?id=<?php echo urlencode($mapID); ?>" 
+                                    class="btn btn-sm btn-link text-primary" 
+                                    title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
                                 <a href="#" class="btn btn-sm btn-link text-danger" title="Delete"><i class="bi bi-trash"></i></a>
                             </td>
                         </tr>
