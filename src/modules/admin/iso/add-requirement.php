@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                             <form method="POST">
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Parent Section</label>
+                                    <label class="form-label fw-bold">Requirement Category (Section)</label>
                                     <select name="sec_ID" class="form-select" required>
                                         <option value="">Select Section...</option>
                                         <?php foreach ($sections as $sec): ?>
