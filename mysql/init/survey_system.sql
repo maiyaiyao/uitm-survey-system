@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql:3306
--- Generation Time: Dec 17, 2025 at 07:30 AM
+-- Generation Time: Jan 07, 2026 at 08:42 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.3.26
 
@@ -35,50 +35,38 @@ CREATE TABLE `criteria` (
   `input_at` date DEFAULT NULL,
   `updated_id` varchar(10) DEFAULT NULL,
   `updated_at` date DEFAULT NULL,
-  `status` enum('Active','Inactive') DEFAULT 'Active',
-  `sub_con_ID` varchar(10) DEFAULT NULL
+  `status` enum('Active','Inactive') DEFAULT 'Active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `criteria`
 --
 
-INSERT INTO `criteria` (`criteria_ID`, `domain_ID`, `criteria_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`, `sub_con_ID`) VALUES
-('AC001', 'AD001', 'Tadbir urus keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC002', 'AD001', 'Pengurusan Atasan', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC003', 'AD001', 'Polisi/prosedur Keselamatan Siber', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC004', 'AD002', 'Pelan Penilaian Risiko', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC005', 'AD002', 'Pelan Rawatan Risiko', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC006', 'AD003', 'Standard dan amalan terbaik keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC007', 'AD003', 'Pengauditan keselamatan siber ', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC008', 'AD004', 'Pembangunan Kompetensi dan Kesedaran', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC009', 'AD004', 'Kakitangan ICT: Latihan kompetensi, kesedaran, kepatuhan ', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC010', 'AD005', 'Pengurusan Inventori aset', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC011', 'AD005', 'Klasifikasi maklumat ', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC012', 'AD006', 'Penguatkuasaan mekanisme pengesahan identiti', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC013', 'AD006', 'Pengurusan capaian', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC014', 'AD007', 'Kesedaran, kepatuhan', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC015', 'AD007', 'Penilaian keberkesanan pihak ketiga', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC016', 'AD007', 'Keperluan kumpulan pakar dan pakar bidang', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC017', 'AD008', 'Kawalan keselamatan infrastruktur rangkaian dan sistem ', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC018', 'AD008', 'Kesediaan pusat operasi keselamatan (SOC)', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC019', 'AD009', 'Pelan insiden keselamatan siber ', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC020', 'AD009', 'Simulasi pelan insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC021', 'AD010', 'Prosedur pengurusan ancaman dan kerentanan keselamatan siber', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC022', 'AD010', 'Teknologi bagi pengurusan ancaman dan kerentanan', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC023', 'AD011', 'Pelan kesinambungan perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC024', 'AD011', 'Simulasi ', NULL, NULL, NULL, NULL, 'Active', NULL),
-('AC025', 'AD012', 'test test criteria edit 21', '4', '2025-11-10', '4', '2025-11-13', 'Active', NULL),
-('AC026', 'AD012', 'criteria lala', '4', '2025-11-10', '4', '2025-12-02', 'Active', NULL),
-('AC027', 'AD012', 'aaaa', '4', '2025-11-10', NULL, '2025-11-13', 'Active', NULL),
-('AC028', 'AD013', 'criteria testing 3333000', '4', '2025-11-13', '4', '2025-12-02', 'Inactive', NULL),
-('AC029', 'AD013', 'criteria testing 1233', '4', '2025-11-14', '4', '2025-12-02', 'Active', NULL),
-('AC030', 'AD013', 'lalalallaladaa', '4', '2025-11-14', '4', '2025-12-02', 'Active', NULL),
-('AC031', 'AD013', 'amamamamma', '4', '2025-11-14', NULL, NULL, 'Active', NULL),
-('AC032', 'AD014', 'criteria domain 1', '4', '2025-11-26', NULL, NULL, 'Inactive', NULL),
-('AC033', 'AD015', 'criteria december', '4', '2025-12-02', NULL, NULL, 'Active', NULL),
-('AC034', 'AD014', 'criteria 2 domain 1', '4', '2025-12-04', '4', '2025-12-08', 'Active', NULL),
-('AC035', 'AD014', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa4444444444444444444444444444444444444', '4', '2025-12-17', NULL, NULL, 'Active', NULL);
+INSERT INTO `criteria` (`criteria_ID`, `domain_ID`, `criteria_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
+('AC001', 'AD001', 'Tadbir urus keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
+('AC002', 'AD001', 'Pengurusan Atasan', NULL, NULL, NULL, NULL, 'Active'),
+('AC003', 'AD001', 'Polisi dan prosedur Keselamatan Siber', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC004', 'AD002', 'Penilaian Risiko', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC005', 'AD002', 'Rawatan Risiko', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC006', 'AD003', 'Standard dan amalan terbaik keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
+('AC007', 'AD003', 'Pengauditan keselamatan siber ', NULL, NULL, NULL, NULL, 'Active'),
+('AC008', 'AD004', 'Pembangunan Kompetensi dan Kesedaran', NULL, NULL, NULL, NULL, 'Active'),
+('AC009', 'AD004', 'Pengurusan Peranan dan Tanggungjawab Keselamatan Siber', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC010', 'AD005', 'Inventori aset', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC011', 'AD005', 'Klasifikasi maklumat ', NULL, NULL, NULL, NULL, 'Active'),
+('AC012', 'AD006', 'Penguatkuasaan mekanisme pengesahan identiti', NULL, NULL, NULL, NULL, 'Active'),
+('AC013', 'AD006', 'Pengurusan capaian', NULL, NULL, NULL, NULL, 'Active'),
+('AC014', 'AD007', 'Kesedaran dan pematuhan', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC015', 'AD007', 'Penilaian keberkesanan pihak ketiga', NULL, NULL, NULL, NULL, 'Active'),
+('AC017', 'AD008', 'Kawalan keselamatan sistem dan aplikasi', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC018', 'AD008', 'Operasi keselamatan', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC019', 'AD009', 'Pelan insiden keselamatan siber ', NULL, NULL, NULL, NULL, 'Active'),
+('AC020', 'AD009', 'Simulasi pelan insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
+('AC021', 'AD010', 'Prosedur pengurusan ancaman dan kerentanan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
+('AC022', 'AD010', 'Teknologi bagi pengurusan ancaman dan kerentanan', NULL, NULL, NULL, NULL, 'Active'),
+('AC023', 'AD011', 'Pelan kesinambungan perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active'),
+('AC024', 'AD011', 'Simulasi ', NULL, NULL, NULL, NULL, 'Active'),
+('AC025', 'AD007', 'Kumpulan pakar dan pakar bidang', '4', '2025-12-23', NULL, NULL, 'Active');
 
 --
 -- Triggers `criteria`
@@ -99,19 +87,6 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `criteria_control`
---
-
-CREATE TABLE `criteria_control` (
-  `link_ID` int(11) NOT NULL,
-  `criteria_ID` varchar(10) NOT NULL,
-  `sub_con_ID` varchar(10) NOT NULL,
-  `linked_at` datetime DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `domain`
 --
 
@@ -122,31 +97,26 @@ CREATE TABLE `domain` (
   `input_at` date DEFAULT NULL,
   `updated_id` varchar(10) DEFAULT NULL,
   `updated_at` date DEFAULT NULL,
-  `status` enum('Active','Inactive') DEFAULT 'Active'
+  `status` enum('Active','Inactive') DEFAULT 'Active',
+  `sec_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `domain`
 --
 
-INSERT INTO `domain` (`domain_ID`, `domain_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
-('AD001', 'Tadbir Urus', NULL, NULL, '4', '2025-11-17', 'Active'),
-('AD002', 'Pengurusan Risiko', NULL, NULL, '4', '2025-11-07', 'Active'),
-('AD003', 'Pematuhan dan Pengauditan', NULL, NULL, NULL, NULL, 'Active'),
-('AD004', 'Keselamatan Sumber Manusia', NULL, NULL, NULL, NULL, 'Active'),
-('AD005', 'Pengurusan Aset', NULL, NULL, NULL, NULL, 'Active'),
-('AD006', 'Pengurusan Identiti Dan Capaian', NULL, NULL, NULL, NULL, 'Active'),
-('AD007', 'Pengurusan Pihak Ketiga', NULL, NULL, NULL, NULL, 'Active'),
-('AD008', 'Pengurusan Keselamatan Sistem Dan Aplikasi', NULL, NULL, NULL, NULL, 'Active'),
-('AD009', 'Pengurusan Insiden', NULL, NULL, NULL, NULL, 'Active'),
-('AD010', 'Pengurusan Ancaman Dan Kerentanan', NULL, NULL, NULL, NULL, 'Active'),
-('AD011', 'Pengurusan Kesinambungan Perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active'),
-('AD012', 'test domain 2', '4', '2025-11-07', '4', '2025-11-07', 'Active'),
-('AD013', 'domain 10', '4', '2025-11-13', '12', '2025-12-08', 'Active'),
-('AD014', 'domain test 12223334445555555', '4', '2025-11-26', '4', '2025-11-27', 'Active'),
-('AD015', 'domain december 1', '4', '2025-12-02', '4', '2025-12-02', 'Inactive'),
-('AD016', 'Pengurusan Kod', '4', '2025-12-15', NULL, NULL, 'Active'),
-('AD017', 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', '4', '2025-12-17', NULL, NULL, 'Active');
+INSERT INTO `domain` (`domain_ID`, `domain_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`, `sec_ID`) VALUES
+('AD001', 'Tadbir Urus', NULL, NULL, '4', '2025-11-17', 'Active', '5'),
+('AD002', 'Pengurusan Risiko', NULL, NULL, '4', '2025-11-07', 'Active', '6'),
+('AD003', 'Pematuhan dan Pengauditan', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AD004', 'Keselamatan Sumber Manusia', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AD005', 'Pengurusan Aset', NULL, NULL, NULL, NULL, 'Active', 'A5'),
+('AD006', 'Pengurusan Identiti Dan Capaian', NULL, NULL, NULL, NULL, 'Active', 'A5'),
+('AD007', 'Pengurusan Pihak Ketiga', NULL, NULL, NULL, NULL, 'Active', 'A5'),
+('AD008', 'Pengurusan Keselamatan Sistem Dan Aplikasi', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AD009', 'Pengurusan Insiden', NULL, NULL, NULL, NULL, 'Active', 'A5'),
+('AD010', 'Pengurusan Ancaman Dan Kerentanan', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AD011', 'Pengurusan Kesinambungan Perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active', 'A5');
 
 --
 -- Triggers `domain`
@@ -185,70 +155,73 @@ CREATE TABLE `element` (
 --
 
 INSERT INTO `element` (`element_ID`, `criteria_ID`, `element_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
-('AE001', 'AC001', 'Tadbir urus keselamatan siber dibangunkan dan dilaksanakan', NULL, NULL, NULL, NULL, 'Active'),
+('AE001', 'AC001', 'Pembangunan dan pelaksanaan tadbir urus keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE002', 'AC001', 'Tanggungjawab dan terma tadbir urus dihuraikan dengan jelas', NULL, NULL, NULL, NULL, 'Active'),
-('AE003', 'AC001', 'Strategi keselamatan siber dibangunkan sejajar dengan strategi universiti', NULL, NULL, NULL, '2025-11-13', 'Active'),
-('AE004', 'AC002', 'Komitmen pengurusan mengkaji dasar dan inisiatif keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE005', 'AC002', 'Komitmen pengurusan atasan dalam memberi sokongan sumber kewangan dan sumber lain (jika perlu)', NULL, NULL, NULL, NULL, 'Active'),
-('AE006', 'AC002', 'Komitmen pengurusan atasan dalam memasti warga universiti faham mengenai keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE007', 'AC003', 'Jelas dalam objektif polisi/prosedur serta tanggungjawab yang oleh warga universiti, pihak ketiga dan pihak berkepentingan', NULL, NULL, NULL, NULL, 'Active'),
-('AE008', 'AC003', 'Pembangunan polisi dan prosedur keselamatan siber  merangkumi semua kawalan yang dicadang oleh piawaian antarabangsa dan amalan terbaik', NULL, NULL, NULL, NULL, 'Active'),
-('AE009', 'AC003', 'Dihebahkan kepada warga universiti, pihak ketiga dan pihak berkepentingan', NULL, NULL, NULL, NULL, 'Active'),
-('AE010', 'AC003', 'Dikaji/disemak secara berkala atau mengikut keperluan semasa', NULL, NULL, NULL, NULL, 'Active'),
-('AE011', 'AC004', 'Keperluan menjalankan penilaian risiko secara berkala', NULL, NULL, NULL, NULL, 'Active'),
-('AE012', 'AC004', 'Keperluan keutamaan peruntukan terhadap keselamatan siber berdasarkan penilaian risiko', NULL, NULL, NULL, NULL, 'Active'),
-('AE013', 'AC005', 'Keperluan menjalankan pelan rawatan risiko secara berkala', NULL, NULL, NULL, NULL, 'Active'),
-('AE014', 'AC005', 'Keperluan pemantauan dan penyemakan keberkesanan pelan rawatan risiko', NULL, NULL, NULL, NULL, 'Active'),
-('AE015', 'AC006', 'Keperluan polisi dan prosedur sejajar dengan keperluan standard dan amalan terbaik', NULL, NULL, NULL, NULL, 'Active'),
-('AE016', 'AC007', 'Keperluan menjalankan audit dan penilaian secara berkala', NULL, NULL, NULL, NULL, 'Active'),
-('AE017', 'AC007', 'Pelaksanaan penemuan dan cadangan daripada audit susulan audit keselamatan maklumat/siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE018', 'AC007', 'Pemantauan proses penyediaan dokumentasi dan bukti pematuhan', NULL, NULL, NULL, NULL, 'Active'),
-('AE019', 'AC008', 'Kesedaran terhadap kepentingan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE020', 'AC008', 'Kepentingan pengasingan tugas berdasarkan peranan dan tanggungjawab dalam keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE021', 'AC008', 'Keperluan pengukuran keberkesanan inisitif program kesedaran dan program latihan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE022', 'AC009', 'Motivasi kakitangan universiti', NULL, NULL, NULL, NULL, 'Active'),
-('AE023', 'AC009', 'Kemahiran dan kepakaran kakitangan ICT', NULL, NULL, NULL, NULL, 'Active'),
-('AE024', 'AC009', 'Keperluan Program Pengganti (Succesor Program)', NULL, NULL, NULL, NULL, 'Active'),
-('AE025', 'AC010', 'Pengurusan inventori aset dan termasuk data, sistem dan aplikasi', NULL, NULL, NULL, NULL, 'Active'),
+('AE003', 'AC001', 'Pembangunan strategi keselamatan siber sejajar dengan strategi organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE004', 'AC002', 'Komitmen pengurusan atasan dalam pembangunan serta penyemakan polisi dan program keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE005', 'AC002', 'Komitmen pengurusan atasan dalam penyediaan sumber kewangan dan sumber manusia.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE006', 'AC002', 'Komitmen pengurusan atasan dalam memastikan organisasi, pihak ketiga dan pihak yang berkepentingan organisasi memahami kepentingan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE007', 'AC003', 'Objektif dasar/polisi dan prosedur dalam penentuan tanggungjawab organisasi, warga, pihak ketiga dan pihak berkepentingan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE008', 'AC003', 'Pembangunan dasar/polisi dan prosedur keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE009', 'AC003', 'Penyebaran dasar/polisi dan prosedur keselamatan siber kepada warga, pihak ketiga dan pihak berkepentingan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE010', 'AC003', 'Penyemakan dan pengemaskinian dasar/polisi dan prosedur secara berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE011', 'AC004', 'Penentuan penilaian risiko keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE012', 'AC004', 'Pelaksanaan penilaian risiko keselamatan siber disemak dan dikemas kini secara berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE013', 'AC005', 'Penyemakan pelaksanaan rawatan risiko keselamatan siber secara berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE014', 'AC005', 'Pemantauan keberkesanan rawatan risiko.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE015', 'AC006', 'Dasar/polisi dan prosedur sejajar dengan keperluan undang-undang, peraturan, standard dan amalan terbaik keselamatan siber organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE019', 'AC008', 'Kesedaran dan latihan keselamatan siber', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE020', 'AC008', 'Pengasingan tugas berdasarkan peranan dan tanggungjawab dalam keselamatan siber', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE021', 'AC008', 'Pengukuran keberkesanan inisiatif program kesedaran dan latihan keselamatan siber', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE022', 'AC009', 'Dokumentasi tanggungjawab keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE023', 'AC009', 'Penentuan dan pengurusan peranan keselamatan siber untuk memastikan kecukupan dan redundansi kakitangan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE024', 'AC009', 'Pelaksanaan Program Pengganti (Succesor Program)', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE025', 'AC010', 'Pengurusan inventori aset.', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE026', 'AC011', 'Klasifikasi maklumat mengikut maklumat terperingkat', NULL, NULL, NULL, NULL, 'Active'),
-('AE027', 'AC011', 'Perlindungan, sanitasi dan pelupusan maklumat semasa kitar hayat maklumat', NULL, NULL, NULL, NULL, 'Active'),
-('AE028', 'AC012', 'Keperluan pengurusan kawalan had capaian', NULL, NULL, NULL, NULL, 'Active'),
-('AE029', 'AC012', 'Keperluan penguatkuasaan mekanisma pengesahan', NULL, NULL, NULL, NULL, 'Active'),
-('AE030', 'AC013', 'Keperluan penyemakan hak capaian pengguna', NULL, NULL, NULL, NULL, 'Active'),
-('AE031', 'AC013', 'Keperluan pemeriksaan dan pemantauan aktiviti capaian pengguna', NULL, NULL, NULL, NULL, 'Active'),
-('AE032', 'AC013', 'Pengurusan dan pemantauan capaian pihak ketiga ke sistem maklumat dan data', NULL, NULL, NULL, NULL, 'Active'),
-('AE033', 'AC014', 'Kesedaran pihak ketiga', NULL, NULL, NULL, NULL, 'Active'),
-('AE034', 'AC014', 'Kepatuhan pihak ketiga terhadap perjanjian ditandatangani', NULL, NULL, NULL, NULL, 'Active'),
-('AE035', 'AC015', 'Keperluan penilaian keberkesanan pihak ketiga', NULL, NULL, NULL, NULL, 'Active'),
-('AE036', 'AC016', 'Keperluan kumpulan pakar atau pakar bidang.', NULL, NULL, NULL, NULL, 'Active'),
-('AE037', 'AC017', 'Kawalan keselamatan yang dilaksanakan', NULL, NULL, NULL, NULL, 'Active'),
-('AE038', 'AC017', 'Memastikan konfigurasi dan pengurusan aset IT yang selamat', NULL, NULL, NULL, NULL, 'Active'),
-('AE039', 'AC017', 'Proses untuk memantau secara berterusan ', NULL, NULL, NULL, NULL, 'Active'),
-('AE040', 'AC017', 'Perisian dan perkakasan dikemaskini dan dikemas kini secara berkala ', NULL, NULL, NULL, NULL, 'Active'),
-('AE041', 'AC017', 'Keperluan mengkaji dan menilai penggunakan teknologi terkini', NULL, NULL, NULL, NULL, 'Active'),
-('AE042', 'AC018', 'Keupayaan SOC untuk memantau dan mengesan ancaman keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE043', 'AC018', 'Perisian dan perkakasan terkini dalam pelaksanaan dan pemantauan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE044', 'AC019', 'Pelan tindak balas insiden untuk menangani insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE045', 'AC019', 'Peranan dan tanggungjawab ditakrifkan dengan jelas dalam pasukan tindak balas kecemasan', NULL, NULL, NULL, NULL, 'Active'),
-('AE046', 'AC019', 'Keperluan pelan insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE047', 'AC019', 'Insiden keselamatan dan amaran disiasat serta tambah baik pelan mengikut keperluan', NULL, NULL, NULL, NULL, 'Active'),
-('AE048', 'AC019', 'Keperluan penyemakan pelan pengurusan insiden', NULL, NULL, NULL, NULL, 'Active'),
-('AE049', 'AC021', 'Keperluan pengurusan pembangunan dan pelaksanaan ancaman dan kerentanan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE050', 'AC022', 'Keperluan teknologi terkini bagi pengurusan ancaman dan kerentanan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE051', 'AC023', 'Keperluan pelan kesinambungan perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active'),
-('AE052', 'AC023', 'Keperluan penyemakan pelan kesinambungan perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active'),
-('AE053', 'AC024', 'Keperluan simulasi terhadap pelan kesinambungan perkhidmatan ICT universiti secara berkala', NULL, NULL, NULL, NULL, 'Active'),
-('AE054', 'AC021', 'Keperluan pengurusan ancaman dan kerentanan keselamatan siber secara berkala', NULL, NULL, NULL, NULL, 'Active'),
-('AE055', 'AC020', 'Tindak balas dan proses pemulihan daripada insiden keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('AE056', 'AC028', 'element 1101269875555', '4', '2025-11-14', '4', '2025-11-14', 'Active'),
-('AE057', 'AC028', 'element 555', '4', '2025-11-14', NULL, NULL, 'Active'),
-('AE058', 'AC028', 'element 2025', '4', '2025-11-14', NULL, '2025-12-04', 'Inactive'),
-('AE059', 'AC025', 'element 1', '4', '2025-11-25', NULL, '2025-11-26', 'Active'),
-('AE060', 'AC026', 'element 2', '4', '2025-11-25', NULL, '2025-12-04', 'Inactive'),
-('AE061', 'AC027', 'element 1234567890', '4', '2025-11-25', '4', '2025-12-04', 'Active'),
-('AE062', 'AC032', 'element criteria 1', '4', '2025-11-26', NULL, NULL, 'Active'),
-('AE063', 'AC026', 'element 2i', '4', '2025-12-04', NULL, NULL, 'Active'),
-('AE064', 'AC033', 'element criteria december', '4', '2025-12-08', NULL, NULL, 'Active');
+('AE027', 'AC011', 'Perlindungan, sanitasi dan pelupusan maklumat semasa kitar hayat.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE028', 'AC012', 'Pengwujudan dan pengurusan identiti pengesahan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE029', 'AC012', 'Penguatkuasaan mekanisme pengesahan bagi sistem dan aplikasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE030', 'AC013', 'Pemantauan dan penyemakan hak akses pengguna secara berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE031', 'AC013', 'Pemantauan dan penyemakan pengurusan akses data dan maklumat organisasi bagi pihak ketiga secara berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE033', 'AC014', 'Kesedaran pihak ketiga terhadap kepentingan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE034', 'AC014', 'Pengesahan akuan perjanjian keselamatan siber pihak ketiga.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE035', 'AC015', 'Penilaian keberkesanan pihak ketiga', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE037', 'AC017', 'Penyelesaian keselamatan yang efektif berdasarkan standard dan amalan terbaik.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE038', 'AC017', 'Konfigurasi dan pengurusan aset IT yang selamat.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE039', 'AC017', 'Pemantauan aktiviti dan tingkah laku rangkaian dan infrastruktur sistem secara berterusan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE040', 'AC017', 'Perisian dan perkakasan terkini.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE041', 'AC017', 'Penilaian penggunaan teknologi terkini.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE042', 'AC018', 'Pemantauan dan pengesanan ancaman keselamatan siber melalui Pusat Operasi Keselamatan (SOC : Security Operation Center).', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE043', 'AC018', 'Penggunaan teknologi terkini dalam pelaksanaan dan pemantauan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE044', 'AC019', 'Pelan tindak balas insiden keselamatan siber', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE045', 'AC019', 'Takrif peranan dan tanggungjawab pasukan tindak balas insiden.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE047', 'AC019', 'Penyiasatan insiden dan amaran keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE048', 'AC019', 'Penyemakan pelan pengurusan insiden secara berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE049', 'AC021', 'Pembangunan dan pelaksanaan ancaman dan kerentanan keselamatan siber secara proaktif.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE050', 'AC022', 'Penggunaan teknologi pengurusan pemantauan ancaman dan kerentanan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('AE051', 'AC023', 'Pembangunan dan pelaksanaan bagi pengurusan kesinambungan perkhidmatan ICT.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE052', 'AC023', 'Penyemakan pelan kesinambungan perkhidmatan ICT.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE053', 'AC024', 'Pelaksanaan simulasi pelan kesinambungan perkhidmatan ICT secara berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE054', 'AC021', 'Penyediaan dan pengawalan versi dokumen prosedur bagi ancaman dan kelemahan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE055', 'AC020', 'Pembangunan prosedur tindak balas dan pemulihan insiden keselamatan siber secara proaktif.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AE056', 'AC001', 'Pemeliharaan privasi dan perlindungan Maklumat Pengenalan Peribadi (Personal Identifiable Information -PII).', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE057', 'AC006', 'Pelaksanaan keselamatan siber organisasi mengikut keperluan undang-undang, peraturan, standard dan amalan terbaik.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE058', 'AC006', 'Penguatkuasaan dan pengauditan yang disemak dan dikemas kini secara berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE059', 'AC007', 'Pelaksanaan tindakan susulan audit keselamtan siber.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE060', 'AC007', 'Pemantauan penyediaan dokumentasi dan bukti pematuhan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE061', 'AC009', 'Pemantauan dan penyemakan tanggungjawab keselamtan siber dan keperluan kakitangan secara berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE062', 'AC010', 'Pemantauan dan penyemakan pengurusan inventori aset disemak dan dikemaskini secara berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE063', 'AC012', 'Pengwujudan dan pengekalan akses logikal.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE064', 'AC012', 'Pemeriksaan, pemantauan dan penyemakan aktiviti capaian pengguna.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE065', 'AC014', 'Pemantauan dan penyemakan pematuhan pihak ketiga yang diperakui secara berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE066', 'AC015', 'Pemantauan dan penyemakan penilaian keberkesanan pihak ketiga secara berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE067', 'AC025', 'Penglibatan pakar bidang atau kumpulan pakar dalam organisasi', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE068', 'AC017', 'Penggunaan teknologi yang efektif berdasarkan standard', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE069', 'AC018', 'Penilaian dan pematauan berkala bagi operasi keselamatan siber.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE070', 'AC020', 'Penyemakan prosedur tindak balas dan pemulihan secara berkala berdasarkan Cyber Drills.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE071', 'AC022', 'Penilaian penggunaan teknologi pengurusan pemantauan ancaman dan kerentanan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE072', 'AC022', 'Pemantauan pengujian keselamatan siber bagi rangkaian, sistem dan aplikasi secara berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('AE073', 'AC024', 'Pemantauan dan penyemakan prosedur simulasi kesinambungan pekhidmatan ICT secara berkala.', '4', '2025-12-23', '4', '2025-12-24', 'Active');
 
 --
 -- Triggers `element`
@@ -264,6 +237,44 @@ CREATE TRIGGER `trg_element_ID` BEFORE INSERT ON `element` FOR EACH ROW BEGIN
 END
 $$
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `element_control`
+--
+
+CREATE TABLE `element_control` (
+  `id` int(11) NOT NULL,
+  `element_ID` varchar(10) DEFAULT NULL,
+  `sub_con_ID` varchar(10) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+--
+-- Dumping data for table `element_control`
+--
+
+INSERT INTO `element_control` (`id`, `element_ID`, `sub_con_ID`) VALUES
+(1, 'AE001', 'A.5.1'),
+(2, 'AE003', 'A.5.1'),
+(3, 'AE001', 'A.5.2'),
+(4, 'AE002', 'A.5.2');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `gap_analysis`
+--
+
+CREATE TABLE `gap_analysis` (
+  `GA_id` int(11) NOT NULL,
+  `domain_ID` varchar(10) DEFAULT NULL,
+  `criteria_ID` varchar(10) DEFAULT NULL,
+  `element_ID` varchar(10) DEFAULT NULL,
+  `user_ID` int(11) DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -298,54 +309,6 @@ CREATE TABLE `response` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
--- Dumping data for table `response`
---
-
-INSERT INTO `response` (`response_ID`, `element_ID`, `survey_ID`, `se_ID`, `user_ID`, `score`, `input_at`, `updated_at`) VALUES
-('RS004', 'AE028', NULL, 'ASA136', 12, 1, '2025-12-09', '2025-12-16'),
-('RS005', 'AE029', NULL, 'ASA141', 12, 1, '2025-12-09', '2025-12-16'),
-('RS006', 'AE030', NULL, 'ASA147', 12, 2, '2025-12-09', '2025-12-16'),
-('RS007', 'AE031', NULL, 'ASA153', 12, 3, '2025-12-09', '2025-12-16'),
-('RS008', 'AE032', NULL, 'ASA159', 12, 4, '2025-12-09', '2025-12-16'),
-('RS009', 'AE049', NULL, 'ASA246', 12, 1, '2025-12-09', '2025-12-16'),
-('RS010', 'AE054', NULL, 'ASA251', 12, 1, '2025-12-09', '2025-12-16'),
-('RS011', 'AE050', NULL, 'ASA256', 12, 1, '2025-12-09', '2025-12-16'),
-('RS012', 'AE025', NULL, 'ASA123', 13, 3, '2025-12-15', '2025-12-15'),
-('RS013', 'AE026', NULL, 'ASA128', 13, 3, '2025-12-15', '2025-12-15'),
-('RS014', 'AE027', NULL, 'ASA133', 13, 3, '2025-12-15', '2025-12-15'),
-('RS015', 'AE028', NULL, 'ASA138', 13, 3, '2025-12-15', '2025-12-15'),
-('RS016', 'AE029', NULL, 'ASA143', 13, 3, '2025-12-15', '2025-12-15'),
-('RS017', 'AE030', NULL, 'ASA148', 13, 3, '2025-12-15', '2025-12-15'),
-('RS018', 'AE031', NULL, 'ASA153', 13, 3, '2025-12-15', '2025-12-15'),
-('RS019', 'AE032', NULL, 'ASA158', 13, 3, '2025-12-15', '2025-12-15'),
-('RS020', 'AE049', NULL, NULL, 13, 3, '2025-12-15', '2025-12-15'),
-('RS021', 'AE054', NULL, NULL, 13, 3, '2025-12-15', '2025-12-15'),
-('RS022', 'AE050', NULL, NULL, 13, 3, '2025-12-15', '2025-12-15'),
-('RS023', 'AE001', NULL, 'ASA001', 10, 1, '2025-12-16', NULL),
-('RS024', 'AE002', NULL, 'ASA009', 10, 4, '2025-12-16', NULL),
-('RS025', 'AE003', NULL, 'ASA014', 10, 4, '2025-12-16', NULL),
-('RS026', 'AE004', NULL, 'ASA016', 10, 1, '2025-12-16', NULL),
-('RS027', 'AE005', NULL, 'ASA021', 10, 1, '2025-12-16', NULL),
-('RS028', 'AE006', NULL, 'ASA027', 10, 2, '2025-12-16', NULL),
-('RS029', 'AE007', NULL, 'ASA031', 10, 1, '2025-12-16', NULL),
-('RS030', 'AE008', NULL, 'ASA038', 10, 3, '2025-12-16', NULL),
-('RS031', 'AE009', NULL, 'ASA044', 10, 4, '2025-12-16', NULL),
-('RS032', 'AE010', NULL, 'ASA050', 10, 5, '2025-12-16', NULL),
-('RS033', 'AE025', NULL, 'ASA122', 12, 2, '2025-12-16', '2025-12-16'),
-('RS034', 'AE026', NULL, 'ASA126', 12, 1, '2025-12-16', '2025-12-16'),
-('RS035', 'AE027', NULL, 'ASA131', 12, 1, '2025-12-16', '2025-12-16'),
-('RS036', 'AE011', 'SV006', 'ASA051', 10, 1, '2025-12-16', '2025-12-16'),
-('RS037', 'AE012', 'SV006', 'ASA056', 10, 1, '2025-12-16', '2025-12-16'),
-('RS038', 'AE013', 'SV006', 'ASA061', 10, 1, '2025-12-16', '2025-12-16'),
-('RS039', 'AE014', 'SV006', 'ASA066', 10, 1, '2025-12-16', '2025-12-16'),
-('RS040', 'AE025', 'SV006', 'ASA122', 10, 2, '2025-12-16', '2025-12-16'),
-('RS041', 'AE026', 'SV006', 'ASA127', 10, 2, '2025-12-16', '2025-12-16'),
-('RS042', 'AE027', 'SV006', 'ASA132', 10, 2, '2025-12-16', '2025-12-16'),
-('RS043', 'AE025', 'SV005', 'ASA121', 10, 1, '2025-12-16', '2025-12-16'),
-('RS044', 'AE026', 'SV005', 'ASA126', 10, 1, '2025-12-16', '2025-12-16'),
-('RS045', 'AE027', 'SV005', 'ASA131', 10, 1, '2025-12-16', '2025-12-16');
-
---
 -- Triggers `response`
 --
 DELIMITER $$
@@ -364,6 +327,19 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `result_criteria`
+--
+
+CREATE TABLE `result_criteria` (
+  `id` int(11) NOT NULL,
+  `criteria_ID` varchar(10) DEFAULT NULL,
+  `score` decimal(5,2) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `result_domain`
 --
 
@@ -371,8 +347,8 @@ CREATE TABLE `result_domain` (
   `rd_ID` varchar(10) NOT NULL,
   `domain_ID` varchar(10) NOT NULL,
   `domain_score_level` int(11) DEFAULT NULL,
-  `num_of_response` int(11) DEFAULT NULL,
-  `last_updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `last_updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `score` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
@@ -417,13 +393,11 @@ CREATE TABLE `score` (
 --
 
 INSERT INTO `score` (`score_ID`, `score_level`, `desc_level`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
-('AS001', 1, 'Tidak lengkap', NULL, NULL, NULL, NULL, 'Active'),
-('AS002', 2, 'Permulaan', NULL, NULL, NULL, NULL, 'Active'),
-('AS003', 3, 'Ditakrif', NULL, NULL, NULL, NULL, 'Active'),
-('AS004', 4, 'Diurus', NULL, NULL, NULL, NULL, 'Active'),
-('AS005', 5, 'Dioptimumm', NULL, NULL, '4', '2025-12-08', 'Active'),
-('AS006', 1, 'Ad-Hoc', NULL, NULL, NULL, NULL, 'Active'),
-('AS007', 2, 'Dilaksana', NULL, NULL, NULL, NULL, 'Active');
+('AS001', 1, 'Permulaan', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AS002', 2, 'Terlaksana', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AS003', 3, 'Tertakrif', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AS004', 4, 'Terurus', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AS005', 5, 'Teroptimum', NULL, NULL, '4', '2025-12-23', 'Active');
 
 --
 -- Triggers `score`
@@ -450,7 +424,7 @@ CREATE TABLE `score_element` (
   `se_ID` varchar(10) NOT NULL,
   `element_ID` varchar(10) DEFAULT NULL,
   `score_ID` varchar(10) DEFAULT NULL,
-  `details` varchar(500) DEFAULT NULL,
+  `details` text DEFAULT NULL,
   `input_id` varchar(10) DEFAULT NULL,
   `input_at` date DEFAULT NULL,
   `updated_id` varchar(10) DEFAULT NULL,
@@ -463,225 +437,344 @@ CREATE TABLE `score_element` (
 --
 
 INSERT INTO `score_element` (`se_ID`, `element_ID`, `score_ID`, `details`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
-('ASA001', 'AE001', 'AS001', 'Tiada struktur tadbir urus  keselamatan siber yang formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA002', 'AE001', 'AS002', 'Struktur tadbir urus  asas telah wujud tetapi memerlukan lebih formalisasi atau skop yang komprehensif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA003', 'AE001', 'AS003', 'Struktur tadbir urus  keselamatan siber yang jelas ditakrifkan dan didokumentasikan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA004', 'AE001', 'AS004', 'Struktur tadbir urus  diurus secara aktif, dikaji semula, dan disesuaikan dengan keadaan yang berubah.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA005', 'AE001', 'AS005', 'Struktur tadbir urus  dipertingkatkan secara berterusan, selari dengan amalan terbaik dan bertindak secara proaktif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA006', 'AE002', 'AS001', 'Peranan dan tanggungjawab yang berkaitan dengan keselamatan siber tidak jelas.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA007', 'AE002', 'AS002', '•	Peranan dan tanggungjawab asas telah dikenal pasti.\r\n•	Peranan dan tanggungjawab asas tidak formal atau disampaikan sepenuhnya kepada warga.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA008', 'AE002', 'AS003', 'Peranan dan tanggungjawab mengenai keselamatan siber yang jelas, didokumentasikan, dan disampaikan kepada seluruh universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA009', 'AE002', 'AS004', 'Kajian semula peranan dan tanggungjawab keselamatan siber dan dikemas kini secara berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA010', 'AE002', 'AS005', '•	Peningkatan berterusan dalam menentukan peranan dan tanggungjawab.\r\n•	 Selari dengan perubahan universiti dan keperluan keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA011', 'AE003', 'AS001', 'Tiada strategi keselamatan siber yang formal atau selari dengan objektif universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA012', 'AE003', 'AS002', 'Strategi asas wujud tetapi kurang selari sepenuhnya dengan objektif universiti atau skop yang komprehensif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA013', 'AE003', 'AS003', 'Strategi keselamatan siber yang tersedia selari dengan objektif universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA014', 'AE003', 'AS004', 'Strategi tersebut dikaji semula dan dikemaskini secara berkala untuk memastikan keselarasan berterusan dengan objektif universiti dan landskap keselamatan siber yang sentiasa berkembang.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA015', 'AE003', 'AS005', 'Strategi diselaraskan, diuruskan, dan disesuaikan secara proaktif, dengan mekanisme maklum balas dan peningkatan berterusan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA016', 'AE004', 'AS001', 'Tiada kajian formal dilakukan oleh pengurusan atasan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA017', 'AE004', 'AS002', 'Kajian sesekali, tetapi tidak secara berkala atau sistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA018', 'AE004', 'AS003', 'Kajian dasar dan inisiatif keselamatan siber adalah secara berkala dan berjadual.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA019', 'AE004', 'AS004', 'Kajian pengurusan yang komprehensif dan sistematik, termasuk memberikan maklum balas dan langkah penyesuaian berdasarkan hasil kajian.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA020', 'AE004', 'AS005', 'Proses kajian adalah secara dinamik dan berterusan dengan mengintegrasikan metrik dan real data time untuk memberi maklumat bagi membuat keputusan dan penyesuaian.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA021', 'AE005', 'AS001', 'Tiada atau kurang peruntukan bagi keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA022', 'AE005', 'AS002', 'Sebahagian peruntukan kewangan dan sumber disediakan tetapi tidak secara konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA023', 'AE005', 'AS003', 'Terdapat proses formal untuk memperuntukkan sumber berdasarkan keperluan keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA024', 'AE005', 'AS004', 'Sumber disediakan secara konsisten, dan terdapat pendekatan proaktif untuk memastikan keperluan keselamatan siber dipenuhi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA025', 'AE005', 'AS005', 'Sumber disediakan secara konsisten dan terdapat pendekatan proaktif dalam memastikan keperluan keselamatan siber dipenuhi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA026', 'AE006', 'AS001', '•	Usaha kesedaran tidak dilaksanakan secara sistematik.\r\n•	Kurang mendapat sokongan dari pengurusan atasan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA027', 'AE006', 'AS002', 'Beberapa usaha bagi program kesedaran telah dilaksanakan, tetapi ia tidak menyeluruh atau konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA028', 'AE006', 'AS003', 'Dasar, prosedur dan program latihan yang ditetapkan, disokong oleh pengurusan tertinggi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA029', 'AE006', 'AS004', '•	Pengurusan atasan secara aktif mengurus inisiatif kesedaran keselamatan siber.\r\n•	Memastikan ia dilaksanakan dengan berkesan dan disepadukan ke dalam budaya organisasi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA030', 'AE006', 'AS005', '•	Pengurusan atasan secara aktif mengurus inisiatif kesedaran keselamatan siber.\r\n•	Memastikan ia dilaksanakan dengan berkesan dan disepadukan ke dalam budaya organisasi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA031', 'AE007', 'AS001', 'Warga universiti, pihak ketiga dan pihak berkepentingan  tidak jelas tentang objektif polisi/prosedur serta tanggungjawab.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA032', 'AE007', 'AS002', 'Ketelusan mengenai objektif polisi/prosedur serta tanggungjawab warga universiti, pihak ketiga dan pihak berkepentingan tidak disampaikan dengan jelas.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA033', 'AE007', 'AS003', 'Objektif polisi/prosedur serta tanggungjawab oleh warga universiti, pihak ketiga dan pihak berkepentingan jelas digariskan dalam dasar/polisi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA034', 'AE007', 'AS004', 'Polisi/prosedur serta tanggungjawab disampaikan dengan baik, dan terdapat mekanisme untuk dikuatkuasa.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA035', 'AE007', 'AS005', 'Ketelusan diutamakan, dan semua pihak berkepentingan memahami sepenuhnya peranan dan tanggungjawab mereka.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA036', 'AE008', 'AS001', 'Polisi dan prosedur keselamatan siber tidak dibangunkan secara komprehensif', NULL, NULL, NULL, NULL, 'Active'),
-('ASA037', 'AE008', 'AS002', 'Polisi dan prosedur keselamatan siber termasuk beberapa kawalan tetapi tidak meliputi semua amalan terbaik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA038', 'AE008', 'AS003', 'Polisi dan prosedur keselamatan siber diselaraskan dengan piawaian antarabangsa dan amalan terbaik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA039', 'AE008', 'AS004', 'Polisi dan prosedur keselamatan siber sentiasa dikemas kini untuk menggabungkan piawaian baharu dan amalan terbaik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA040', 'AE008', 'AS005', 'Polisi/prosedur keselamatan siber diperhalusi secara berterusan untuk kekal mendahului ancaman yang muncul dan perubahan dalam amalan terbaik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA041', 'AE009', 'AS001', 'Polisi dan prosedur keselamatan siber tidak disebarkan dengan berkesan, dan kesedaran adalah rendah.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA042', 'AE009', 'AS002', 'Polisi dan prosedur keselamatan siber disebarkan, tetapi usaha kesedaran tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA043', 'AE009', 'AS003', 'Polisi dan prosedur keselamatan siber asar dimaklumkan secara aktif kepada semua pihak yang berkaitan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA044', 'AE009', 'AS004', 'Terdapat kempen secara berkala dalam memastikan kesedaran dan pemahaman polisi dan prosedur di peringkat universiti dan pihak ketiga.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA045', 'AE009', 'AS005', 'Polisi/prosedur keselamatan siber telah menjadi budaya, dan semua pihak berkepentingan sedar sepenuhnya akan tanggungjawab mereka.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA046', 'AE010', 'AS001', 'Kajian atau semakan tidak wujud.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA047', 'AE010', 'AS002', 'Semakan dijalankan sekali-sekala tetapi tidak sistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA048', 'AE010', 'AS003', 'Terdapat jadual rasmi untuk semakan dasar.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA049', 'AE010', 'AS004', 'Semakan dijalankan secara berkala dan disesuaikan dengan keperluan semasa.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA050', 'AE010', 'AS005', 'Semakan dijalankan secara proaktif, dengan tumpuan pada peningkatan berterusan', NULL, NULL, NULL, NULL, 'Active'),
-('ASA051', 'AE011', 'AS001', 'Penilaian risiko tidak dijalankan atau bersistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA052', 'AE011', 'AS002', 'Beberapa penilaian risiko dijalankan tetapi hanya merangkumi beberapa bahagian atau tidak sepenuhnya secara sistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA053', 'AE011', 'AS003', 'Proses formal dan ditakrifkan untuk penilaian risiko berkala wujud, tetapi perlu diintegrasikan sepenuhnya atau lebih komprehensif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA054', 'AE011', 'AS004', '•	Penilaian risiko yang komprehensif dan berkala dijalankan. \r\n•	Diurus secara aktif yang merupakan sebahagian daripada strategi pengurusan risiko universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA055', 'AE011', 'AS005', 'Pengoptimuman dan peningkatan berterusan proses penilaian risiko dengan mengintegrasi kaedah yang lebih canggih bagi menyesuaikan diri dengan ancaman baru.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA056', 'AE012', 'AS001', 'Tiada peruntukan atau sedikit peruntukan berdasarkan penilaian risiko.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA057', 'AE012', 'AS002', 'Beberapa penjajaran peruntukan berdasarkan risiko, tetapi tidak sistematik atau berdasarkan pemahaman risiko yang komprehensif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA058', 'AE012', 'AS003', 'Proses formal untuk memberi keutamaan kepada peruntukan keselamatan siber berdasarkan penilaian risiko.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA059', 'AE012', 'AS004', 'Proses yang sistematik dan diurus dengan baik untuk memberi keutamaan kepada semua peruntukan keselamatan siber berdasarkan penilaian risiko yang komprehensif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA060', 'AE012', 'AS005', 'Pengoptimuman berterusan penjajaran pelaburan, menggunakan kaedah yang lebih canggih dan berterusan dengan maklumat dan senario risiko yang baru.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA061', 'AE013', 'AS001', 'Pelan rawatan risiko yang tidak formal; tindak balas risiko adalah reaktif dan tidak bersistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA062', 'AE013', 'AS002', 'Pelan rawatan risiko asas wujud, tetapi perlu lebih komprehensif dan praktikal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA063', 'AE013', 'AS003', 'Pelan rawatan risiko yang jelas ditakrifkan untuk semua risiko penting tidak diuji sepenuhnya atau diintegrasikan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA064', 'AE013', 'AS004', 'Pelan rawatan risiko yang dikaji semula dan diurus secara berkala, diintegrasikan ke dalam keseluruhan strategi pengurusan risiko.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA065', 'AE013', 'AS005', 'Proses rawatan risiko yang telah dikaji dan diperbaiki secara berterusan, dengan  adapatasi proses tersebut dengan landskap risiko yang sering berubah.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA066', 'AE014', 'AS001', 'Langkah-langkah pemantauan dan kajian keberkesanan pengurangan risiko adalah minima.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA067', 'AE014', 'AS002', 'Beberapa proses pemantauan dan kajian dilaksanakan tetapi kurang sistematik dan praktikal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA068', 'AE014', 'AS003', 'Proses ditakrifkan untuk memantau dan mengkaji langkah-langkah pengurangan risiko dengan diintegrasikan sepenuhnya atau komprehensif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA069', 'AE014', 'AS004', '•	Langkah-langkah pengurangan risiko adalah secara menyeluruh dan diintegrasikan ke dalam strategi pengurusan risiko.\r\n•	Pemantauan dan kajian risiko yang berkala, sistematik, dan menyeluruh.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA070', 'AE014', 'AS005', 'Peningkatan berterusan dan pengoptimuman proses pemantauan, dengan memasukkan maklum balas dan adaptasi dengan perubahan landskap risiko yang sering berubah.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA071', 'AE015', 'AS001', 'Polisi dan prosedur tidak sejajar dengan standard dan amalan terbaik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA072', 'AE015', 'AS002', '•	Sesetengah penjajaran wujud, tetapi polisi dan prosedur tidak meliputi semua standard dan amalan terbaik yang diperlukan.\r\n•	Pelaksanaan yang tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA073', 'AE015', 'AS003', '•	Polisi dan prosedur jelas sejajar dengan standard dan amalan terbaik yang berkaitan.\r\n•	Terdapat pendekatan yang sistematik untuk memastikan pematuhan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA074', 'AE015', 'AS004', 'Penjajaran dengan standard dan amalan terbaik dikekalkan secara aktif, kemas kini dan pelarasan tetap kepada polisi dan prosedur secara berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA075', 'AE015', 'AS005', 'Polisi dan prosedur sejajar dengan standard semasa dan amalan terbaik dan berterusan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA076', 'AE016', 'AS001', 'Audit dan penilaian yang jarang dilaksanakan atau tidak wujud.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA077', 'AE016', 'AS002', 'Audit sesekali dijalankan, tetapi tidak teratur atau kurang menyeluruh.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA078', 'AE016', 'AS003', 'Audit dan penilaian yang dijadualkan secara berkala dengan pendekatan yang berstruktur tetapi ada ruang untuk penambahbaikan dalam skop.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA079', 'AE016', 'AS004', 'Audit dan penilaian berkala yang menyeluruh dan berkesan, dengan pengubahsuaian berdasarkan standard dan peraturan yang berkembang.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA080', 'AE016', 'AS005', 'Penambahbaikan berterusan dalam proses audit, dengan amalan terbaik dan pendekatan inovatif untuk memastikan penilaian pematuhan yang menyeluruh dan cekap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA081', 'AE017', 'AS001', 'Tindak balas yang tidak konsisten atau reaktif terhadap dapatan audit.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA082', 'AE017', 'AS002', 'Tindak balas asas terhadap dapatan audit tetapi kurang cepat atau secara menyeluruh.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA083', 'AE017', 'AS003', 'Pendekatan sistematik untuk menangani dapatan audit tetapi kurang berkesan dalam pelaksanaan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA084', 'AE017', 'AS004', 'Tindak balas yang berkesan dan tepat pada masanya terhadap dapatan audit, dengan kajian berkala dan penambahbaikan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA085', 'AE017', 'AS005', 'Pendekatan proaktif dan menyeluruh untuk menangani dan meramalkan hasil dapatan audit, memberi tumpuan kepada penambahbaikan berterusan dan amalan terbaik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA086', 'AE018', 'AS001', 'Proses dokumentasi yang terhad atau tidak teratur.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA087', 'AE018', 'AS002', 'Proses dokumentasi asas ada tetapi kurang menyeluruh atau kemas kini secara berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA088', 'AE018', 'AS003', 'Proses dokumentasi berstruktur tetapi memerlukan peningkatan dalam aksesibiliti atau kelengkapannya.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA089', 'AE018', 'AS004', 'Proses dokumentasi yang dikendalikan dengan baik dan komprehensif, dengan kemas kini dan ulasan berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA090', 'AE018', 'AS005', 'Strategi dokumentasi yang canggih, termasuk automasi dan integrasi dengan sistem lain, memastikan ketepatan dan kecekapan yang tinggi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA091', 'AE019', 'AS001', '•	Kesedaran tentang kepentingan keselamatan siber tidak wujud atau rendah dikalangan pihak berkepentingan.\r\n•	Terdapat sedikit penekanan terhadap kepentingan kesedaran keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA092', 'AE019', 'AS002', '•	Terdapat beberapa kesedaran tentang kepentingan keselamatan siber, tetapi ia tidak konsisten di peringkat universiti.\r\n•	Usaha untuk menggalakkan kesedaran adalah secara ad hoc.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA093', 'AE019', 'AS003', '•	Kepentingan keselamatan siber dikomunikasikan dengan jelas dan difahami oleh pihak berkepentingan.\r\n•	Terdapat program kesedaran rasmi yang disediakan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA094', 'AE019', 'AS004', 'Kesedaran tentang kepentingan keselamatan siber secara aktif dipromosikan dan diperkukuh melalui komunikasi berterusan, latihan dan inisiatif kesedaran.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA095', 'AE019', 'AS005', '•	Keselamatan siber diiktiraf sebagai keutamaan utama.\r\n•	Terdapat budaya kesedaran dalam keselamatan siber yang kukuh di seluruh universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA096', 'AE020', 'AS001', '•	Pengasingan tugas dalam keselamatan siber tidak difahami atau dilaksanakan dengan baik.\r\n•	Terdapat sedikit kesedaran tentang kepentingannya.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA097', 'AE020', 'AS002', 'Beberapa pengasingan tugas wujud, tetapi ia tidak diformalkan atau digunakan secara konsisten di seluruh universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA098', 'AE020', 'AS003', '•	Peranan dan tanggungjawab dalam keselamatan siber ditakrifkan dengan jelas.\r\n•	Terdapat pendekatan berstruktur untuk pengasingan tugas.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA099', 'AE020', 'AS004', 'Pengasingan tugas dikuatkuasakan dan dipantau secara aktif untuk mengelakkan konflik kepentingan dan memastikan akauntabiliti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA100', 'AE020', 'AS005', 'Pengasingan tugas dioptimumkan untuk meminimumkan risiko dan memaksimumkan kecekapan dalam operasi keselamatan siber, dengan pengasingan tanggungjawab yang jelas dan mekanisme pengawasan yang berkesan disediakan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA101', 'AE021', 'AS001', 'Keberkesanan program kesedaran dan latihan tidak diukur atau dinilai.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA102', 'AE021', 'AS002', 'Terdapat beberapa percubaan untuk mengukur keberkesanan, tetapi ia tidak formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA103', 'AE021', 'AS003', 'Penilaian yang lebih berstruktur terhadap keberkesanan latihan kurang mendalam atau konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA104', 'AE021', 'AS004', 'Keberkesanan program dinilai secara berkala, dan maklum balas digunakan untuk menambah baik dan memperhalusi inisiatif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA105', 'AE021', 'AS005', 'Peningkatan berterusan pengukuran keberkesanan, menggunakan kaedah yang canggih seperti simulasi, ujian berkala, dan analisis maklum balas.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA106', 'AE022', 'AS001', 'Motivasi kakitangan terhadap keselamatan siber tidak wujud atau rendah.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA107', 'AE022', 'AS002', '•	Sedikit kesedaran dan motivasi dalam kalangan kakitangan.\r\n•	Kesedaran tidak konsisten di peringkat organisasi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA108', 'AE022', 'AS003', 'Motivasi ke arah keselamatan siber digalakkan dan disokong secara aktif melalui program kesedaran, insentif atau skim pengiktirafan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA109', 'AE022', 'AS004', 'Terdapat budaya kesedaran keselamatan siber dan motivasi dikekalkan secara konsisten melalui latihan berterusan, komunikasi dan pengiktirafan pencapaian.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA110', 'AE022', 'AS005', 'Keselamatan Siber telah tertanam dalam budaya organisasi, dan kakitangan sangat bermotivasi dan proaktif dalam pendekatan mereka terhadap keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA111', 'AE023', 'AS001', '•	Kekurangan kemahiran dan kepakaran keselamatan siber yang diperlukan.\r\n•	Terdapat sedikit peruntukan bagi program latihan atau pembangunan kakitangan ICT.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA112', 'AE023', 'AS002', 'Sesetengah kakitangan ICT mempunyai kemahiran asas keselamatan siber, tetapi terdapat jurang dalam kepakaran atau peluang latihan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA113', 'AE023', 'AS003', 'Terdapat program latihan berstruktur disediakan untuk membangunkan kemahiran keselamatan siber di kalangan kakitangan ICT, dan amalan pengambilan pekerja mengutamakan kepakaran keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA114', 'AE023', 'AS004', '•	Kakitangan ICT menerima latihan dan peluang pembangunan kendiri. \r\n•	Terdapat laluan kerjaya yang jelas bagi profesional keselamatan siber dalam organisasi.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA115', 'AE023', 'AS005', '•	Kakitangan ICT memiliki kemahiran dan kepakaran keselamatan siber terkini.\r\n•	Terdapat budaya pembelajaran dan inovasi berterusan dalam keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA116', 'AE024', 'AS001', '•	Tiada program penggantian rasmi disediakan untuk bahagian/unit keselamatan siber.\r\n•	Keperluan kakitangan ditangani secara reaktif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA117', 'AE024', 'AS002', 'Keperluan penggantian dikenal pasti, tetapi tidak ada proses rasmi untuk perancangan penggantian atau pembangunan bakat.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA118', 'AE024', 'AS003', 'Terdapat program penggantian berstruktur, termasuk perancangan penggantian, pembangunan bakat dan strategi pengambilan untuk memastikan kesinambungan keupayaan keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA119', 'AE024', 'AS004', 'Keperluan program penggantian disemak dan dikemas kini secara berkala berdasarkan keperluan organisasi dan perubahan dalam landskap keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA120', 'AE024', 'AS005', 'Program penggantian adalah sangat cekap dan menyesuaikan diri, memastikan keperluan sumber keselamatan siber mempunyai bakat yang sesuai dalam menangani ancaman dan cabaran yang muncul.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA121', 'AE025', 'AS001', 'Tiada inventori aset maklumat atau formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA122', 'AE025', 'AS002', 'Inventori asas wujud tetapi perlu lebih komprehensif atau dikemaskini secara berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA123', 'AE025', 'AS003', 'Proses dan prosedur yang ditakrifkan dengan baik dalam mengekalkan sistem inventori lengkap aset maklumat, tetapi hanya merangkumi beberapa aset atau tidak sepenuhnya bersepadu.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA124', 'AE025', 'AS004', 'Inventori yang dikemaskini dan dikelola secara berkala merangkumi semua aset maklumat, yang bersepadu bagi proses IT dan keselamatan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA125', 'AE025', 'AS005', 'Peningkatan berterusan dan pengoptimuman proses inventori aset, menyesuaikan diri dengan teknologi baru dan perubahan universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA126', 'AE026', 'AS001', 'Tiada pengelasan maklumat atau pelaksanaan pengelasan yang kurang serta tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA127', 'AE026', 'AS002', 'Pengelasan asas beberapa maklumat, tetapi perlu lebih komprehensif atau dilaksanakan secara konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA128', 'AE026', 'AS003', 'Proses formal untuk mengklasifikasi semua malumat aset mengikut tahap klasifikasi tetapi perlu lebih mendalam atau bersepadu dengan kaedah lain.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA129', 'AE026', 'AS004', 'Pengelasan yang komprehensif dan dilaksanakan secara konsisten, yang bersepadu ke dalam proses keselamatan dan pengurusan risiko yang lebih luas.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA130', 'AE026', 'AS005', 'Proses pengelasan yang dikaji semula dan diperbaiki secara berterusan, menyesuaikan diri dengan operasi perkhidmatan dan perubahan landskap ancaman.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA131', 'AE027', 'AS001', '•	Langkah-langkah yang minimum atau ad-hoc untuk perlindungan dan pembuangan maklumat.\r\n•	Proses tidak sepenuhnya praktikal atau bersistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA132', 'AE027', 'AS002', 'Beberapa langkah perlindungan dan proses pembuangan sedia ada, tetapi perlu lebih komprehensif dan praktikal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA133', 'AE027', 'AS003', 'Proses yang jelas ditakrifkan bagi perlindungan, sanitasi dan pelupusan maklumat.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA134', 'AE027', 'AS004', '•	Proses perlindungan kitar hayat yang baik dikelola.\r\n•	Proses perlindungan, sanitasi dan pelupusan yang diintegrasikan ke dalam strategi keselamatan maklumat secara keseluruhan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA135', 'AE027', 'AS005', 'Peningkatan berterusan dan pengoptimuman perlindungan aset dan proses sanitasi dan pelupusan, serta kebolehan adapatasi dengan teknologi baru dan ancaman.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA136', 'AE028', 'AS001', 'Kawalan akses pengguna tidak diurus dengan baik, dengan pengawasan yang terhad dan penguatkuasaan yang tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA137', 'AE028', 'AS002', 'Sesetengah kawalan akses pengguna telah disediakan, tetapi tidak menyeluruh atau dikuatkuasakan secara konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA138', 'AE028', 'AS003', 'Polisi dan prosedur yang ditakrifkan untuk kawalan akses wujud, tetapi mungkin tidak diintegrasikan sepenuhnya atau dilaksanakan secara konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA139', 'AE028', 'AS004', 'Kawalan akses yang komprehensif dan dikelola dengan baik di semua sistem, dengan kajian semula dan kemaskini secara berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA140', 'AE028', 'AS005', 'Peningkatan berterusan dan pengoptimuman proses kawalan akses, menyesuaikan diri dengan teknologi baru dan ancaman.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA141', 'AE029', 'AS001', 'Mekanisme pengesahan lemah atau tidak konsisten dikuatkuasakan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA142', 'AE029', 'AS002', 'Pelaksanaan asas kaedah pengesahan yang lebih kukuh, tetapi tidak komprehensif atau dikuatkuasakan untuk semua sumber sensitif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA143', 'AE029', 'AS003', 'Polisi dan prosedur yang ditakrifkan untuk pengesahan yang kukuh sedia ada, tetapi tidak diintegrasikan sepenuhnya dengan semua sistem atau dikuatkuasakan secara konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA144', 'AE029', 'AS004', 'Kaedah pengesahan yang kuat seperti pengesahan multi-faktor dilaksanakan sepenuhnya dan dikelola di semua sumber sensitif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA145', 'AE029', 'AS005', 'Menilai secara berkala dan mengambil teknologi dan kaedah pengesahan terkini, memastikan keselamatan yang optimum.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA146', 'AE030', 'AS001', 'Hak akses pengguna tidak disemak atau jarang sama sekali.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA147', 'AE030', 'AS002', 'Hak akses disemak secara berkala, tetapi proses manual dan terdedah kepada ralat atau kesilapan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA148', 'AE030', 'AS003', 'Terdapat prosedur untuk semakan akses pengguna, termasuk mempunyai sistem automatik provisioning dan de-provisioning.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA149', 'AE030', 'AS004', 'Hak akses pengguna kerap disemak dan diselaraskan berdasarkan perubahan peranan atau tanggungjawab.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA150', 'AE030', 'AS005', '•	Peningkatan berterusan dan penyempurnaan proses pengurusan akses.\r\n•	Pemantauan berterusan untuk akses tanpa kebenaran.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA151', 'AE031', 'AS001', 'Pemantauan dan pemeriksaan aktiviti akses pengguna yang tiada atau terhad.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA152', 'AE031', 'AS002', '•	Pemantauan dan pengauditan asas disediakan.\r\n•	Tidak menyeluruh atau digunakan dengan berkesan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA153', 'AE031', 'AS003', '•	Proses formal untuk pemantauan dan pengauditan wujud.\r\n•	Kekurangan atau penyepaduan penuh dengan proses keselamatan lain.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA154', 'AE031', 'AS004', 'Pemantauan dan pengauditan akses pengguna yang komprehensif dan berkesan, disepadukan ke dalam rangka kerja keselamatan dan pematuhan keseluruhan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA155', 'AE031', 'AS005', 'Peningkatan berterusan dan pengoptimuman proses pemantauan dan pengauditan, menggunakan alat dan kaedah terkini.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA156', 'AE032', 'AS001', 'Akses pihak ketiga tidak diurus atau dipantau dengan berkesan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA157', 'AE032', 'AS002', 'Prosedur pemantauan asas, tetapi tidak konsisten atau terhad dalam skop.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA158', 'AE032', 'AS003', 'Terdapat dasar dan prosedur rasmi untuk mengurus akses pihak ketiga, termasuk penilaian risiko pihak ketiga dan keperluan kontrak.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA159', 'AE032', 'AS004', 'Akses pihak ketiga dipantau dan diurus secara aktif, dengan audit dan semakan pematuhan yang kerap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA160', 'AE032', 'AS005', 'Pengurusan akses pihak ketiga dioptimumkan untuk pengurangan risiko, dengan pemantauan berterusan dan kawalan automatik untuk akses pihak ketiga.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA161', 'AE033', 'AS001', '•	Tiada proses atau usaha yang ditetapkan bagi mendidik atau menyampaikan keperluan keselamatan siber kepada mereka.\r\n•	Pertimbangan keselamatan siber mungkin kurang atau tidak diendahkan sepenuhnya.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA162', 'AE033', 'AS002', '•	Pihak universiti menyedari kepentingan kesedaran keselamatan siber pihak ketiga dan telah memulakan beberapa usaha untuk mendidik atau menyampaikan keperluan keselamatan siber kepada mereka.\r\n•	Pihak ketiga mempunyai pengetahuan minimum tentang keperluan keselamatan siber\r\n•	Usaha ini kurang konsisten merentas semua pihak ketiga.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA163', 'AE033', 'AS003', 'Kaedah rasmi wujud untuk memaklumkan pihak ketiga tentang kepentingan keselamatan siber. Ini boleh melibatkan penyediaan dokumen, piawaian atau bahan latihan yang memperincikan jangkaan dan keperluan keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
-('ASA164', 'AE033', 'AS004', '•	Universiti secara agresif menyelia pengetahuan keselamatan siber pihak ketiga dengan berkomunikasi dan menguatkuasakan keperluan keselamatan siber secara konsisten.\r\n•	Sistem ditubuhkan untuk mengawasi pematuhan pihak ketiga terhadap piawaian keselamatan siber, dan maklum balas diberikan untuk meningkatkan pemahaman dan pematuhan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA165', 'AE033', 'AS005', '•	Universiti secara konsisten menyasarkan untuk meningkatkan aktiviti kesedaran keselamatan siber pihak ketiga.\r\n•	Bahan komunikasi dan latihan disesuaikan untuk menangani permintaan unik dan risiko pelbagai perhubungan pihak ketiga.\r\n•	Prosedur penambahbaikan berterusan diwujudkan untuk menjamin keberkesanan kempen kesedaran.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA166', 'AE034', 'AS001', 'Penilaian jarang atau tidak ada keperluan keselamatan siber dalam kontrak.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA167', 'AE034', 'AS002', 'Perjanjian keselamatan maklumat dengan pihak ketiga diselia dan dikuatkuasakan, walaupun secara tidak konsisten', NULL, NULL, NULL, NULL, 'Active'),
-('ASA168', 'AE034', 'AS003', '•	Penilaian berkala dengan klausa dan keperluan keselamatan siber yang ditakrifkan.\r\n•	Perjanjian yang jelas, bertulis dan konsisten mengawal semua perkongsian pihak ketiga.\r\n•	Pemeriksaan pematuhan tetap dan mekanisme ketidakpatuhan telah disediakan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA169', 'AE034', 'AS004', '•	Pematuhan perjanjian keselamatan maklumat dikendalikan dan disemak secara aktif semasa dikendalikan.\r\n•	Terdapat proses untuk menjejak, melaporkan dan mengurus isu dan pelanggaran pematuhan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA170', 'AE034', 'AS005', 'Amalan terbaik dalam keperluan keselamatan siber kontrak, dengan fleksibiliti bagi mengurangkan ancaman dan meminimakan risiko pihak ketiga.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA171', 'AE035', 'AS006', 'Tiada penilaian formal; bergantung kepada penilaian secara ad-hoc atau tidak formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA172', 'AE035', 'AS007', 'Penilaian asas dijalankan tetapi mungkin kurang mendalam atau konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA176', 'AE036', 'AS006', 'Tiada proses rasmi bagi penglibatan kumpulan pakar atau pakar bidang.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA177', 'AE036', 'AS007', '•	Usaha untuk penglibatan kumpulan pakar atau pakar bidang tidak konsisten.\r\n•	Tidak mempunyai proses yang formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA181', 'AE037', 'AS006', 'Kawalan keselamatan formal tidak ada atau minima; bergantung kepada tetapan asas atau ‘default setting’.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA182', 'AE037', 'AS007', 'Kawalan keselamatan asas di tempat tetapi tidak menyeluruh atau sepenuhnya bersepadu.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA186', 'AE038', 'AS006', 'Prosedur khusus yang tidak ada atau minima untuk konfigurasi selamat; bergantung kepada tetapan asas atau (default setting).', NULL, NULL, NULL, NULL, 'Active'),
-('ASA187', 'AE038', 'AS007', 'Beberapa langkah untuk konfigurasi selamat digunakan, tetapi mungkin kurang mengikut ketelitian atau', NULL, NULL, NULL, NULL, 'Active'),
-('ASA191', 'AE039', 'AS006', 'Langkah keselamatan infrastruktur rangkaian dan sistem dipantau tanpa proses formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA192', 'AE039', 'AS007', 'Langkah keselamatan dan infrastruktu infrastruktur rangkaian dan sistem dipantau, tetapi tidak secara mendalam.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA196', 'AE040', 'AS006', 'Kemas kini perisian dan perkakasan jarang atau diabaikan, menyebabkan sistem terdedah kepada kelemahan keselamatan yang diketahui.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA197', 'AE040', 'AS007', '•	Terdapat beberapa usaha untuk menggunakan kemas kini, tetapi ia tidak teratur atau reaktif.\r\n•	Terdapat kelewatan dalam mengatasi kelemahan kritikal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA201', 'AE041', 'AS006', 'Tiada proses formal; penggunaan teknologi baru adalah reaktif.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA202', 'AE041', 'AS007', 'Beberapa penilaian teknologi baru mungkin tidak teratur atau kurang pendekatan strategik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA206', 'AE042', 'AS006', 'Tiada keupayaan SOC formal, pemantauan ancaman yang reaktif atau tidak wujud.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA207', 'AE042', 'AS007', 'Fungsi SOC asas ada tetapi terhad dalam skop atau keberkesanan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA211', 'AE043', 'AS006', 'Perisian dan perkakasan keselamatan maklumat tidak wujud atau sudah oudated. Peruntukan minimum dalam menaik taraf atau memperoleh teknologi baharu.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA212', 'AE043', 'AS007', 'Beberapa alatan dan perkakasan keselamatan maklumat asas telah disediakan, tetapi ia tidak dikemas kini dengan kemajuan terkini dalam teknologi keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA216', 'AE044', 'AS006', 'Tiada rancangan tindak balas insiden formal dan tindak balas.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA217', 'AE044', 'AS007', 'Rancangan tindak balas kejadian asas wujud tetapi tidak lengkap atau dikemaskini secara berkala.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA221', 'AE045', 'AS006', 'Peranan dan tanggungjawab tidak ditakrifkan dengan jelas, menyebabkan kekeliruan semasa insiden.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA222', 'AE045', 'AS007', 'Peranan asas ditakrifkan tetapi kurang jelas atau lengkap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA226', 'AE055', 'AS006', 'Masa tindak balas dan pemulihan insiden yang lambat atau tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA227', 'AE055', 'AS007', 'Mekanisme tindak balas insiden yang asas, tetapi kurang cepat atau cekap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA231', 'AE046', 'AS006', 'Pengurusan insiden yang tidak konsisten atau ditambah baik, melalui proses pengekalan, pemusnahan dan usaha pemulihan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA232', 'AE046', 'AS007', 'Pengurusan asas insiden tetapi kurang menyeluruh atau cekap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA236', 'AE047', 'AS006', 'Tindak balas insiden yang perlahan atau tidak konsisten terhadap insiden dan amaran.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA237', 'AE047', 'AS007', 'Prosedur penyiasatan dan peningkatan asas insiden ada, tetapi lambat atau tidak cekap.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA241', 'AE048', 'AS006', 'Tiada proses formal untuk mengkaji dan belajar dari insiden.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA242', 'AE048', 'AS007', 'Proses ulasan asas telah diletakkan, tetapi tidak teliti atau bersistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA246', 'AE049', 'AS006', 'Tiada keperluan pengurusan rasmi bagi ancaman dan kelemahan keselamatan siber.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA247', 'AE049', 'AS007', 'Beberapa keperluan pengurusan yang disediakan, tetapi ia tidak diformalkan atau digunakan secara konsisten di seluruh universiti.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA251', 'AE054', 'AS006', '•	Pengurusan ancaman dan keretanan tidak wujud atau sedikit. \r\n•	Sedikit kesedaran atau keutamaan terhadap aktiviti ini.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA252', 'AE054', 'AS007', 'Pengiktirafan tentang keperluan untuk pengurusan ancaman dan kerentanan, tetapi ia tidak dijalankan secara teratur atau sistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA256', 'AE050', 'AS006', 'Pihak universiti tidak mempunyai kesedaran atau pelaburan dalam teknologi keselamatan siber terkini untuk pengurusan ancaman dan kerentanan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA257', 'AE050', 'AS007', 'Beberapa teknologi keselamatan siber asas telah disediakan, tetapi tidak dikemas kini dengan kemajuan terkini.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA261', 'AE051', 'AS006', 'Pengurusan kesinambungan perkhidmatan ICT tidak diformalkan dan tiada keperluan khusus disediakan. ', NULL, NULL, NULL, NULL, 'Active'),
-('ASA262', 'AE051', 'AS007', 'Sedikit kesedaran tentang kepentingan kesinambungan perkhidmatan ICT, tetapi keperluan formal adalah  kurang atau tidak konsisten.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA266', 'AE052', 'AS006', '•	Pelan tidak disemak atau dikemas kini secara kerap. \r\n•	Tiada proses formal disediakan untuk semakan.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA267', 'AE052', 'AS007', 'Pengiktirafan tentang keperluan untuk semakan pelan, tetapi ia tidak dijalankan secara teratur atau sistematik.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA271', 'AE052', 'AS006', 'Simulasi pelan tidak dijalankan dan terdapat sedikit kesedaran tentang kepentingannya.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA272', 'AE052', 'AS007', 'Beberapa simulasi pelan dijalankan, tetapi ia jarang berlaku atau tidak formal.', NULL, NULL, NULL, NULL, 'Active'),
-('ASA276', 'AE059', 'AS001', 'level 1 score test', '4', '2025-11-26', '4', '2025-11-26', 'Active'),
-('ASA277', 'AE059', 'AS002', 'aaaa', '4', '2025-11-26', NULL, NULL, 'Active'),
-('ASA278', 'AE062', 'AS001', 'Mekanisme pengesahan lemah atau tidak konsisten dikuatkuasakan.', '4', '2025-11-26', '4', '2025-11-26', 'Active'),
-('ASA279', 'AE062', 'AS002', 'Pelaksanaan asas kaedah pengesahan yang lebih kukuh, tetapi tidak komprehensif atau dikuatkuasakan untuk semua sumber sensitif.', '4', '2025-11-26', '4', '2025-11-26', 'Active'),
-('ASA280', 'AE062', 'AS003', 'Polisi dan prosedur yang ditakrifkan untuk pengesahan yang kukuh sedia ada, tetapi tidak diintegrasikan sepenuhnya dengan semua sistem atau dikuatkuasakan secara konsisten.', '4', '2025-11-26', '4', '2025-12-02', 'Active'),
-('ASA281', 'AE062', 'AS004', 'Kaedah pengesahan yang kuat seperti pengesahan multi-faktor dilaksanakan sepenuhnya dan dikelola di semua sumber sensitif.', '4', '2025-11-26', NULL, NULL, 'Active'),
-('ASA282', 'AE061', 'AS006', '123454', '4', '2025-12-05', '4', '2025-12-05', 'Active');
+('ASA001', 'AE001', 'AS001', '•	Pembangunan dan pelaksanaan tadbir urus keselamatan siber adalah ad hoc; dan\r\n•	Pembangunan dan pelaksanaan tadbir urus keselamatan siber tidak dilaksanakan secara sistematik; dan\r\n•	Tiada dokumen bagi pembangunan dan pelaksanaan tadbir urus keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA002', 'AE001', 'AS002', '•	Tadbir urus keselamatan siber asas ada tetapi tidak dilaksanakan secara sistematik; dan\r\n•	Tadbir urus keselamatan siber asas tidak konsisten; dan\r\n•	Pembangunan dan pelaksanaan tadbir urus keselamatan siber tidak didokumenkan dengan baik.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA003', 'AE001', 'AS003', '•	Telah lengkap Tahap 2; dan\r\n•	Tadbir urus keselamatan siber dibangunkan dan didokumenkan sepenuhnya; dan\r\n•	Pemantauan, semakan dan kemas kini yang minima.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA004', 'AE001', 'AS004', '•	Telah lengkap Tahap 3; dan\r\n•	Tadbir urus keselamatan siber diurus secara sistematik dengan pemantauan, semakan dan kemas kini yang kerap; dan\r\n•	Terdapat mekanisme formal untuk memastikan pematuhan dan keberkesanan merentas organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA005', 'AE001', 'AS005', '•	Telah lengkap Tahap 4; dan\r\n•	Tadbir urus keselamatan siber dioptimumkan secara berterusan melalui penilaian dan penambahbaikan yang berterusan; dan\r\n•	Tadbir urus keselamatan siber terus dipertingkatkan dan diperhalusi berdasarkan maklum balas, metrik prestasi dan  warga dan pihak yang berkepentingan ancaman yang muncul.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA006', 'AE002', 'AS001', '•	Tiada tanggungjawab atau terma tadbir urus yang ditakrifkan dengan jelas; dan \r\n•	Tiada dokumen yang formal disediakan bagi tanggungjawab atau terma tadbir urus; dan\r\n•	Warga organisasi dan pihak berkepentingan tidak mengetahui peranan keselamatan siber mereka.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA007', 'AE002', 'AS002', '•	Sesetengah tanggungjawab dan terma tadbir urus ditakrifkan tetapi tidak lengkap dan tidak digunakan secara konsisten di seluruh organisasi; dan\r\n•	Dokumen tanggungjawab atau terma tadbir urus yang minima; dan\r\n•	Peranan dan tanggungjawab asas tidak formal atau disampaikan sepenuhnya kepada warga.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA008', 'AE002', 'AS003', '•	Telah lengkap Tahap 2; dan\r\n•	Ia diseragamkan dan digunakan secara konsisten di seluruh organisasi; dan\r\n•	Tanggungjawab dan syarat tadbir urus dibangunkan sepenuhnya, didokumenkan dan disampaikan; dan\r\n•	Semua pihak berkepentingan yang berkaitan sedar akan peranan dan tanggungjawab mereka.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA009', 'AE002', 'AS004', '•	Telah lengkap Tahap 3; dan\r\n•	Tanggungjawab dan syarat tadbir urus ditakrifkan, diurus secara aktif dan dipantau; dan\r\n•	Tanggungjawab dan terma tadbir urus ditakrifkan dengan jelas, didokumenkan dan diuruskan melalui proses formal; dan\r\n•	Terdapat proses untuk memastikan pematuhan dan akauntabiliti.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA010', 'AE002', 'AS005', '•	Telah lengkap Tahap 4; dan\r\n•	Tanggungjawab dan tadbir urus terus bertambah baik berdasarkan maklum balas warga dan pihak yang berkepentingan mengikut amalan terbaik semasa;  dan\r\n•	Tanggungjawab dan syarat tadbir urus terus dioptimumkan melalui penilaian dan penambahbaikan berterusan; dan\r\n•	Pendekatan proaktif diperhalusi dalam mengoptimumkan takrifan ini; dan\r\n•	Strategi penyesuaian memastikan ia kekal relevan dan berkesan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA011', 'AE003', 'AS001', '•	Tiada strategi keselamatan siber dibangunkan sejajar dengan strategi organisasi; dan\r\n•	Strategi keselamatan siber tidak wujud atau terputus sepenuhnya daripada matlamat dan objektif organisasi; dan\r\n•	Usaha keselamatan siber adalah ad hoc dan tidak diselaraskan dengan matlamat organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA012', 'AE003', 'AS002', '•	Hanya sebahagian strategi keselamatan siber sejajar dengan strategi organisasi; dan\r\n•	Strategi keselamatan siber tidak secara menyeluruh dan selaras dengan objektif organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA013', 'AE003', 'AS003', '•	Telah lengkap Tahap 2; dan\r\n•	Strategi keselamatan siber dibangunkan selaras dengan strategi organisasi, dengan dokumentasi yang jelas dan proses standard memastikan penjajaran; dan \r\n•	Terdapat pendekatan yang didokumenkan dan diseragamkan yang memastikan strategi keselamatan siber menyokong matlamat dan objektif organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA014', 'AE003', 'AS004', '•	Telah lengkap Tahap 3; dan\r\n•	Strategi keselamatan siber bukan sahaja sejajar dengan strategi organisasi tetapi juga diurus dan dipantau secara aktif untuk memastikan penjajaran berterusan; dan\r\n•	Strategi keselamatan siber diurus secara sistematik dan disemak secara berkala dalam memastikan ia kekal sejajar dengan strategi organisasi; dan\r\n•	Proses formal disediakan bagi penyesuaian perubahan dalam objektif organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA015', 'AE003', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Strategi keselamatan siber dioptimumkan secara berterusan untuk kekal sejajar sepenuhnya dengan strategi organisasi yang sedang berkembang; dan\r\n• Terdapat pendekatan proaktif dalam meningkatkan strategi berdasarkan maklum balas warga, pihak ketiga dan pihak yang berkepentingan, metrik prestasi dan amalan terbaik yang muncul; dan\r\n• Penilaian dan penambahbaikan berterusan memastikan usaha keselamatan siber menyokong matlamat organisasi yang berkembang dengan berkesan', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA016', 'AE004', 'AS001', '• Tiada komitmen formal daripada pengurusan atasan terhadap keselamatan siber; dan\r\n• Polisi dan program keselamatan siber tidak wujud atau wujud secara minimum; dan\r\n• Tindakan keselamatan siber dilakukan secara reaktif tanpa perancangan strategik; dan\r\n• Kakitangan dan pengurusan tidak diberi latihan khusus dalam bidang keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA017', 'AE004', 'AS002', '• Pengurusan atasan mula menunjukkan minat terhadap keselamatan siber, tetapi komitmen mereka tidak sepenuhnya formal; dan\r\n• Program keselamatan siber mula diwujudkan, walaupun masih tidak komprehensif; dan\r\n• Polisi siber dan garis panduan mula disediakan, tetapi belum disemak secara berkala; dan\r\n• Beberapa sumber diperuntukkan untuk program keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA018', 'AE004', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Pengurusan atasan memberi komitmen yang jelas melalui pelaburan dalam keselamatan siber dan penyertaan aktif dalam perancangan strategik; dan\r\n• Polisi keselamatan siber telah diwujudkan dan dikemas kini secara berkala; dan\r\n• Program keselamatan siber menjadi sebahagian daripada budaya organisasi dan melibatkan penyertaan semua peringkat pekerja; dan\r\n• Latihan berkala dijalankan untuk memastikan pemahaman dan pematuhan polisi keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA019', 'AE004', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pengurusan atasan secara aktif mengawasi, mengukur, dan menilai kecekapan program keselamatan siber; dan\r\n• Komitmen jelas melalui pembiayaan mencukupi dan pelaksanaan inisiatif keselamatan siber yang inovatif; dan\r\n• Polisi keselamatan siber ditakrifkan secara kuantitatif dengan ukuran prestasi yang jelas; dan\r\n• Laporan dan audit keselamatan dilakukan secara berkala untuk menilai pencapaian matlamat keselamatan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA020', 'AE004', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pengurusan atasan menunjukkan kepimpinan yang aktif dan berterusan dalam pembangunan serta inovasi polisi dan program keselamatan siber; dan\r\n• Komitmen pengurusan bukan sahaja kepada pematuhan, tetapi juga kepada inovasi berterusan dalam strategi keselamatan siber untuk menyesuaikan diri dengan ancaman siber yang berubah-ubah; dan\r\n• Penyemakan polisi dan program keselamatan siber dilakukan secara berkala dan dengan strategi masa depan yang proaktif; dan\r\n• Keselamatan siber menjadi agenda utama pengurusan dan budaya organisasi di seluruh peringkat, disokong oleh penggunaan teknologi dan amalan terbaik terkini..', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA021', 'AE005', 'AS001', '• Pengurusan atasan tidak memberi perhatian atau menyediakan peruntukan kewangan yang khusus untuk sokongan keselamatan siber atau projek lain; dan\r\n• Tiada perancangan sistematik bagi sumber manusia atau kewangan untuk inisiatif yang penting; dan\r\n• Sumber yang diperuntukkan adalah terhad dan tidak memenuhi keperluan asas organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA022', 'AE005', 'AS002', '• Pengurusan atasan mula menyediakan sumber kewangan dan manusia, tetapi sokongan ini tidak berstruktur atau mencukupi; dan\r\n• Beberapa bajet diperuntukkan untuk projek tertentu, tetapi ia hanya bersifat reaktif, misalnya selepas insiden atau apabila diperlukan segera; dan\r\n• Terdapat kesedaran mengenai keperluan tambahan, namun peruntukan masih belum dioptimumkan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA023', 'AE005', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Pengurusan atasan secara aktif menyokong penyediaan sumber kewangan dan sumber manusia berdasarkan rancangan yang jelas; dan\r\n• Bajet dan sumber diperuntukkan secara formal untuk menyokong inisiatif keselamatan dan pembangunan organisasi; dan\r\n• Pengurusan memastikan bahawa setiap jabatan atau projek menerima sumber yang sewajarnya, dengan penekanan kepada kecekapan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA024', 'AE005', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pengurusan atasan mengukur dan menilai keperluan sumber kewangan dan sumber manusia secara kuantitatif; dan\r\n• Sokongan sumber disediakan berdasarkan analisis yang teliti dan penyelarasan strategik; dan\r\n• Sumber diperuntukkan dengan berkesan dan diselaraskan dengan keperluan projek jangka panjang organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA025', 'AE005', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pengurusan atasan menyediakan sokongan sumber kewangan dan manusia yang optimum dengan komitmen tinggi kepada keperluan semasa dan masa depan; dan\r\n• Peruntukan kewangan dan sumber manusia tidak sahaja mencukupi, tetapi juga dioptimumkan untuk mencapai inovasi dan peningkatan berterusan dalam semua bidang; dan\r\n• Sokongan sumber adalah bersepadu dengan strategi organisasi jangka panjang dan disesuaikan dengan perubahan keperluan serta teknologi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA026', 'AE006', 'AS001', '• Pengurusan atasan tidak mempunyai atau kurang memberikan komitmen untuk memastikan organisasi, pihak ketiga dan pihak yang berkepentingan memahami keselamatan siber; dan\r\n• Program kesedaran dan latihan yang minima dan tidak mencukupi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA027', 'AE006', 'AS002', '• Pengurusan atasan menunjukkan sedikit kesedaran tentang keperluan untuk pemahaman keselamatan siber, tetapi komitmen boleh menjadi lebih pelbagai dan konsisten; dan\r\n• Beberapa latihan asas atau usaha kesedaran wujud tetapi perlu distrukturkan dengan lebih baik.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA028', 'AE006', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Komitmen pengurusan atasan terhadap kesedaran keselamatan siber diwujudkan dan didokumenkan; dan\r\n• Terdapat program latihan dan kesedaran yang jelas dan berjadual dengan baik untuk memastikan warga organisasi memahami prinsip dan amalan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA029', 'AE006', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Komitmen pengurusan atasan terhadap kesedaran keselamatan siber diurus dan dipantau secara aktif; dan\r\n• Pengurusan atasan menguruskan inisiatif kesedaran keselamatan siber secara sistematik; dan\r\n• Penilaian dan kemas kini yang kerap memastikan program latihan berkesan dan warga organisasi dididik secara berterusan tentang amalan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA030', 'AE006', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Komitmen pengurusan atasan terhadap kesedaran keselamatan siber terus dioptimumkan; dan\r\n• Program latihan dan kesedaran dipertingkatkan secara proaktif berdasarkan maklum balas serta amalan terbaik dan terkini untuk memastikan ia berkesan dengan cabaran keselamatan siber semasa.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA031', 'AE007', 'AS001', '• Dasar dan polisi tidak jelas atau tidak wujud secara formal untuk menetapkan tanggungjawab dalam organisasi; dan\r\n• Tanggungjawab antara organisasi, kakitangan, pihak ketiga, dan pihak berkepentingan tidak ditakrifkan dengan baik; dan\r\n• Kebergantungan tinggi kepada penyelesaian masalah yang bersifat ad-hoc dan reaktif.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA032', 'AE007', 'AS002', '• Tanggungjawab asas bagi organisasi dan warga mula ditetapkan, tetapi masih kekurangan definisi formal untuk pihak ketiga dan pihak berkepentingan; dan\r\n• Dasar dan polisi mula diperkenalkan, tetapi masih tidak konsisten atau terperinci; dan\r\n• Terdapat kesedaran tentang keperluan prosedur yang lebih jelas, namun pelaksanaannya masih bersifat terbatas.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA033', 'AE007', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Dasar dan prosedur yang jelas telah diwujudkan untuk semua pihak termasuk organisasi, warga, pihak ketiga, dan pihak berkepentingan; dan\r\n• Tanggungjawab ditakrifkan dengan baik dalam dokumen polisi, memastikan pemahaman dan pematuhan dari semua pihak terlibat; dan\r\n• Terdapat penyelarasan yang konsisten antara pelbagai jabatan atau pihak dalam organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA034', 'AE007', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Dasar, polisi, dan prosedur yang jelas serta diukur secara kuantitatif untuk memastikan tanggungjawab setiap pihak diuruskan dengan berkesan; dan\r\n• Penilaian berkala dilakukan untuk memastikan bahawa setiap pihak mematuhi tanggungjawab yang telah ditetapkan dalam polisi; dan\r\n• Analisis dan laporan dibuat untuk mengukur prestasi berasaskan pematuhan kepada tanggungjawab yang telah didefinisikan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA035', 'AE007', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Polisi dan prosedur yang jelas dan dioptimumkan di mana tanggungjawab antara organisasi, warga, pihak ketiga, dan pihak berkepentingan bukan sahaja ditetapkan, tetapi sentiasa diperbaharui mengikut perubahan dalam peraturan atau amalan terbaik; dan\r\n• Dasar dan tanggungjawab difahami dan disepakati sepenuhnya oleh semua pihak terlibat, dan pengurusan secara aktif mengawal selia kepatuhan; dan\r\n• Inovasi dalam pelaksanaan tanggungjawab diterapkan, memastikan proses sentiasa efisien dan selari dengan matlamat jangka panjang organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA036', 'AE008', 'AS001', '• Dasar/polisi dan prosedur keselamatan siber tidak menggabungkan kawalan yang disyorkan oleh standard antarabangsa dan amalan terbaik; dan\r\n• Tiada dasar/polisi dan prosedur formal yang ditetapkan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA037', 'AE008', 'AS002', '• Beberapa usaha dibuat untuk menggabungkan kawalan daripada standard antarabangsa dan amalan terbaik, tetapi tidak lengkap, digunakan secara tidak konsisten dan tidak didokumenkan dengan baik; dan\r\n• Dasar/polisi dan prosedur berada di peringkat awal pembangunan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA038', 'AE008', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Dasar/polisi dan prosedur keselamatan siber ditakrifkan dan didokumenkan dengan baik; dan\r\n• Menggabungkan semua kawalan berkaitan yang disyorkan oleh standard antarabangsa dan amalan terbaik; dan\r\n• Dasar/polisi dan prosedur ini dibangunkan dan diselenggara secara sistematik.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA039', 'AE008', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Penggabungan kawalan yang disyorkan oleh standard antarabangsa dan amalan terbaik diurus dan dipantau secara aktif; dan\r\n• Dasar/polisi dan prosedur sentiasa disemak dan dikemas kini untuk memastikan ia kekal komprehensif dan berkesan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA040', 'AE008', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses membangunkan dasar/polisi dan prosedur keselamatan siber dioptimumkan secara berterusan; dan\r\n• Terdapat pendekatan proaktif untuk menambah baik dan dasar/polisi diperhalusi berdasarkan maklum balas warga dan pihak yang berkepentingan, metrik prestasi dan amalan terbaik yang muncul; dan\r\n• Kawalan sentiasa disemak dan dipertingkatkan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA041', 'AE009', 'AS001', '• Penyebaran dasar/polisi keselamatan siber sangat terhad, jika ada; dan\r\n• Tiada strategi formal untuk memastikan warga organisasi, pihak ketiga, atau pihak berkepentingan memahami prosedur keselamatan siber; dan\r\n• Sebarang komunikasi yang berlaku adalah tidak formal, tidak didokumentasikan, dan bersifat ad-hoc.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA042', 'AE009', 'AS002', '• Penyebaran dasar/polisi keselamatan siber mula dilakukan, tetapi pelaksanaannya tidak konsisten; dan\r\n• Beberapa warga dan pihak berkepentingan diberikan akses kepada dasar ini, tetapi latihan dan panduan formal masih terhad; dan\r\n• Prosedur keselamatan siber didokumenkan, tetapi penyebaran kepada pihak ketiga masih tidak menyeluruh.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA043', 'AE009', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Polisi dan prosedur keselamatan siber telah ditakrif dan dikomunikasikan secara jelas kepada semua pihak, termasuk warga organisasi, pihak ketiga, dan pihak berkepentingan; dan\r\n• Sesi latihan dan bengkel formal telah diadakan untuk memastikan semua pihak memahami dasar dan prosedur; dan\r\n• Saluran komunikasi yang formal dan sistematik telah diwujudkan untuk menyebarkan maklumat berkaitan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA044', 'AE009', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Penyebaran dasar/polisi keselamatan siber dilakukan secara kuantitatif dan diawasi untuk memastikan semua pihak memahami dan mematuhi prosedur; dan\r\n• Mekanisme penilaian dan audit digunakan untuk mengukur tahap pemahaman warga dan pihak ketiga terhadap polisi yang disebarkan; dan\r\n• Proses penyebaran dikawal selia dengan analisis prestasi berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA045', 'AE009', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penyebaran dasar dan prosedur keselamatan siber adalah sangat berstruktur dan berkesan, dengan penggunaan teknologi terkini untuk memastikan semua pihak mendapat akses tepat waktu dan berterusan kepada polisi ini; dan\r\n• Sesi latihan dan komunikasi keselamatan siber sentiasa diperbaharui dan disesuaikan dengan ancaman serta teknologi semasa; dan\r\n• Semua warga, pihak ketiga, dan pihak berkepentingan bukan sahaja memahami, tetapi juga mematuhi dan mengamalkan dasar keselamatan siber sebagai sebahagian daripada budaya organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA046', 'AE010', 'AS001', '• Semakan sama ada tidak dijalankan sama sekali atau berlaku secara proaktif tanpa proses yang ditetapkan; dan\r\n• Tiada mekanisme formal untuk memastikan dasar atau amalan disemak secara berkala atau sebagai tindak balas kepada keperluan semasa.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA047', 'AE010', 'AS002', '• Semakan dijalankan sekali-sekala; dan\r\n• Semakan dijalankan tidak teratur dan tidak berdasarkan jadual;dan\r\n• Tiada jadual rasmi dan semakan berlaku sebagai tindak balas kepada isu tertentu dan bukannya secara proaktif.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA048', 'AE010', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Jadual dan proses rasmi untuk semakan berkala diwujudkan dan didokumenkan; dan\r\n• Semakan dijalankan secara berkala mengikut jadual; dan\r\n• Terdapat prosedur bagi tindak balas kepada keperluan semasa juga.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA049', 'AE010', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses semakan diurus dan dipantau secara aktif; dan\r\n• Semakan dijalankan secara sistematik serta berkala.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA050', 'AE010', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses semakan dioptimumkan secara berterusan; dan\r\n• Penambahbaikan berterusan dibuat berdasarkan maklum balas warga dan pihak yang berkepentingan mengikut amalan terbaik; dan \r\n• Penambahbaikan dilakukan  secara dinamik mengikut keperluan dan keadaan ancaman siber yang berubah-ubah.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA051', 'AE011', 'AS001', '• Tiada pendekatan sistematik atau formal untuk menilai risiko keselamatan siber; dan\r\n• Penilaian risiko dijalankan secara ad-hoc, hanya selepas insiden berlaku atau apabila diperlukan; dan\r\n• Organisasi tidak mempunyai strategi keselamatan yang jelas yang diselaraskan dengan matlamat dan tujuan organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA052', 'AE011', 'AS002', '• Keperluan kepentingan Terdapat kesedaran terhadap keperluan untuk penilaian risiko keselamatan siber, dan beberapa langkah telah dilaksanakan; dan\r\n• Penilaian risiko mula dilaksanakan, tetapi tidak secara konsisten di seluruh organisasi atau tidak sepenuhnya disesuaikan dengan matlamat strategik; dan\r\n• Organisasi mula menggunakan alat asas atau kerangka umum untuk menilai risiko, tetapi ia masih tidak berkait rapat dengan objektif organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA053', 'AE011', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Penilaian risiko keselamatan siber telah dijalankan secara formal dan didokumenkan, dengan dasar dan prosedur yang jelas; dan\r\n• Penilaian risiko diselaraskan dengan objektif organisasi  dan dilaksanakan di seluruh organisasi, melibatkan semua jabatan yang berkaitan; dan\r\n• Terdapat penggunaan kerangka penilaian risiko yang lebih mantap seperti ISO 27001 atau NIST, dan risiko dinilai berdasarkan impaknya terhadap tujuan organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA054', 'AE011', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses penilaian risiko keselamatan siber diurus dan diukur secara kuantitatif, dengan analisis mendalam mengenai potensi ancaman dan kelemahan berdasarkan matlamat strategik organisasi; dan\r\n• Penilaian risiko dilakukan secara berkala dan hasilnya dianalisis untuk memastikan bahawa mitigasi risiko adalah selari dengan strategi organisasi; dan\r\n• Keputusan dibuat berdasarkan metrik yang jelas dan pengurusan risiko disokong oleh data dan analitik yang terperinci.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA055', 'AE011', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penilaian risiko keselamatan siber adalah bersepadu sepenuhnya dengan objektif strategik dan matlamat jangka panjang organisasi; dan\r\n• Organisasi sentiasa memperbaiki proses penilaian risiko berdasarkan maklum balas dan perubahan dalam persekitaran ancaman siber; dan\r\n• Strategi mitigasi risiko adalah proaktif dan inovatif, menggunakan teknologi canggih serta pendekatan analisis ramalan untuk menjangka ancaman yang akan datang dan menyesuaikan langkah pencegahan mengikut keperluan organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA056', 'AE012', 'AS001', '• Tiada keperluan mengikut keutamaan keselamatan siber berdasarkan penilaian risiko; dan\r\n• Keutamaan permohonan keperluan dilakukan secara ad hoc tidak konsisten; dan\r\n• Langkah keselamatan siber dilaksanakan secara rawak atau berdasarkan kebimbangan; dan\r\n• Kurang kesedaran tentang keperluan mengikut keutamaan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA057', 'AE012', 'AS002', '• Sedikit kesedaran tentang keperluan mengikut keutamaan keselamatan siber berdasarkan risiko; dan\r\n• Proses dilakukan tidak formal; dan\r\n•Tindakan adalah reaktif dan bukannya proaktif, serta bergantung pada kebimbangan individu.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA058', 'AE012', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Organisasi membuat keperluan mengikut keutamaan berdasarkan penilaian risiko secara formal; dan\r\n• Prosedur keperluan mengikut keutamaan keselamatan siber diwujudkan dan didokumenkan; dan\r\n• Dokumentasi yang jelas dan pelaksanaan yang konsisten; dan\r\n• Permohonan yang konsisten dan bersistematik dalam membuat keutamaan bagi proses penyediaan keperluan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA059', 'AE012', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan dan semakan berkala terhadap proses keperluan mengikut keutamaan; dan\r\n• Organisasi mempunyai proses pengurusan pengawasan dalam membuat keberkesanan pemantauan bagi keperluan mengikut keutamaan; dan\r\n• Penggunaan metrik dan KPI untuk mengukur keberkesanan; dan\r\n• Pematuhan berterusan kepada proses dengan pengawasan dan pelarasan berdasarkan data prestasi; dan\r\n• Proses ini diselarikan dalam strategi pengurusan risiko organisasi yang lebih menyeluruh.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA060', 'AE012', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penambahbaikan berterusan proses penyediaan keperluan melalui inovasi dan maklum balas warga dan pihak yang berkepentingan; dan\r\n• Pelarasan proses penyediaan keperluan mengikut keutamaan dalam membuat keputusan strategik; dan\r\n• Penyesuaian proaktif kepada ancaman dan perubahan yang muncul dalam landskap keselamatan siber; dan\r\n• Penggunaan kaedah dan metodologi terkini dalam meningkatkan proses keutamaan keputusan bagi penyediaan keperluan keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA061', 'AE013', 'AS001', '• Tiada proses atau garis panduan formal disediakan; dan\r\n• Aktiviti penyemakan adalah secara ad hoc;\r\n• Tiada dokumentasi atau laporan rasmi; dan\r\n• Kesedaran terhad di kalangan warga organisasi dan pihak berkepentingan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA062', 'AE013', 'AS002', '• Proses asas untuk memantau pelan rawatan risiko adalah tidak seragam atau secara konsisten; dan\r\n• Langkah awal untuk melaporkan dan mendokumentasi penemuan; dan\r\n• Pihak yang berkaitan dimaklumkan atas dasar mengetahui; dan\r\n• Penglibatan aktif semua pihak yang berkaitan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA063', 'AE013', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses dan prosedur formal untuk memantau keberkesanan rawatan risiko diwujudkan dan didokumenkan; dan\r\n• Prosedur semakan dan penyemakan yang standard; dan\r\n• Dokumentasi dan pelaporan tetap; dan\r\n• Peranan dan tanggungjawab ditetapkan bagi senua pihak yang berkaitan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA064', 'AE013', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses penyemakan diurus dengan baik dan disepadukan ke dalam rangka kerja pengurusan risiko keseluruhan organisasi; dan\r\n• Pemakaian prosedur penyemakan yang konsisten; dan\r\n• Semakan tetap dan kemas kini kepada pelan rawatan risiko berdasarkan penemuan; dan \r\n• Penglibatan aktif semua pihak yang berkaitan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA065', 'AE013', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses penyemakan terus diperbaiki dan dioptimumkan untuk keberkesanan maksimum; dan\r\n• Penggunaan alat dan instrumen canggih bagi analisis dan pemantauan; dan\r\n• Maklum balas berterusan untuk menambah baik pelan rawatan risiko; dan\r\n• Pengenalpastian proaktif potensi penambahbaikan dan inovasi dalam amalan pengurusan risiko; dan \r\n• Pelaporan dan komunikasi yang komprehensif merentasi semua peringkat dalam organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA066', 'AE014', 'AS001', '• Pemantauan  tidak dijalankan;\r\n• Pemantauan  berlaku secara sesekali tanpa sebarang proses yang ditetapkan; dan\r\n• Tiada mekanisme untuk memastikan pemantauan  berdasarkan keperluan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA067', 'AE014', 'AS002', '• Pemantauan  dijalankan sekali-sekala tetapi tidak teratur dan tidak berdasarkan jadual rasmi; dan\r\n• Proses pemantauan  adalah reaktif dan bukannya proaktif, berdasarkan kepada tindak balas isu khusus dan bukannya sebagai sebahagian daripada rancangan berstruktur.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA068', 'AE014', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Jadual dan proses rasmi untuk pemantauan  diwujudkan dan didokumenkan; dan\r\n• Pemantauan  dijalankan mengikut jadual ini; dan\r\n• Terdapat prosedur untuk tindak balas kepada keperluan semasa.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA069', 'AE014', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses pemantauan  diurus dan dipantau secara aktif; dan\r\n• Semakan dijalankan secara sistematik secara berkala dan sebagai tindak balas kepada keperluan semasa, dengan penemuan digunakan untuk membuat pelarasan tepat pada masanya.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA070', 'AE014', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses Pemantauan  dioptimumkan secara berterusan; dan\r\n• Terdapat pendekatan proaktif bagi menambah baik proses pemantauan  berdasarkan maklum balas warga dan pihak yang berkepentingan, metrik prestasi dan amalan terbaik; dan \r\n• Penambahbaikan dibuat berdasarkan maklum balas warga dan pihak yang berkepentingan dan amalan terbaik; dan\r\n• Penambahbaikan dilakukan  secara dinamik mengikut keperluan dan keadaan ancaman siber yang berubah-ubah.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA071', 'AE015', 'AS001', '• Tiada dasar atau prosedur formal yang ditetapkan untuk mematuhi undang-undang, peraturan, atau standard keselamatan siber; dan\r\n• Organisasi tidak sedar atau memahami sepenuhnya keperluan undang-undang dan peraturan yang berkaitan dengan keselamatan siber; dan\r\n• Amalan keselamatan siber berlaku secara ad-hoc, tanpa rujukan kepada amalan terbaik industri atau keperluan perundangan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA072', 'AE015', 'AS002', '• Organisasi mula memahami keperluan undang-undang peraturan, dan standard keselamatan siber; dan\r\n• Beberapa dasar dan prosedur keselamatan telah diperkenalkan untuk mematuhi keperluan minimum, tetapi tidak sepenuhnya disesuaikan dengan amalan terbaik; dan\r\n• Terdapat usaha untuk memenuhi kepatuhan secara asas, tetapi implementasi tidak konsisten di seluruh organisasi.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA073', 'AE015', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Organisasi mempunyai dasar dan prosedur keselamatan siber yang jelas dan didokumenkan, sejajar dengan keperluan undang-undang, peraturan, dan standard yang terpakai seperti ISO 27001, NIST, atau RAKKSA; dan\r\n• Terdapat penekanan pada pematuhan sepenuhnya terhadap undang-undang dan peraturan yang relevan, dengan polisi yang ditakrifkan dengan baik untuk memastikan keselamatan siber dipelihara; dan\r\n• Proses audit dalaman dan pemeriksaan berkala mula diperkenalkan untuk memastikan pematuhan berterusan.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA074', 'AE015', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Dasar dan prosedur keselamatan siber bukan sahaja mematuhi undang-undang dan peraturan tetapi juga diukur secara kuantitatif untuk menilai keberkesanan pematuhan; dan\r\n• Organisasi melaksanakan amalan terbaik dan standard keselamatan siber antarabangsa, dengan penggunaan metrik dan pengukuran yang jelas untuk menilai kepatuhan dan keberkesanan dasar; dan\r\n• Penilaian risiko dilakukan secara berkala untuk memastikan organisasi terus sejajar dengan peraturan keselamatan siber yang berubah-ubah.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA075', 'AE015', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Organisasi sentiasa memperbaharui dan mengoptimumkan dasar dan prosedur keselamatan siber agar selaras dengan perubahan undang-undang, peraturan, dan amalan terbaik dalam industri; dan\r\n• Dasar keselamatan siber organisasi adalah fleksibel dan proaktif, memastikan pematuhan bukan sahaja kepada undang-undang semasa tetapi juga dapat menjangka perubahan dalam peraturan masa hadapan; dan\r\n• Keselamatan siber menjadi sebahagian daripada budaya organisasi dengan komitmen sepenuhnya daripada pengurusan dan pekerja untuk memenuhi atau melampaui standard  perundangan dan industri.', NULL, NULL, '4', '2025-12-23', 'Active'),
+('ASA091', 'AE019', 'AS001', '• Kesedaran dan latihan keselamatan siber tidak ada atau dilaksanakan secara minimum dan tidak formal; dan\r\n• Tiada program latihan keselamatan siber yang tersusun. Kesedaran di kalangan kakitangan tentang keselamatan siber sangat rendah; dan\r\n• Tiada usaha khusus untuk mendidik atau melibatkan kakitangan dalam memahami risiko keselamatan siber yang dihadapi oleh organisasi.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA092', 'AE019', 'AS002', '• Program latihan keselamatan siber mula dilaksanakan, tetapi ia masih bersifat asas dan tidak sistematik; dan\r\n• Latihan disediakan secara sekali sekala, melalui modul dalam talian atau bengkel asas, tetapi tidak disesuaikan dengan keperluan khusus kakitangan; dan\r\n• Kesedaran tentang keselamatan siber di kalangan kakitangan mula meningkat, tetapi tidak semua kakitangan terlibat secara aktif.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA093', 'AE019', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Program kesedaran dan latihan keselamatan siber telah ditakrifkan dengan jelas. Kandungan latihan disesuaikan mengikut peranan dan tanggungjawab kakitangan; dan\r\n• Latihan diadakan secara berkala dan melibatkan topik penting seperti pengurusan kata laluan, phishing, dan ancaman siber; dan\r\n• Kesedaran keselamatan siber mula menjadi sebahagian daripada budaya organisasi, dan kakitangan mulai memahami pentingnya keselamatan siber dalam kerja harian mereka.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA094', 'AE019', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Program kesedaran dan latihan  keselamatan siber dilaksanakan secara sistematik dan dipantau untuk memastikan keberkesanannya; dan\r\n• Latihan diberikan kepada semua peringkat organisasi secara berkala dengan pemantauan dan pelaporan terhadap penyertaan serta keberkesanan latihan; dan\r\n• Kakitangan terlatih untuk mengenal pasti dan bertindak balas terhadap ancaman siber dengan betul, dan mereka memahami dasar serta prosedur keselamatan siber organisasi.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA095', 'AE019', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Kesedaran dan latihan siber dioptimumkan dengan pendekatan yang berterusan dan disesuaikan untuk semua kakitangan, menggunakan teknologi moden seperti simulasi serangan dan kajian kes yang interaktif; dan\r\n• Program latihan sentiasa dikemas kini mengikut ancaman terkini dan disesuaikan dengan perubahan dalam peraturan atau standard keselamatan; dan\r\n• Kesedaran keselamatan siber menjadi sebahagian penting daripada strategi keselamatan keseluruhan organisasi. Kakitangan bukan sahaja mematuhi dasar, tetapi juga memainkan peranan aktif dalam mengurangkan risiko siber.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA096', 'AE020', 'AS001', '• Pengasingan tugas tidak dilaksanakan atau dilaksanakan secara minimum; dan\r\n• Kakitangan sering mempunyai akses tanpa sekatan kepada sistem dan data sensitif tanpa mengambil kira peranan atau tanggungjawab mereka; dan\r\n• Tiada dasar formal untuk memisahkan tugas-tugas kritikal, menjadikan organisasi terdedah kepada risiko keselamatan dalaman seperti penyalahgunaan kuasa atau akses yang tidak sah.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA097', 'AE020', 'AS002', '• Pengasingan tugas mula diperkenalkan, tetapi masih belum lengkap atau konsisten di seluruh organisasi; dan\r\n• Beberapa peranan kritikal dalam keselamatan siber sudah dipisahkan, tetapi pemisahan ini tidak selalu dilaksanakan mengikut amalan terbaik; dan\r\n• Terdapat dasar awal untuk membatasi akses kepada sistem tertentu, tetapi belum ada mekanisme yang jelas untuk menguatkuasakan atau memantau pemisahan ini.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA098', 'AE020', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Pengasingan tugas telah ditakrifkan dengan jelas dan didokumentasikan dalam dasar keselamatan siber; dan\r\n• Setiap peranan dan tanggungjawab dalam organisasi mempunyai akses dan kuasa yang sesuai dengan fungsi mereka, mengurangkan risiko konflik kepentingan atau akses yang tidak sah; dan\r\n• Tugas-tugas kritikal, seperti pengesahan transaksi atau pengurusan konfigurasi sistem, diasingkan dengan baik untuk mengelakkan individu yang sama melakukan tugas yang boleh menjejaskan keselamatan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA099', 'AE020', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pengasingan tugas dilaksanakan dengan baik dan dipantau secara berterusan melalui sistem pengurusan keselamatan; dan\r\n• Prosedur dan alat teknologi digunakan untuk memastikan bahawa akses dan kawalan selaras dengan peranan individu, dan sebarang konflik atau pelanggaran pengasingan tugas dapat dikesan serta ditangani dengan segera; dan\r\n• Audit berkala dilakukan untuk menilai keberkesanan pengasingan tugas dan memastikan pematuhan kepada dasar.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA100', 'AE020', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pengasingan tugas mencapai tahap optimum di mana ia diintegrasikan sepenuhnya dalam strategi keselamatan siber organisasi; dan\r\n• Teknologi automasi dan pemantauan digunakan untuk mengurus akses berdasarkan peranan, dengan pengesanan konflik dan risiko secara real-time; dan\r\n• Pengasingan tugas dioptimumkan melalui analisis risiko berterusan dan penambahbaikan, memastikan bahawa setiap tugas dijalankan oleh individu yang betul dengan tahap akses yang sewajarnya, mengurangkan risiko dalaman dan mempertingkatkan keselamatan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA101', 'AE021', 'AS001', '• Tiada proses formal untuk mengukur keberkesanan program kesedaran dan latihan keselamatan siber; dan\r\n• Latihan keselamatan siber dijalankan, tetapi tiada usaha untuk menilai impak atau keberkesanannya; dan\r\n• Organisasi bergantung pada penyertaan semata-mata tanpa menilai sama ada latihan tersebut benar-benar meningkatkan kesedaran atau pengetahuan kakitangan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA102', 'AE021', 'AS002', '• Pengukuran keberkesanan mula dilaksanakan, tetapi masih terhad kepada metrik asas seperti jumlah penyertaan atau penyelesaian kursus; dan\r\n• Tiada mekanisme yang kukuh untuk mengukur perubahan dalam tingkah laku kakitangan atau peningkatan pengetahuan berkaitan keselamatan siber; dan\r\n• Penilaian keberkesanan bersifat reaktif, hanya dijalankan apabila berlaku insiden keselamatan atau kelemahan yang dikenal pasti dalam audit.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA103', 'AE021', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses pengukuran keberkesanan program kesedaran dan latihan keselamatan siber telah ditakrifkan dengan jelas; dan\r\n• Pelbagai metrik digunakan untuk menilai keberkesanan program seperti penilaian pra dan pasca latihan, ujian pengetahuan, dan kadar kejayaan dalam mengesan ancaman seperti ujian phishing; dan\r\n• Data mengenai keberkesanan program dikumpulkan secara berkala dan dilaporkan kepada pihak pengurusan, dengan fokus pada peningkatan berterusan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA104', 'AE021', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pengukuran keberkesanan program kesedaran keselamatan siber adalah menyeluruh dan dioptimumkan, menggunakan teknologi seperti analitik data dan automasi untuk menilai tingkah laku kakitangan secara real-time; dan\r\n• Program latihan dan kesedaran keselamatan siber sentiasa diperbaiki berdasarkan data keberkesanan yang diukur, memastikan ia responsif terhadap ancaman siber terkini; dan\r\n• Organisasi mengukur impak jangka panjang terhadap budaya keselamatan siber, memastikan peningkatan kesedaran bukan sahaja diukur melalui prestasi semasa tetapi juga melalui pengurangan insiden keselamatan yang ketara.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA105', 'AE021', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pengukuran keberkesanan program kesedaran keselamatan siber adalah menyeluruh dan dioptimumkan, menggunakan teknologi seperti analitik data dan automasi untuk menilai tingkah laku kakitangan secara real-time; dan\r\n• Program latihan dan kesedaran keselamatan siber sentiasa diperbaiki berdasarkan data keberkesanan yang diukur, memastikan ia responsif terhadap ancaman siber terkini; dan\r\n• Organisasi mengukur impak jangka panjang terhadap budaya keselamatan siber, memastikan peningkatan kesedaran bukan sahaja diukur melalui prestasi semasa tetapi juga melalui pengurangan insiden keselamatan yang ketara.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA106', 'AE022', 'AS001', '• Tiada dokumentasi formal mengenai tanggungjawab keselamatan siber; dan\r\n• Kakitangan tidak jelas tentang peranan mereka dalam memastikan keselamatan siber organisasi; dan\r\n• Tanggungjawab keselamatan siber hanya diketahui secara lisan atau tidak ditetapkan secara jelas.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA107', 'AE022', 'AS002', '• Dokumentasi tanggungjawab keselamatan siber mula diwujudkan, tetapi hanya untuk beberapa peranan kritikal; dan\r\n• Tanggungjawab masih tidak lengkap atau tidak menyeluruh, dengan peranan keselamatan siber yang tidak terperinci untuk semua kakitangan; dan\r\n• Peranan dan tanggungjawab hanya ditetapkan untuk memenuhi keperluan pematuhan minimum tanpa penyelarasan menyeluruh dalam organisasi.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA108', 'AE022', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Tanggungjawab keselamatan siber telah ditakrifkan dengan jelas dan didokumentasikan untuk semua peranan yang relevan dalam organisasi; dan\r\n• Setiap kakitangan mempunyai peranan keselamatan siber yang khusus, dengan tanggungjawab yang sepadan mengikut tugas dan kedudukan mereka dalam organisasi; dan\r\n• Dokumentasi disediakan dalam bentuk dasar, garis panduan, dan prosedur yang jelas serta dikongsi dengan semua peringkat kakitangan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA109', 'AE022', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Dokumentasi tanggungjawab keselamatan siber diurus secara berkala dan dikemas kini apabila terdapat perubahan dalam struktur organisasi, teknologi, atau ancaman siber; dan\r\n• Proses penyemakan dan pengesahan tanggungjawab dilakukan secara berkala untuk memastikan setiap peranan dipenuhi dengan betul; dan\r\n• Tanggungjawab keselamatan siber diintegrasikan sepenuhnya dalam pengurusan risiko dan strategi keselamatan organisasi.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA110', 'AE022', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Dokumentasi tanggungjawab keselamatan siber dioptimumkan dan menjadi sebahagian daripada budaya organisasi; dan\r\n• Setiap individu dalam organisasi memahami dan melaksanakan tanggungjawab keselamatan siber mereka, dan peranan tersebut disesuaikan berdasarkan perubahan ancaman dan keperluan pematuhan; dan\r\n• Dokumentasi disokong oleh teknologi automasi untuk mengesan, mengurus, dan mengesahkan pematuhan terhadap tanggungjawab yang telah ditetapkan secara real-time.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA111', 'AE023', 'AS001', '• Penentuan dan pengurusan tanggungjawab keselamatan siber tidak dilakukan atau dilakukan secara minimum dan tidak formal; dan\r\n• Tiada proses untuk memastikan tanggungjawab keselamatan siber diagihkan dengan jelas atau untuk memastikan kecukupan dalam peranan keselamatan siber; dan\r\n• Redundansi tanggungjawab kakitangan tidak diambil kira, menjadikan organisasi bergantung kepada individu tertentu tanpa pelan sandaran sekiranya berlaku ketidakhadiran atau kekosongan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA112', 'AE023', 'AS002', '• Penentuan tanggungjawab keselamatan siber mula dilakukan tetapi masih tidak menyeluruh. Sesetengah peranan penting ditetapkan, namun masih ada kelemahan dalam mengurus peranan kritikal; dan\r\n• Usaha untuk memastikan kecukupan tanggungjawab dilakukan, tetapi tidak ada strategi jelas untuk menangani keperluan redundansi; dan\r\n• Pemantauan tanggungjawab keselamatan kakitangan adalah terhad, dengan sedikit tumpuan pada bagaimana tanggungjawab diagihkan apabila kakitangan kritikal tiada.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA113', 'AE023', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Penentuan tanggungjawab keselamatan siber telah ditakrifkan dengan jelas untuk semua peranan yang relevan, termasuk kecukupan dalam setiap peranan keselamatan; dan\r\n• Redundansi tanggungjawab telah dirancang, dengan pelan kontingensi yang jelas bagi memastikan setiap peranan keselamatan kritikal mempunyai individu sandaran; dan\r\n• Tanggungjawab keselamatan siber didokumenkan dengan baik, dan terdapat proses formal untuk memastikan bahawa jika kakitangan kritikal tiada, tanggungjawab mereka dapat diambil alih oleh kakitangan lain yang terlatih.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA114', 'AE023', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pengurusan tanggungjawab keselamatan siber dilakukan secara berkala, dengan pemantauan aktif terhadap kecukupan dan redundansi setiap tanggungjawab; dan\r\n• Setiap tanggungjawab keselamatan siber dalam organisasi dipastikan mencukupi, dan pelan sandaran atau redundansi diurus secara sistematik untuk peranan kritikal; dan\r\n• Latihan diberikan kepada kakitangan sandaran untuk memastikan mereka dapat mengambil alih tanggungjawab keselamatan apabila perlu, memastikan kesinambungan operasi tanpa risiko keselamatan yang tinggi.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA115', 'AE023', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penentuan dan pengurusan tanggungjawab keselamatan siber mencapai tahap optimum, di mana tanggungjawab bukan sahaja diagihkan dengan baik tetapi juga dioptimumkan berdasarkan keperluan organisasi dan ancaman keselamatan terkini; dan\r\n• Redundansi tanggungjawab diurus secara berterusan dan dipantau dengan teknologi untuk memastikan setiap peranan kritikal sentiasa mempunyai pelan sandaran yang aktif dan berkesan; dan\r\n• Organisasi memastikan bahawa kecukupan dan redundansi tanggungjawab keselamatan siber diselaraskan dengan strategi keseluruhan keselamatan, dengan audit dan penilaian berkala bagi memastikan kelangsungan operasi yang optimum tanpa sebarang gangguan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA116', 'AE024', 'AS001', '• Program Penggantian belum ada atau tidak diformalisasikan; dan\r\n• Tiada perancangan atau usaha untuk mengenal pasti individu yang sesuai bagi menggantikan kakitangan penting dalam keselamatan siber atau peranan kritikal lain; dan\r\n• Kakitangan meninggalkan organisasi atau jabatan tanpa pelan kesinambungan yang jelas, menyebabkan kelemahan dalam operasi keselamatan dan kepimpinan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA117', 'AE024', 'AS002', '• Program Penggantian mula diperkenalkan, tetapi hanya untuk beberapa peranan kritikal; dan\r\n• Organisasi mula mengenal pasti bakat dalaman untuk menggantikan kakitangan penting, tetapi proses ini belum menyeluruh atau berstruktur; dan\r\n• Tumpuan hanya diberikan kepada beberapa peranan kepimpinan atau keselamatan siber utama, tanpa pelan yang jelas untuk peranan keselamatan siber peringkat menengah atau rendah', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA118', 'AE024', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Program Penggantian telah ditakrifkan dengan jelas dan melibatkan penilaian bakat serta perancangan penggantian bagi peranan keselamatan siber yang penting; dan\r\n• Proses pemilihan pengganti dibuat berdasarkan kriteria yang jelas, seperti prestasi, kemahiran teknikal, dan potensi kepimpinan; dan\r\n• Program ini merangkumi pembangunan dan latihan bagi individu yang dikenalpasti sebagai calon pengganti, dengan tumpuan pada peningkatan kemahiran dan pengetahuan keselamatan siber.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA119', 'AE024', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pelaksanaan Program Penggantian dijalankan secara sistematik dengan pemantauan berterusan dan penilaian kemajuan calon pengganti; dan\r\n• Terdapat pelan latihan dan pembangunan yang terstruktur bagi setiap calon pengganti, yang direka untuk memastikan mereka bersedia mengambil alih peranan kritikal apabila perlu; dan\r\n• Program penggantian dilihat sebagai komponen penting dalam strategi keselamatan organisasi, memastikan kesinambungan kepimpinan dan keselamatan siber dalam menghadapi perubahan atau ketidakhadiran kakitangan utama.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA120', 'AE024', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Program Penggantian dioptimumkan sepenuhnya, dengan pendekatan yang proaktif untuk mengenal pasti, melatih, dan mengurus calon pengganti bagi semua peranan penting, termasuk keselamatan siber; dan\r\n• Program ini diintegrasikan dengan strategi pengurusan bakat dan perancangan jangka panjang organisasi, menggunakan analitik data dan penilaian prestasi untuk mengenal pasti calon pengganti terbaik; dan\r\n• Proses penggantian adalah dinamik dan disesuaikan dengan keperluan operasi, memastikan bahawa organisasi sentiasa bersedia untuk menangani perubahan kepimpinan atau keselamatan tanpa gangguan kepada operasi dan tahap keselamatan.', NULL, NULL, '4', '2025-12-24', 'Active');
+INSERT INTO `score_element` (`se_ID`, `element_ID`, `score_ID`, `details`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
+('ASA121', 'AE025', 'AS001', '• Tiada proses pengurusan inventori aset formal disediakan;\r\n• Kurang kesedaran atau pengakuan tentang kepentingan pengurusan inventori aset; \r\n• Aset, termasuk data, sistem dan aplikasi, tidak dapat dijejaki atau didokumenkan; dan\r\n• Beberapa kesedaran tentang kepentingan pengurusan inventori aset, tetapi usaha adalah tidak formal dan adalah secara ad hoc.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA122', 'AE025', 'AS002', '• Inventori aset wujud tetapi tidak lengkap, tidak konsisten dan tidak dikemas kini secara sistematik; dan\r\n• Data, sistem dan aplikasi dijejaki tanpa proses formal atau mengikut standardan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA123', 'AE025', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses pengurusan inventori aset yang dibangunkan  dan didokumenkan; dan\r\n• Inventori komprehensif yang merangkumi semua data, sistem dan aplikasi; dan\r\n• Kemas kini dan penyelenggaraan inventori aset secara berkala; dan\r\n• Peranan dan tanggungjawab yang jelas dalam menguruskan inventori aset.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA124', 'AE025', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan dan semakan berkala terhadap proses pengurusan inventori aset; dan\r\n• Penggunaan metrik dan petunjuk prestasi utama (KPI) bagi mengukur ketepatan dan keberkesanan inventori; dan\r\n• Pematuhan berterusan kepada proses pengurusan inventori dengan pengawasan dan pelarasan pengurusan berdasarkan data prestasi; dan\r\n• Penyepaduan pengurusan inventori aset ke dalam proses dan strategi organisasi yang lebih luas.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA125', 'AE025', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penambahbaikan berterusan proses pengurusan inventori aset melalui inovasi dan maklum balas warga dan pihak yang berkepentingan; dan\r\n• Integrasi pengurusan inventori aset diselaraskan dengan perancangan strategik dan hasil jangka panjang; dan\r\n• Penyesuaian proaktif kepada teknologi baru muncul dan amalan terbaik industri; dan\r\n• Penggunaan metodologi dan teknologi terkini bagi meningkatkan proses pengurusan inventori.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA126', 'AE026', 'AS001', '• Tiada sistem pengelasan maklumat disediakan; \r\n• Hanya jenis maklumat tertentu diklasifikasikan dan pengelasan dilakukan secara ad-hoc; dan\r\n• Maklumat tidak dikelaskan, dan tiada garis panduan atau proses yang ditetapkan untuk pengelasan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA127', 'AE026', 'AS002', '• Klasifikasi maklumat wujud tetapi tidak lengkap, tidak konsisten dan tidak dikemas kini secara sistematik; dan\r\n• Beberapa usaha dilakukan bagi mengklasifikasikan maklumat, tetapi ini adalah tidak formal, tidak konsisten dan tidak mempunyai proses berstruktur.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA128', 'AE026', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses yang ditakrifkan dengan baik dan didokumenkan bagi klasifikasi maklumat telah disediakan; dan\r\n• Garis panduan dan prosedur diwujudkan, dan maklumat dikelaskan secara konsisten mengikut standardan ini.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA129', 'AE026', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses pengelasan maklumat diurus dan dipantau secara aktif; dan\r\n• Terdapat prosedur yang sistematik dalam memastikan semua maklumat dikelaskan dengan betul; dan\r\n• Pematuhan dan garis panduan bagi klasifikasi maklumat disemak secara berkala, dan penambahbaikan dibuat mengikut keperluan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA130', 'AE026', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses pengelasan maklumat dioptimumkan secara berterusan; dan\r\n• Pendekatan proaktif bagi meningkatkan sistem klasifikasi berdasarkan maklum balas warga dan pihak yang berkepentingan, metrik prestasi dan amalan terbaik; dan\r\n• Penggunaan metodologi dan teknologi terkini dalam meningkatkan proses klasifikasi maklumat.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA131', 'AE027', 'AS001', '• Tiada prosedur formal untuk perlindungan, sanitasi, atau pelupusan maklumat; dan\r\n• Maklumat tidak dikendalikan secara sistematik mengikut keperluan kitar hayat maklumat; dan\r\n• Proses pelupusan maklumat berlaku secara ad-hoc atau tidak dipantau dengan betul, meningkatkan risiko kebocoran maklumat.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA132', 'AE027', 'AS002', '• Terdapat langkah asas untuk melindungi maklumat semasa kitar hayatnya, tetapi prosedur sanitasi dan pelupusan maklumat masih tidak jelas atau konsisten; dan\r\n• Beberapa prosedur pelupusan telah diperkenalkan, namun pelaksanaannya tidak menyeluruh atau dipatuhi di semua jabatan; dan\r\n• Sanitasi maklumat dilakukan, tetapi prosesnya tidak diaudit secara berkala.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA133', 'AE027', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Dasar dan prosedur perlindungan, sanitasi, dan pelupusan maklumat telah dirangka dan didokumenkan, merangkumi keseluruhan kitar hayat maklumat; dan\r\n• Terdapat kaedah yang jelas untuk melindungi maklumat sepanjang fasa kitar hayatnya, termasuk langkah-langkah sanitasi sebelum pelupusan; dan\r\n• Maklumat sensitif dilupuskan secara sistematik mengikut prosedur yang ditetapkan, memastikan pematuhan kepada peraturan dan standard keselamatan maklumat.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA134', 'AE027', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Perlindungan, sanitasi, dan pelupusan maklumat dikawal dan diukur secara kuantitatif untuk memastikan keberkesanan prosedur sepanjang kitar hayat maklumat; dan\r\n• Semua maklumat diklasifikasikan mengikut tahap keperluan keselamatan, dan prosedur sanitasi serta pelupusan diurus secara sistematik berdasarkan jenis maklumat; dan\r\n• Proses pemantauan dilakukan untuk memastikan maklumat yang telah tamat tempoh dilupuskan dengan selamat dan tepat masa.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA135', 'AE027', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses perlindungan, sanitasi, dan pelupusan maklumat dioptimumkan sepenuhnya, dengan penekanan pada inovasi dan pematuhan kepada standard keselamatan maklumat yang terkini; dan\r\n• Sanitasi dan pelupusan maklumat dilakukan secara proaktif, menggunakan teknologi terkini seperti pemadaman selamat (secure wipe) dan kaedah enkripsi untuk memastikan maklumat yang tamat tempoh tidak boleh diakses semula; dan\r\n• Audit berkala dan pemantauan berterusan memastikan amalan terbaik diterapkan sepanjang kitar hayat maklumat, dan perlindungan maklumat menjadi sebahagian daripada budaya keselamatan organisasi.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA136', 'AE028', 'AS001', '• Keperluan untuk mewujudkan identiti dan mengurus pengesahan diiktiraf, tetapi proses atau garis panduan formal masih perlu dilaksanakan; dan\r\n• Kaedah asas atau ad hoc pengurusan identiti dan pengesahan; dan\r\n• Dokumentasi minimum atau proses formal; dan\r\n• Kesedaran terhad tentang amalan terbaik dalam pengurusan identiti dan pengesahan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA137', 'AE028', 'AS002', '• Telah lengkap Tahap 2; dan\r\n• Proses asas untuk mewujudkan identiti dan mengurus pengesahan telah disediakan tetapi tidak seragam atau tidak digunakan secara konsisten; dan\r\n• Usaha awal untuk melaksanakan mekanisme pengesahan (cth., nama pengguna dan kata laluan); dan\r\n• Terdapat beberapa dokumentasi prosedur pengurusan identiti; dan\r\n• Aplikasi amalan pengesahan yang tidak konsisten pada seluruh organisasi.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA138', 'AE028', 'AS003', '• Proses dan prosedur formal untuk mewujudkan identiti dan mengurus pengesahan diwujudkan dan didokumenkan;\r\n• Prosedur standard  untuk pengesahan identiti dan pengesahan;\r\n• Dokumentasi komprehensif pengurusan identiti dan amalan pengesahan; dan\r\n• Pelaksanaan pengesahan pelbagai faktor (Multi Factor Aunthentication-MFA) untuk sistem kritikal.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA139', 'AE028', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses untuk mewujudkan identiti dan mengurus pengesahan diurus dengan baik dan disepadukan ke dalam rangka kerja keselamatan organisasi; dan\r\n• Aplikasi konsisten prosedur pengurusan identiti dan pengesahan di seluruh organisasi; dan\r\n• Semakan tetap dan kemas kini amalan pengesahan untuk menangani ancaman baharu; dan\r\n• Penggunaan penyelesaian identiti dan pengurusan akses (Identity Access Management-IAM) terpusat; dan\r\n• Pemantauan dan pengurusan aktif acara dan insiden pengesahan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA140', 'AE028', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses untuk mewujudkan identiti dan mengurus pengesahan terus dipertingkatkan dan dioptimumkan untuk keselamatan maksimum dan kemudahan pengguna; dan\r\n• Penggunaan teknologi pengesahan lanjutan (cth., biometrik, analisis tingkah laku); dan\r\n• Proses maklum balas berterusan untuk meningkatkan identiti dan amalan pengesahan; dan\r\n• Pengenalpastian proaktif dan penggunaan kaedah pengesahan yang baru muncul; dan\r\n• Dokumentasi yang komprehensif dan mudah dilayari; dan\r\n• Penjajaran strategik dengan matlamat organisasi dan amalan terbaik industri; dan\r\n• Penyepaduan pengurusan identiti dan pengesahan dengan keselamatan siber dan strategi organisasi  yang lebih luas.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA141', 'AE029', 'AS001', '• Tiada mekanisme pengesahan formal yang diterapkan, atau sistem pengesahan yang sangat asas digunakan; dan\r\n• Pengesahan pengguna dilakukan menggunakan kata laluan yang lemah tanpa standard keselamatan yang jelas; dan\r\n• Aplikasi dan sistem tidak mematuhi keperluan minimum untuk keselamatan pengesahan, meningkatkan risiko akses tanpa izin.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA142', 'AE029', 'AS002', '• Mekanisme pengesahan asas seperti kata laluan telah dilaksanakan, namun masih terdapat kelemahan dalam keselamatan, seperti tiada keperluan untuk kata laluan yang kompleks; dan\r\n• Pengesahan dua faktor (Two Factor Aunthentication - 2FA) mula diperkenalkan, tetapi penggunaannya tidak meluas dan hanya diaplikasikan pada sistem kritikal; dan\r\n• Mekanisme pengesahan wujud tetapi tidak dikendalikan atau dipantau secara aktif.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA143', 'AE029', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Sistem dan aplikasi mempunyai mekanisme pengesahan yang jelas dan mengikut standard  keselamatan yang diiktiraf; dan\r\n• Pengesahan dua faktor (2FA) atau pelbagai faktor (Multi Factor Aunthentication- MFA) digunakan untuk aplikasi yang sensitif dan kritikal, serta menjadi sebahagian daripada polisi keselamatan organisasi; dan\r\n• Dasar pengurusan kata laluan yang kuat telah diterapkan, termasuk keperluan untuk kata laluan kompleks, penukaran kata laluan secara berkala, dan penyimpanan kata laluan yang selamat.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA144', 'AE029', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Mekanisme pengesahan dipantau dan diukur secara kuantitatif untuk menilai keberkesanan, dengan pemantauan berterusan terhadap akses pengguna; dan\r\n• Pengesahan (Multi factor Authentication- MFA) digunakan secara meluas di seluruh organisasi, termasuk pada semua sistem dan aplikasi yang penting; dan\r\n• Terdapat analisis berkala terhadap log pengesahan untuk mengenal pasti dan mencegah percubaan akses tidak sah, dengan penggunaan teknologi analitik keselamatan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA145', 'AE029', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pengesahan bagi sistem dan aplikasi dioptimumkan sepenuhnya, menggunakan teknologi terkini seperti pengesahan biometrik, token keselamatan fizikal, atau pengesahan berasaskan risiko; dan\r\n• Proses pengesahan berintegrasi dengan sistem kecerdasan buatan (Artificial Intelligence- AI) untuk menilai risiko akses secara automatik dan menyesuaikan tahap pengesahan yang diperlukan; dan\r\n• Organisasi terus menilai dan memperbaiki mekanisme pengesahan berdasarkan ancaman keselamatan siber yang berubah-ubah dan teknologi baru yang tersedia.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA146', 'AE030', 'AS001', '• Tiada proses formal atau prosedur yang jelas untuk memantau dan menyemak hak akses pengguna; dan\r\n• Akses pengguna ke sistem atau data jarang atau tidak pernah disemak secara berkala; dan\r\n• Risiko akses yang berlebihan atau akses yang tidak diperlukan dibiarkan tanpa pengawasan, meningkatkan potensi risiko keselamatan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA147', 'AE030', 'AS002', '• Proses pemantauan hak akses pengguna mula dilaksanakan, tetapi ia tidak dilakukan secara konsisten di seluruh organisasi; dan\r\n• Penyemakan hak akses dilakukan pada beberapa sistem kritikal sahaja, sementara sistem lain tidak diberikan perhatian yang sama; dan\r\n• Terdapat kesedaran tentang keperluan menyemak akses secara berkala, tetapi tiada garis panduan formal atau dokumentasi yang lengkap.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA148', 'AE030', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Prosedur formal untuk pemantauan dan penyemakan hak akses pengguna telah diwujudkan dan didokumenkan; dan\r\n• Penyemakan hak akses pengguna dilakukan secara berkala dan merangkumi semua sistem dan aplikasi penting.\r\n• Hasil penyemakan didokumentasikan dan tindakan diambil untuk membatalkan atau menyelaraskan hak akses yang tidak lagi diperlukan, dengan proses audit dalaman yang menyokong.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA149', 'AE030', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan dan penyemakan hak akses pengguna dikawal dan diukur secara kuantitatif, menggunakan metrik dan data untuk menilai keberkesanan proses; dan\r\n• Sistem pengurusan akses automatik digunakan untuk memantau akses secara real-time dan menyemak hak akses secara berkala mengikut jadual yang telah ditetapkan; dan\r\n• Audit akses dilakukan pada selang masa tertentu dengan penekanan pada pengesanan akses yang tidak perlu atau melampaui keperluan, serta pematuhan kepada polisi keselamatan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA150', 'AE030', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses pemantauan dan penyemakan hak akses pengguna dioptimumkan sepenuhnya dengan automasi dan integrasi teknologi kecerdasan buatan (AI) untuk mengenal pasti risiko akses yang tidak sah atau mencurigakan secara proaktif; dan\r\n• Akses pengguna disemak secara berkala berdasarkan faktor risiko yang dinamik, dan mekanisme pencegahan dibina untuk menghalang akses yang tidak sah atau melebihi keperluan secara automatik; dan\r\n• Penyemakan hak akses dilakukan secara berterusan, dengan proses pemantauan akses yang selaras dengan perubahan peranan pengguna, serta pengurusan identiti dan akses yang terkemuka dalam industri.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA151', 'AE031', 'AS001', '• Tiada prosedur formal untuk memantau atau menyemak akses pihak ketiga kepada data dan maklumat organisasi; dan\r\n• Akses pihak ketiga diberikan tanpa penilaian risiko yang tepat, dan tiada penyeliaan selepas akses diberikan; dan\r\n• Potensi risiko keselamatan yang tinggi kerana tiada kawalan terhadap akses pihak ketiga selepas ia diluluskan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA152', 'AE031', 'AS002', '• Proses asas untuk memberikan dan memantau akses pihak ketiga telah diwujudkan, tetapi hanya meliputi sebahagian daripada data atau sistem penting; dan\r\n• Penyemakan hak akses pihak ketiga dilakukan secara tidak konsisten, dan kadangkala akses berterusan tanpa justifikasi jelas; dan\r\n• Terdapat usaha untuk mengenal pasti pihak ketiga dengan akses berlebihan, tetapi tindakan proaktif untuk menyekat atau menyemak semula akses adalah terhad.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA153', 'AE031', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Polisi dan prosedur yang jelas untuk pemantauan dan penyemakan akses pihak ketiga telah ditetapkan, termasuk proses dokumentasi dan kawalan; dan\r\n• Akses pihak ketiga disemak secara berkala berdasarkan risiko dan keperluan organisasi , dengan penyelarasan yang lebih baik antara jabatan teknologi maklumat dan pengurusan risiko; dan\r\n• Tindakan diambil untuk membatalkan atau menyemak semula akses pihak ketiga yang tidak lagi diperlukan atau yang tidak mematuhi syarat perjanjian.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA154', 'AE031', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses pemantauan dan penyemakan akses pihak ketiga dikawal dengan metrik yang jelas, dan pengukuran dilakukan untuk menilai keberkesanan langkah keselamatan yang diambil; dan\r\n• Log akses pihak ketiga dipantau secara berkala, dan penyemakan dilakukan berdasarkan analisis risiko yang lebih mendalam; dan\r\n• Pengurusan akses pihak ketiga melibatkan penggunaan alat automatik untuk mengesan akses luar biasa atau aktiviti yang mencurigakan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA155', 'AE031', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pemantauan dan penyemakan akses pihak ketiga adalah automatik sepenuhnya, dengan penggunaan teknologi seperti AI dan pembelajaran mesin untuk menganalisis aktiviti akses secara real-time; dan\r\n• Akses pihak ketiga diurus dengan teliti menggunakan strategi berasaskan risiko yang disesuaikan dengan keperluan organisasi dan ancaman keselamatan semasa; dan\r\n• Audit secara berterusan dilakukan untuk memastikan pematuhan pihak ketiga terhadap semua dasar keselamatan, dengan tindakan segera diambil apabila terdapat pelanggaran atau risiko yang dikenal pasti.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA161', 'AE033', 'AS001', '• Tiada program berstruktur atau usaha untuk meningkatkan kesedaran pihak ketiga tentang dasar dan amalan keselamatan; dan\r\n• Tidak menyampaikan kepentingan keselamatan dan pematuhan kepada pihak ketiga; dan\r\n• Sebarang usaha kesedaran adalah tidak bersistematik dan tidak digunakan secara konsisten.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA162', 'AE033', 'AS002', '• Beberapa usaha untuk meningkatkan kesedaran pihak ketiga adalah tidak formal dan bukan sebahagian daripada program berstruktur; dan\r\n• Pihak ketiga dimaklumkan tentang beberapa dasar keselamatan, tetapi ini dilakukan secara tidak konsisten; dan\r\n• Usaha kesedaran adalah terhad dan hanya mencapai sebilangan kecil pihak ketiga.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA163', 'AE033', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Organisasi telah membangunkan dokumen berkaitan proses dalam meningkatkan kesedaran pihak ketiga tentang dasar, polisi dan amalan keselamatan;\r\n• Strategi komunikasi yang jelas dan sistematik disediakan untuk memaklumkan pihak ketiga tentang dasar keselamatan yang berkaitan; dan\r\n• Pihak ketiga menerima latihan dan pendidikan tetap mengenai dasar keselamatan dan keperluan pematuhan; dan\r\n• Terdapat prosedur standard untuk memastikan kesedaran pihak ketiga sebagai sebahagian daripada perjanjian kontrak.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA164', 'AE033', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Organisasi sentiasa memantau keberkesanan usaha kesedaran pihak ketiganya dan mengumpul maklum balas untuk penambahbaikan; dan\r\n• Penggunaan metrik dan penunjuk prestasi utama (Key Performance Indicator-KPI) untuk mengukur kesan program kesedaran pihak ketiga;\r\n• Pemantauan pengurusan yang berterusan memastikan program kesedaran pihak ketiga berkesan dan sejajar dengan matlamat organisasi; dan\r\n• Program kesedaran pihak ketiga disepadukan ke dalam dasar organisasi dan rangka kerja pematuhan yang lebih luas.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA165', 'AE033', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Organisasi terus menambah baik program kesedaran pihak ketiga melalui inovasi, maklum balas dan penyesuaian kepada ancaman baharu; dan\r\n• Program kesedaran pihak ketiga diselaraskan dengan perancangan strategik dan hasil jangka panjang; dan\r\n• Organisasi menggunakan kaedah dan teknologi terkini untuk meningkatkan keberkesanan usaha kesedaran pihak ketiganya; dan\r\n• Organisasi secara proaktif menyesuaikan program kesedaran kepada keperluan keselamatan yang muncul dan amalan terbaik industri.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA166', 'AE034', 'AS001', '• Tiada mekanisme atau usaha disediakan untuk memastikan pematuhan akuan pihak ketiga terhadap perjanjian yang diperakui; dan\r\n• Pematuhan tidak dipantau mahupun dikuatkuasakan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA167', 'AE034', 'AS002', '• Beberapa usaha ad-hoc dibuat untuk memastikan pematuhan pihak ketiga, tetapi tidak konsisten dan tiada proses formal; dan\r\n• Perjanjian keselamatan siber kadangkala diperiksa, tetapi tidak dikuatkuasakan secara sistematik.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA168', 'AE034', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Terdapat proses yang ditakrifkan dan didokumenkan dengan baik untuk memastikan pematuhan pihak ketiga terhadap perjanjian yang diperakui; dan\r\n• Pematuhan dilaksanakan mengikut proses secara berkala dan pihak ketiga secara amnya mengetahui keperluan pematuhan.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA169', 'AE034', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses untuk memastikan pematuhan pihak ketiga diurus dan dipantau secara aktif; dan\r\n• Terdapat semakan pematuhan yang sistematik, dan sebarang ketidakpatuhan akan ditangani dengan segera; dan  \r\n• Proses ini disemak dan diperbaiki secara berkala.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA170', 'AE034', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Memastikan pematuhan pihak ketiga dioptimumkan secara berterusan; dan\r\n• Terdapat pendekatan proaktif untuk mempertingkatkan proses pematuhan berdasarkan maklum balas, metrik prestasi dan amalan terbaik; dan\r\n• Pemeriksaan pematuhan sangat berkesan dan menyesuaikan diri secara dinamik kepada cabaran dan perjanjian baharu.', NULL, NULL, '4', '2025-12-24', 'Active'),
+('ASA273', 'AE056', 'AS001', '•	Organisasi berada pada tahap asas dalam melaksanakan langkah-langkah untuk melindungi PII; dan\r\n•	Tiada dasar atau prosedur rasmi yang ditetapkan, dan perlindungan PII dilakukan secara ad-hoc atau reaktif; dan\r\n•	Kesedaran tentang undang-undang seperti PDPA 2010 adalah rendah.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA274', 'AE056', 'AS002', '• Terdapat langkah-langkah asas yang mula dilaksanakan untuk melindungi PII, namun belum sepenuhnya formal; dan\r\n• Beberapa prosedur atau garis panduan wujud, tetapi pelaksanaannya tidak konsisten; dan\r\n• Warga mula didedahkan kepada latihan asas berkaitan pematuhan privasi dan PII.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA275', 'AE056', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Organisasi mempunyai dasar-dasar dan prosedur yang formal dan didokumentasikan untuk pemeliharaan privasi dan perlindungan PII; dan\r\n• Pematuhan terhadap undang-undang privasi seperti PDPA dipantau secara berkala; dan\r\n• Terdapat pemantauan risiko untuk pelanggaran PII, dan pelaporan pelanggaran dilaksanakan mengikut peraturan yang terpakai.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA276', 'AE056', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Privasi dan perlindungan PII diurus dengan pendekatan sistematik dan diukur secara kuantitatif; dan\r\n• Pengurusan privasi menjadi sebahagian daripada strategi keseluruhan organisasi, dengan analisis risiko dan penilaian kesan dilakukan secara berkala; dan\r\n• Mekanisme untuk mengendalikan insiden pelanggaran privasi diselaraskan dan diuji secara berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA277', 'AE056', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Perlindungan PII dioptimumkan dengan menggunakan teknologi terkini seperti enkripsi data dan pemantauan berterusan; dan\r\n• Pemeliharaan privasi adalah budaya organisasi yang kuat, dengan latihan dan audit berkala untuk memastikan pematuhan yang berterusan; dan\r\n• Organisasi mematuhi dan sering melampaui keperluan undang-undang serta kontrak, sambil berinovasi untuk meningkatkan keselamatan data.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA278', 'AE057', 'AS001', '• Organisasi tidak mempunyai pelan formal untuk mematuhi undang-undang, peraturan, dan standard keselamatan siber.\r\n• Langkah-langkah keselamatan siber hanya dilaksanakan secara reaktif apabila berlaku insiden atau ancaman yang teruk.\r\n• Tiada rujukan atau kepatuhan yang konsisten kepada undang-undang dan standard  seperti ISO/IEC 27001, GDPR, atau peraturan tempatan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA279', 'AE057', 'AS002', '• Organisasi mula melaksanakan beberapa prosedur keselamatan siber berdasarkan undang-undang dan peraturan, namun tidak menyeluruh atau konsisten.\r\n• Pematuhan terhadap standard  seperti ISO 27001 atau amalan terbaik industri telah mula diterapkan tetapi belum sepenuhnya diurus secara formal.\r\n• Tiada audit berkala untuk memastikan pematuhan yang berterusan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA280', 'AE057', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses dan prosedur keselamatan siber yang jelas telah dirumuskan untuk mematuhi semua undang-undang, peraturan, dan standard  yang relevan.\r\n• Pelaksanaan keselamatan siber dijalankan secara konsisten merentasi semua jabatan dalam organisasi dan melibatkan pihak ketiga yang berkaitan.\r\n• Audit dalaman dan luaran dijalankan secara berkala untuk memastikan pematuhan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA281', 'AE057', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pelaksanaan keselamatan siber dipantau dengan menggunakan metrik kuantitatif untuk menilai keberkesanan pelaksanaan mengikut undang-undang dan standard yang diperlukan.\r\n• Organisasi mengkaji hasil audit dan laporan untuk membuat penambahbaikan berterusan terhadap pematuhan peraturan dan undang-undang.\r\n• Pematuhan standard  seperti ISO 27001, PCI-DSS, atau NIST dipastikan dengan konsisten melalui analisis risiko dan langkah kawalan yang sistematik.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA282', 'AE057', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Keselamatan siber dilaksanakan secara proaktif dengan menggunakan teknologi terkini untuk memastikan pematuhan automatik terhadap undang-undang dan peraturan yang berubah-ubah.\r\n• Organisasi melaksanakan audit berterusan, ujian penetrasi, dan pemantauan keselamatan secara masa nyata untuk memastikan pelaksanaan keselamatan yang optimum.\r\n• Pematuhan undang-undang dan peraturan sentiasa ditingkatkan berdasarkan ancaman dan risiko baru yang dikenal pasti, serta perkembangan dalam undang-undang keselamatan siber global.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA283', 'AE058', 'AS001', '• Penguatkuasaan dan pengauditan belum diwujudkan atau dilakukan secara sporadik.\r\n• Tiada pelaksanaan yang formal atau proses penyemakan semula pematuhan undang-undang dan peraturan.\r\n• Proses tidak mendokumentasikan amalan terbaik dan standard keselamatan yang diperlukan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA284', 'AE058', 'AS002', '• Penguatkuasaan dan pengauditan telah dilaksanakan, namun tiada jadual atau sistem yang tetap.\r\n• Penyemakan terhadap pematuhan undang-undang dan standard  dilakukan hanya apabila diperlukan, contohnya apabila ada perubahan besar.\r\n• Organisasi mula mengenal pasti standard keselamatan tetapi belum ada integrasi penuh ke dalam operasi berkala.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA285', 'AE058', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Penguatkuasaan dan pengauditan dilakukan secara berkala mengikut prosedur yang jelas dan terdokumentasi.\r\n• Organisasi mempunyai proses penyemakan semula yang berstruktur untuk memastikan pematuhan terhadap undang-undang, standard , dan amalan terbaik.\r\n• Pengemaskinian dilakukan mengikut jadual yang ditetapkan untuk memastikan pematuhan berterusan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA286', 'AE058', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Penguatkuasaan dan pengauditan diuruskan secara kuantitatif dengan metrik untuk menilai keberkesanannya.\r\n• Proses penyemakan semula undang-undang, standard , dan amalan terbaik dijalankan secara berkala, dengan hasil audit digunakan untuk memperbaiki sistem.\r\n• Organisasi memastikan setiap perubahan undang-undang dan peraturan diselaraskan dengan segera.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA287', 'AE058', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penguatkuasaan dan pengauditan dikemas kini secara dinamik menggunakan automasi dan teknologi terkini.\r\n• Proses penyemakan dan pengemaskinian dilakukan secara proaktif, memastikan keperluan undang-undang dan amalan terbaik sentiasa diikuti.\r\n• Audit dijalankan secara berkala dengan pemantauan masa nyata untuk memastikan pematuhan berterusan tanpa gangguan operasi.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA288', 'AE059', 'AS001', '• Tindakan susulan audit dijalankan secara ad hoc atau apabila terdapat keperluan mendesak; dan\r\n• Tiada prosedur formal untuk pelaksanaan tindakan pembetulan selepas audit; dan\r\n• Pemenuhan keperluan pematuhan masih tidak konsisten, dan organisasi hanya bertindak balas kepada isu atau ancaman apabila dikesan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA289', 'AE059', 'AS002', '• Tindakan susulan audit mula dilaksanakan tetapi masih tidak lengkap atau sepenuhnya sistematik; dan\r\n• Terdapat usaha untuk mematuhi cadangan audit dan keperluan pematuhan, tetapi tindakan tidak dilaksanakan dengan segera atau sepenuhnya; dan\r\n• Pelaksanaan tindakan pembetulan masih bersifat reaktif, dengan pemantauan yang minimum terhadap keberkesanannya.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA290', 'AE059', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses tindakan susulan audit keselamatan siber dan pematuhan telah ditakrifkan dengan jelas; dan\r\n• Semua cadangan audit dilaksanakan dengan garis masa yang ditetapkan, dan ada pelan tindakan yang sistematik untuk menyelesaikan isu keselamatan; dan\r\n• Keperluan pematuhan diurus dengan baik, dan organisasi mempunyai mekanisme untuk memantau dan melaporkan kepatuhan terhadap standard dan peraturan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA291', 'AE059', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pelaksanaan tindakan susulan audit dijalankan secara terurus, dan dipantau secara berkala melalui proses yang formal dan berstruktur; dan\r\n• Tindakan pembetulan dilaksanakan secara menyeluruh, dengan sistem pemantauan prestasi bagi memastikan keberkesanan langkah pembetulan; dan\r\n• Pemenuhan keperluan pematuhan sentiasa dipantau, dengan dokumentasi lengkap yang menyokong setiap tindakan dan peningkatan yang diambil.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA292', 'AE059', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Tindakan susulan audit dan pemenuhan keperluan pematuhan dilaksanakan secara proaktif, dengan amalan terbaik yang dioptimumkan untuk mengurangkan risiko keselamatan siber; dan\r\n• Penggunaan teknologi automasi dan analitik untuk memantau tindakan susulan audit secara real-time; dan\r\n• Proses tindakan pembetulan dan pematuhan bukan sahaja dilaksanakan, tetapi secara berterusan dikaji dan diperbaiki untuk menyesuaikan diri dengan ancaman keselamatan terkini serta perubahan dalam undang-undang dan peraturan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA293', 'AE060', 'AS001', '• Tiada proses formal untuk memantau penyediaan dokumentasi pematuhan; dan\r\n• Pemantauan adalah secara ad hoc dan tidak konsisten; dan\r\n• Kurang kesedaran atau pengakuan tentang kepentingan memantau proses ini; dan\r\n• Dokumentasi pematuhan disediakan tanpa sebarang pengawasan atau pemantauan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA294', 'AE060', 'AS002', '• Proses dokumentasi asas ada tetapi kurang menyeluruh atau kemas kini secara berkala;\r\n• Proses dokumentasi yang terhad atau tidak teratur; dan\r\n• Beberapa keperluan untuk memantau penyediaan dokumentasi pematuhan, tetapi pendekatannya tidak formal; dan\r\n• Organisasi menyedari kepentingan pemantauan tetapi tidak mempunyai prosedur yang ditetapkan atau pendekatan berstruktur.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA295', 'AE060', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Prosedur yang ditetapkan dan didokumenkan bagi memantau penyediaan dokumentasi pematuhan; dan\r\n• Proses konsisten yang jelas telah disediakan; dan\r\n• Aktiviti pemantauan dijalankan mengikut jadual atau kriteria yang ditetapkan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA296', 'AE060', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan dan semakan berkala terhadap proses penyediaan dokumentasi pematuhan; dan\r\n• Penggunaan metrik atau petunjuk prestasi utama (KPI) untuk mengukur keberkesanan dan kecekapan proses; dan\r\n• Pelarasan dan penambahbaikan dibuat berdasarkan hasil pemantauan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA297', 'AE060', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penambahbaikan berterusan proses pemantauan melalui inovasi dan maklum balas warga dan pihak yang berkepentingan; dan\r\n• Aktiviti pemantauan diselaraskan dalam objektif dan proses organisasi yang lebih menyeluruh; dan\r\n• Jangkaan proaktif terhadap keperluan pematuhan dan keperluan masa hadapan.', '4', '2025-12-23', NULL, NULL, 'Active'),
+('ASA298', 'AE061', 'AS001', '• Pemantauan dan penyemakan tanggungjawab keselamatan siber tidak wujud atau dilakukan secara ad hoc; dan\r\n• Tiada proses formal untuk menilai keperluan kakitangan berkaitan keselamatan siber atau menyemak sama ada tanggungjawab mereka masih relevan dan dipenuhi; dan\r\n• Keperluan keselamatan siber hanya dikaji semula apabila berlaku insiden keselamatan atau audit luaran.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA299', 'AE061', 'AS002', '• Pemantauan dan penyemakan mula dijalankan, tetapi hanya terhad kepada jabatan atau peranan tertentu; dan\r\n• Terdapat beberapa usaha untuk memastikan tanggungjawab keselamatan siber disemak secara berkala, tetapi ia masih belum sepenuhnya sistematik; dan\r\n• Keperluan kakitangan berkaitan keselamatan siber dinilai secara sporadik, dan tiada prosedur jelas untuk memperbaharui tanggungjawab atau memperbaiki kelemahan yang dikenalpasti.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA300', 'AE061', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Pemantauan dan penyemakan tanggungjawab keselamatan siber telah ditakrifkan dengan jelas dan dilaksanakan secara berkala; dan\r\n• Proses penyemakan keperluan kakitangan dijalankan secara teratur untuk memastikan mereka mempunyai latihan, pengetahuan, dan tanggungjawab yang sesuai dengan perubahan ancaman dan teknologi; dan\r\n• Tanggungjawab keselamatan siber dikemas kini mengikut perubahan dalam organisasi, dan prosedur untuk menyemak dan melaporkan status pemenuhan tanggungjawab dilaksanakan dengan jelas.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA301', 'AE061', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan dan penyemakan tanggungjawab keselamatan siber dijalankan secara sistematik dan berstruktur; dan\r\n• Setiap tanggungjawab keselamatan siber dipantau melalui proses formal, dan keperluan kakitangan dinilai secara berkala berdasarkan hasil audit, risiko terkini, dan prestasi keselamatan; dan\r\n• Keputusan daripada penyemakan tanggungjawab dan keperluan kakitangan digunakan untuk memperbaiki program latihan dan menetapkan tanggungjawab baru yang lebih relevan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA302', 'AE061', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pemantauan dan penyemakan dilakukan secara berterusan dengan bantuan teknologi automasi dan analitik untuk menilai pematuhan terhadap tanggungjawab keselamatan siber dalam masa nyata; dan\r\n• Proses penyemakan bukan sahaja menilai tanggungjawab sedia ada tetapi juga proaktif dalam mengenal pasti dan menangani keperluan masa depan kakitangan berdasarkan ancaman baru, teknologi, dan perubahan dalam peraturan; dan\r\n• Tanggungjawab keselamatan siber dan keperluan kakitangan secara berkala dikaji semula sebagai sebahagian daripada strategi keselamatan menyeluruh, dengan maklum balas daripada semua peringkat organisasi digunakan untuk penambahbaikan berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA303', 'AE062', 'AS001', '• Pemantauan dan penyemakan jarang dilakukan atau hanya apabila berlaku masalah teknikal atau keperluan auditan; dan\r\n• Tiada proses tetap untuk mengemas kini inventori, menyebabkan data aset yang tidak tepat atau ketinggalan zaman.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA304', 'AE062', 'AS002', '• Pemantauan dan penyemakan dilakukan secara berkala tetapi terhad kepada sebahagian aset atau tidak menyeluruh; dan\r\n• Tanggungjawab pengurusan inventori telah diberikan, namun proses untuk mengemas kini inventori masih kurang teratur atau tidak konsisten; dan\r\n• Inventori tidak dikaitkan sepenuhnya dengan keperluan keselamatan siber atau risiko organisasi  yang lebih luas.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA305', 'AE062', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Pemantauan dan penyemakan inventori aset dijalankan secara berkala dan mengikut prosedur yang jelas; dan\r\n• Proses mengemas kini inventori dilakukan secara teratur apabila terdapat perubahan dalam aset atau semasa audit dalaman; dan\r\n• Data inventori digunakan untuk menilai risiko keselamatan siber dan memastikan kawalan keselamatan yang sewajarnya diterapkan pada setiap aset.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA306', 'AE062', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pengurusan inventori aset dikawal secara sistematik dengan penyemakan dan pengemaskinian berkala yang jelas dan terjadual; dan\r\n• Pemantauan inventori melibatkan teknologi automasi atau alat pengurusan aset, yang memudahkan pengesanan dan kemas kini secara real-time atau pada selang waktu tertentu; dan\r\n• Aset dihubungkan dengan risiko keselamatan siber yang berkaitan, dan penyemakan dilakukan bagi memastikan setiap aset dilindungi dengan kawalan keselamatan yang tepat.\r\n• Inventori diperbaharui berdasarkan analisis risiko dan keperluan peraturan, serta disepadukan dengan keperluan organisasi  dan operasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA307', 'AE062', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pengurusan inventori aset dioptimumkan sepenuhnya, dengan pemantauan dan penyemakan dilakukan secara automatik dan berterusan; dan\r\n• Sistem pengurusan aset menggunakan teknologi terkini seperti AI atau pembelajaran mesin untuk mengenal pasti perubahan dan mengemas kini inventori dengan serta-merta; dan\r\n• Inventori aset diintegrasikan dengan strategi keseluruhan keselamatan siber dan pengurusan risiko, membolehkan organisasi bertindak balas dengan cepat terhadap ancaman yang berpotensi; dan\r\n• Penyemakan inventori dilakukan secara proaktif, memastikan semua aset yang berkaitan dengan data, sistem, dan aplikasi sentiasa dalam keadaan terkawal dan dilindungi mengikut keperluan peraturan serta amalan terbaik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA308', 'AE063', 'AS001', '• Tiada proses formal atau sistematik untuk pengwujudan dan pengekalan akses logikal; dan\r\n• Akses kepada sistem dan data diberikan secara ad-hoc tanpa penilaian risiko yang jelas atau pengesahan kebenaran; dan\r\n• Tiada prosedur khusus untuk mengurus dan menghapuskan akses apabila pengguna meninggalkan organisasi atau apabila akses tidak lagi diperlukan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA309', 'AE063', 'AS002', '• Prosedur asas untuk pengwujudan akses logikal telah dilaksanakan, tetapi terdapat kekurangan dalam pengawasan dan pengurusan akses; dan\r\n• Akses diberikan berdasarkan peranan pengguna, tetapi polisi pengurusan akses tidak diikuti sepenuhnya atau tidak dikemas kini secara berkala.\r\n• Proses pengekalan akses mula diperkenalkan, tetapi tidak ada mekanisme automatik untuk menyemak atau mengaudit akses yang berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA310', 'AE063', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Polisi dan prosedur yang jelas telah diwujudkan untuk pengwujudan dan pengekalan akses logikal, berdasarkan prinsip akses minimum (least privilege) ; dan\r\n• Proses pengesahan akses berdasarkan peranan, dengan semakan berkala dilakukan untuk memastikan hanya pengguna yang dibenarkan mempunyai akses; dan\r\n• Terdapat dokumentasi yang lengkap untuk proses pengurusan akses dan penghapusan akses apabila tidak diperlukan lagi, termasuk semakan akses semasa perubahan peranan atau pemergian pengguna.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA311', 'AE063', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Akses logikal dikawal secara kuantitatif dengan metrik dan pengukuran untuk menilai keberkesanan pengurusan akses; dan\r\n• Sistem pengurusan akses automatik digunakan untuk mengawal dan mengesan perubahan akses pengguna, termasuk pengesahan semula akses pada selang masa yang ditetapkan; dan\r\n• Log akses disemak secara berkala untuk memastikan integriti dan pematuhan kepada polisi keselamatan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA312', 'AE063', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pengwujudan dan pengekalan akses logikal dioptimumkan dengan penggunaan teknologi automasi dan kecerdasan buatan (AI) untuk menyesuaikan akses berdasarkan keperluan risiko semasa; dan\r\n• Akses logikal dipantau secara real-time, dengan amaran automatik untuk sebarang aktiviti mencurigakan atau akses tidak sah; dan\r\n• Organisasi secara aktif menyesuaikan dasar pengurusan akses untuk menyokong persekitaran organisasi  yang berubah, dan akses logikal diperkemas selaras dengan amalan terbaik keselamatan siber global.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA313', 'AE064', 'AS001', '• Tiada proses formal untuk memeriksa, memantau, atau menyemak aktiviti capaian pengguna; dan\r\n• Akses pengguna kepada sistem tidak dipantau secara konsisten, menyebabkan risiko kebocoran maklumat atau penyalahgunaan akses; dan\r\n• Organisasi bergantung pada tindakan reaktif sahaja, hanya mengesan masalah selepas insiden keselamatan berlaku.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA314', 'AE064', 'AS002', '• Pemeriksaan dan pemantauan aktiviti capaian pengguna telah dimulakan, tetapi hanya dijalankan pada sistem atau aplikasi tertentu, terutamanya yang dianggap kritikal; dan\r\n• Terdapat log aktiviti pengguna yang dihasilkan, tetapi ia tidak disemak secara berkala dan tiada tindakan segera diambil berdasarkan aktiviti yang mencurigakan; dan\r\n• Prosedur penyemakan tidak dijalankan secara konsisten di seluruh organisasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA315', 'AE064', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses pemeriksaan, pemantauan, dan penyemakan aktiviti capaian pengguna telah ditetapkan secara formal dengan dokumentasi lengkap; dan\r\n• Pemantauan dijalankan secara berkala pada semua sistem penting, dan log aktiviti pengguna diperiksa untuk mengesan sebarang anomali atau aktiviti yang tidak dibenarkan; dan\r\n• Pengurusan dan audit secara dalaman dijalankan untuk memastikan tiada pelanggaran atau penyalahgunaan akses.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA316', 'AE064', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan aktiviti capaian pengguna dilakukan secara kuantitatif, dengan metrik dan data yang dikumpulkan untuk menilai keberkesanan sistem pemantauan; dan\r\n• Log aktiviti pengguna disemak secara automatik dengan sistem pengesanan anomali yang mampu memberikan amaran jika berlaku aktiviti luar biasa atau risiko keselamatan; dan\r\n• Audit berjadual dilakukan dengan kerap dan hasil audit digunakan untuk memperbaiki dasar keselamatan akses.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA317', 'AE064', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pemantauan dan penyemakan aktiviti capaian pengguna adalah automatik sepenuhnya, dengan penggunaan teknologi canggih seperti kecerdasan buatan (AI) dan pembelajaran mesin (Machine Learning- ML) untuk mengenal pasti tingkah laku mencurigakan dalam masa nyata; dan\r\n• Sistem pemantauan aktif mampu mengenal pasti dan mencegah akses tidak sah sebelum kerosakan berlaku, dengan pembetulan automatik atau penutupan akses yang mencurigakan; dan\r\n• Penyemakan dan audit dijalankan secara berterusan, dengan proses keselamatan yang dioptimumkan untuk menyesuaikan dengan perubahan ancaman keselamatan siber dan persekitaran teknologi yang berkembang.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA318', 'AE065', 'AS001', '• Tiada proses formal untuk memastikan pihak ketiga mematuhi perjanjian keselamatan maklumat; dan\r\n• Pemantauan dan penyemakan pematuhan pihak ketiga tidak dilakukan atau hanya berlaku dalam situasi tertentu tanpa garis panduan yang jelas; dan\r\n• Organisasi bergantung pada tanggungjawab pihak ketiga tanpa kawalan dalaman untuk memastikan pematuhan yang berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA319', 'AE065', 'AS002', '• Organisasi mula melaksanakan proses asas untuk memantau pematuhan pihak ketiga terhadap perjanjian keselamatan maklumat; dan\r\n• Penyemakan dilakukan secara berkala, tetapi ia terhad kepada dokumen perjanjian tanpa pemantauan aktif terhadap amalan keselamatan pihak ketiga; dan\r\n• Terdapat penambahbaikan dalam pemantauan, tetapi prosedur ini masih tidak konsisten dan bergantung pada situasi risiko.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA320', 'AE065', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Polisi dan prosedur yang jelas telah ditetapkan untuk memantau dan menyemak pematuhan pihak ketiga terhadap perjanjian keselamatan maklumat; dan\r\n• Penyemakan pematuhan pihak ketiga dilakukan secara berkala dengan audit dalaman atau eksternal yang memeriksa dokumentasi dan amalan keselamatan; dan\r\n• Organisasi memantau bahawa pihak ketiga mematuhi syarat-syarat keselamatan maklumat yang dipersetujui dalam kontrak dan perjanjian perkhidmatan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA321', 'AE065', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses pemantauan dan penyemakan pematuhan pihak ketiga dikawal secara kuantitatif dengan penggunaan metrik yang jelas untuk menilai tahap pematuhan; dan\r\n• Organisasi menggunakan alat teknologi untuk memantau pematuhan secara automatik dan mengesan sebarang penyelewengan atau ketidakpatuhan; dan\r\n• Penyemakan dilakukan berdasarkan risiko yang telah dinilai, dan audit berkala dijalankan dengan laporan terperinci untuk memastikan bahawa pihak ketiga terus mematuhi perjanjian.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA322', 'AE065', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pemantauan dan penyemakan pematuhan pihak ketiga terhadap perjanjian keselamatan maklumat dijalankan secara proaktif dan automatik dengan teknologi canggih seperti AI untuk menilai risiko dalam masa nyata; dan\r\n• Proses pemantauan adalah berterusan, dengan tindak balas segera terhadap sebarang ketidakpatuhan yang dikesan melalui pemantauan yang berasaskan risiko; dan\r\n• Pihak ketiga diaudit secara berkala menggunakan standard  keselamatan maklumat yang diiktiraf di peringkat global, dan pematuhan mereka disahkan melalui proses audit dalaman dan eksternal.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA323', 'AE035', 'AS001', '• Tiada proses formal untuk menilai keberkesanan pihak ketiga dalam menyediakan perkhidmatan atau memenuhi keperluan keselamatan maklumat; dan\r\n• Penilaian keberkesanan dilakukan secara tidak berkala, atau hanya apabila berlaku masalah atau insiden; dan\r\n• Pihak ketiga dipilih dan diuruskan tanpa mekanisme penilaian yang jelas untuk menilai prestasi keseluruhan atau risiko yang berkaitan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA324', 'AE035', 'AS002', '• Terdapat usaha asas untuk menilai keberkesanan pihak ketiga, tetapi penilaian ini dilakukan secara tidak konsisten dan terhad kepada aspek tertentu; dan\r\n• Penilaian prestasi  terhad kepada pematuhan kontrak tanpa penilaian menyeluruh terhadap kesesuaian amalan keselamatan atau perkhidmatan yang disediakan; dan\r\n• Penilaian dilakukan berdasarkan kejadian atau apabila diperlukan sahaja, dengan tumpuan pada aspek operasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA325', 'AE035', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Organisasi telah menubuhkan dan mendokumentasikan proses untuk memastikan pematuhan pihak ketiga terhadap perjanjian yang diperakui; dan\r\n• Prosedur sistematik disediakan untuk memantau dan menguatkuasakan pematuhan; dan\r\n• Perjanjian yang diperakui termasuk keperluan pematuhan yang jelas dan ditakrifkan; dan\r\n• Kakitangan  yang bertanggungjawab untuk pengawasan pematuhan dilatih dan mengetahui prosedur ini.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA326', 'AE035', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Organisasi mengaudit pihak ketiga untuk memastikan pematuhan dengan perjanjian yang diperakui; dan\r\n• Penggunaan metrik dan petunjuk prestasi utama (KPI) untuk mengukur tahap pematuhan; dan\r\n• Pemantauan pengurusan yang berterusan memastikan pematuhan pihak ketiga dikekalkan; dan\r\n• Pemantauan pematuhan diintegrasikan dengan pengurusan risiko organisasi dan rangka kerja pematuhan yang lebih luas.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA327', 'AE035', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Organisasi terus meningkatkan proses pematuhan pihak ketiga melalui inovasi dan maklum balas; dan\r\n• Proses pematuhan pihak ketiga diselaraskan dengan perancangan strategik dan hasil jangka panjang; dan\r\n• Organisasi menggunakan kaedah terkini untuk meningkatkan pemantauan pematuhan; dan\r\n• Organisasi secara proaktif menyesuaikan proses pematuhannya kepada risiko baru muncul dan amalan terbaik industri.', '4', '2025-12-24', NULL, NULL, 'Active');
+INSERT INTO `score_element` (`se_ID`, `element_ID`, `score_ID`, `details`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
+('ASA328', 'AE066', 'AS001', '• Tiada proses atau struktur formal untuk memantau atau menyemak penilaian keberkesanan pihak ketiga; dan\r\n• Penilaian dilakukan hanya apabila terdapat masalah atau insiden yang berkaitan dengan perkhidmatan pihak ketiga, tanpa pemantauan proaktif; dan\r\n• Organisasi kurang menyedari kepentingan pemantauan secara berkala terhadap keberkesanan pihak ketiga.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA329', 'AE066', 'AS002', '• Terdapat usaha untuk melaksanakan pemantauan dan penyemakan keberkesanan pihak ketiga, tetapi ia dilakukan secara tidak berkala atau tidak menyeluruh; dan\r\n• Penilaian hanya dilakukan dalam keadaan tertentu atau pada waktu yang tidak tetap, menyebabkan kurangnya konsistensi dalam mengesan risiko atau masalah; dan\r\n• Tindakan susulan dari penilaian tidak didokumentasikan atau dipantau secara sistematik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA330', 'AE066', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses formal untuk pemantauan dan penyemakan keberkesanan pihak ketiga telah didokumentasikan dan dijalankan secara berkala; dan\r\n• Penilaian keberkesanan pihak ketiga dilakukan mengikut jadual yang jelas, dengan prosedur dan metrik prestasi yang spesifik; dan\r\n• Proses ini merangkumi pemeriksaan terhadap pematuhan perjanjian, prestasi keselamatan, dan pengurusan risiko pihak ketiga, dengan tindakan pembetulan diambil berdasarkan hasil penilaian.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA331', 'AE066', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan dan penyemakan keberkesanan pihak ketiga dilakukan berdasarkan analisis kuantitatif, menggunakan data dan metrik prestasi yang diukur secara objektif; dan\r\n• Penilaian dilakukan secara berkala dengan sokongan teknologi untuk mengesan penyelewengan atau masalah dalam masa nyata; dan\r\n• Keberkesanan pihak ketiga dinilai berdasarkan risiko yang dinamik, dengan audit dan laporan prestasi yang digunakan untuk memperbaiki atau menguruskan hubungan dengan pihak ketiga.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA332', 'AE066', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pemantauan dan penyemakan keberkesanan pihak ketiga sepenuhnya automatik, dengan penggunaan teknologi AI dan pembelajaran mesin untuk menilai prestasi pihak ketiga secara berterusan; dan\r\n• Organisasi mengadaptasi proses penilaian mengikut perubahan dalam keperluan organisasi , risiko keselamatan, dan perubahan dalam landskap pihak ketiga; dan\r\n• Penilaian keberkesanan bukan sahaja melibatkan pematuhan terhadap perjanjian, tetapi juga menggalakkan peningkatan berterusan dalam prestasi pihak ketiga melalui kolaborasi dan perkongsian maklumat.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA333', 'AE067', 'AS001', '• Organisasi tidak mempunyai akses tetap kepada pakar bidang atau kumpulan pakar untuk memberi khidmat rundingan; dan\r\n• Penglibatan pakar hanya dilakukan berdasarkan keperluan mendesak atau apabila timbul masalah tertentu; dan\r\n• Keputusan biasanya dibuat tanpa rujukan atau nasihat daripada pakar bidang yang berpengalaman.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA334', 'AE067', 'AS002', '• Organisasi mula melibatkan pakar bidang atau kumpulan pakar dalam beberapa aspek operasi, tetapi penglibatan mereka adalah terhad kepada bidang tertentu sahaja; dan\r\n• Khidmat rundingan diberikan berdasarkan permintaan, tanpa ada proses formal untuk mendapatkan maklum balas secara berkala; dan\r\n• Pakar bidang hanya dirujuk untuk projek atau isu yang dianggap kritikal, dan bukan sebagai sebahagian daripada strategi menyeluruh.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA335', 'AE067', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Terdapat proses yang ditetapkan untuk melibatkan pakar bidang atau kumpulan pakar dalam keputusan strategik dan operasi; dan\r\n• Maklumat dan khidmat runding daripada pakar digunakan secara aktif untuk menyokong perancangan, pemantauan, dan peningkatan kualiti perkhidmatan atau produk; dan\r\n• Pakar berkongsi kepakaran mereka secara berkala, membantu dalam menilai risiko, peluang, dan trend terkini yang relevan dengan organisasi .', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA336', 'AE067', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Penglibatan pakar bidang atau kumpulan pakar adalah berstruktur dan diukur dengan metrik tertentu untuk menilai keberkesanan sumbangan mereka; dan\r\n• Pakar bidang memberikan maklumat yang penting untuk meningkatkan daya saing dan mengurangkan risiko operasi; dan\r\n• Khidmat rundingan ini diselaraskan dengan matlamat strategik organisasi, memastikan pengurusan risiko dan peluang dilakukan secara efisien.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA337', 'AE067', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pakar bidang atau kumpulan pakar terlibat secara aktif dan berterusan dalam semua proses pengurusan dan pengambilan keputusan, menggunakan teknologi canggih untuk meningkatkan penyampaian maklumat dan khidmat runding; dan\r\n• Organisasi mengintegrasikan kepakaran pakar ke dalam strategi menyeluruh, memastikan penyelarasan dengan perubahan teknologi, undang-undang, dan keperluan organisasi  global; dan\r\n• Sumbangan pakar dinilai secara berterusan dan digabungkan dengan analitik data untuk memastikan keputusan yang diambil adalah berdasarkan fakta dan maklumat yang terkini serta tepat.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA338', 'AE038', 'AS001', '• Tiada proses formal atau dokumentasi untuk mengurus konfigurasi dan aset IT; dan\r\n• Konfigurasi aset IT dilakukan secara ad-hoc, tanpa perancangan atau panduan keselamatan yang jelas; dan\r\n• Risiko keselamatan yang berkaitan dengan aset IT tidak dikenalpasti atau diurus secara berkesan, menyebabkan potensi ancaman yang tinggi terhadap sistem dan data.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA339', 'AE038', 'AS002', '• Proses asas untuk konfigurasi dan pengurusan aset IT telah diwujudkan, tetapi masih kurang teratur dan bergantung kepada tindakan manual; dan\r\n• Pengurusan aset IT dijalankan, tetapi prosedur keselamatan tidak diikuti secara konsisten di seluruh organisasi; dan\r\n• Terdapat usaha untuk memastikan konfigurasi yang selamat, tetapi pelaksanaan dan pengurusan perubahan aset adalah tidak konsisten atau terhad kepada sistem kritikal sahaja.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA340', 'AE038', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses dan prosedur formal telah diwujudkan untuk mengurus konfigurasi dan aset IT dengan fokus pada keselamatan; dan\r\n• Semua aset IT didaftarkan dan dikonfigurasikan dengan dasar keselamatan yang ditetapkan, termasuk kawalan akses dan pengesahan; dan\r\n• Proses ini melibatkan pengurusan perubahan konfigurasi aset IT dengan dokumentasi dan pengesahan untuk meminimakan risiko pelanggaran keselamatan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA341', 'AE038', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Konfigurasi dan pengurusan aset IT dijalankan dengan sokongan metrik dan analisis risiko yang jelas, membolehkan organisasi mengukur dan memantau keberkesanan proses pengurusan keselamatan; dan\r\n• Pengurusan perubahan dan kawalan konfigurasi dijalankan secara berterusan, dengan pengesahan keselamatan secara berkala; dan\r\n• Alat automasi digunakan untuk mengurus dan memantau aset IT, termasuk pelaksanaan patch keselamatan dan pengesanan konfigurasi yang tidak selamat.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA342', 'AE038', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Proses pengurusan aset IT sepenuhnya automatik, dengan penggunaan teknologi seperti AI dan pembelajaran mesin untuk mengesan ancaman dan memastikan konfigurasi yang selamat; dan\r\n• Pengurusan konfigurasi aset IT dilakukan secara proaktif, dengan analisis risiko real-time untuk mengenal pasti dan menangani kelemahan keselamatan dengan cepat.\r\n• Organisasi sentiasa menilai dan mengemas kini konfigurasi aset IT berdasarkan perubahan dalam landskap ancaman siber dan keperluan organisasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA343', 'AE037', 'AS001', '• Tiada proses formal untuk mengenal pasti dan  memilih penyelesaian keselamatan siber yang sesuai; dan\r\n• Pemilihan penyelesaian keselamatan siber dilakukan secara ad-hoc atau reaktif, hanya apabila terdapat insiden keselamatan; dan\r\n• Organisasi bergantung kepada penyelesaian keselamatan siber  yang asas, tanpa rujukan kepada standard  dan amalan terbaik dalam industri.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA344', 'AE037', 'AS002', '• Terdapat proses asas untuk mengenal pasti penyelesaian keselamatan siber, tetapi ia masih tidak sepenuhnya teratur atau komprehensif; dan\r\n• Organisasi mula menyedari kepentingan standard  keselamatan siber seperti ISO atau NIST, namun pelaksanaan standard  ini tidak menyeluruh; dan\r\n• Pemilihan penyelesaian keselamatan siber  dilakukan berdasarkan keperluan tertentu, namun tidak merangkumi semua komponen infrastruktur, sistem, dan aplikasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA345', 'AE037', 'AS003', '• Proses dan telah lengkap Tahap 2; dan\r\n• Proses formal untuk mengenal pasti penyelesaian keselamatan siber  telah didokumentasikan dan diterapkan di seluruh organisasi; dan\r\n• Penyelesaian keselamatan siber  dipilih berdasarkan standard  yang ditetapkan, serta penilaian risiko yang menyeluruh terhadap ancaman terhadap infrastruktur dan sistem; dan\r\n• Penyelesaian yang dipilih selaras dengan amalan terbaik industri, dan proses pemilihan melibatkan kajian terhadap keberkesanan teknologi terkini.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA346', 'AE037', 'AS004', '• Proses dan telah lengkap Tahap 3; dan\r\n• Proses pemilihan penyelesaian keselamatan siber dilakukan secara kuantitatif, di mana metrik digunakan untuk mengukur keberkesanan terhadap ancaman yang dikenalpasti; dan\r\n• Sistem automasi digunakan untuk menilai prestasi penyelesaian keselamatan siber yang sedia ada, serta untuk mengenal pasti penyelesaian baru yang lebih efektif berdasarkan standard  industri; dan\r\n• Organisasi secara berkala menyemak dan mengemas kini penyelesaian keselamatan siber  bagi memastikan ia masih relevan dengan perubahan dalam landskap ancaman.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA347', 'AE037', 'AS005', '• Proses dan telah lengkap Tahap 4; dan\r\n• Pemilihan penyelesaian keselamatan siber dilakukan secara proaktif, dengan penggunaan teknologi seperti AI dan pembelajaran mesin untuk mengenal pasti ancaman baru dan mencadangkan penyelesaian keselamatan yang paling sesuai; dan\r\n• Organisasi mengamalkan pendekatan berasaskan risiko diintegrasikan dengan strategi keselamatan siber dan organisasi   yang berterusan dengan merujuk kepada standard terkini; dan\r\n• Penyelesaian keselamatan siber yang digunakan sentiasa dioptimumkan, dengan proses yang automatik dan penilaian berterusan terhadap keberkesanan penyelesaian yang dipilih.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA348', 'AE040', 'AS001', '• Tiada prosedur formal untuk mengemas kini perisian dan perkakasan; dan\r\n• Kemas kini dilakukan secara ad-hoc atau hanya apabila berlaku masalah teknikal atau ancaman keselamatan; dan\r\n• Organisasi bergantung kepada pengguna akhir atau pentadbir untuk melakukan kemas kini secara manual, yang menyebabkan kelewatan dalam pemakaian patch atau kemas kini penting.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA349', 'AE040', 'AS002', '• Kemas kini perisian dan perkakasan dilakukan secara berkala tetapi tidak menyeluruh atau tepat pada masanya; dan\r\n• Proses kemas kini adalah manual dan dilakukan berdasarkan keperluan yang dikenalpasti, tetapi tanpa jadual kemas kini yang jelas; dan\r\n• Organisasi mula memperkenalkan dasar dan prosedur asas untuk mengurus kemas kini keselamatan, tetapi pelaksanaan tidak konsisten di seluruh infrastruktur IT.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA350', 'AE040', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses formal untuk memastikan perisian dan perkakasan sentiasa dikemas kini telah diwujudkan, termasuk jadual kemas kini yang berkala; dan\r\n• Alat dan sistem automasi diperkenalkan untuk membantu mengenal pasti kemas kini dan memudahkan pemasangan patch keselamatan; dan\r\n• Kemas kini dilakukan mengikut prosedur yang ditetapkan, dan semua peranti serta aplikasi penting disertakan dalam program pengurusan kemas kini.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA351', 'AE040', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Kemas kini perisian dan perkakasan diuruskan secara kuantitatif, dengan metrik yang jelas untuk mengukur keberkesanan dan ketepatan masa kemas kini; dan\r\n• Sistem pemantauan digunakan untuk mengenal pasti kelemahan atau perisian yang tidak dikemas kini dan menyediakan amaran automatik; dan\r\n• Kemas kini dilakukan berdasarkan keutamaan risiko, dengan tumpuan pada perlindungan keselamatan siber dan memastikan semua perisian kritikal sentiasa terkini.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA352', 'AE040', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Organisasi terus kemas kini perisian dan perkakasan dilakukan secara automatik dan berterusan dengan penggunaan teknologi AI dan pembelajaran mesin untuk mengesan kelemahan serta mengurus proses kemas kini secara proaktif; dan\r\n• Semua peranti, perisian, dan sistem di organisasi dikemas kini secara real-time, tanpa campur tangan manual, untuk mengurangkan risiko keselamatan; dan\r\n• Organisasi menggunakan pendekatan zero-day patching untuk memastikan bahawa sebarang kelemahan keselamatan segera ditangani sebaik sahaja ia dikenalpasti.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA353', 'AE068', 'AS001', '• Tiada penggunaan teknologi yang terancang dan tiada standard yang digunakan sebagai rujukan; dan\r\n• Sistem dan aplikasi dibangunkan atau diperoleh tanpa mengikut standard  atau amalan terbaik dalam industri; dan\r\n• Tiada proses formal untuk memastikan teknologi yang digunakan relevan dengan keperluan semasa.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA354', 'AE068', 'AS002', '• Penggunaan teknologi mula diuruskan secara lebih sistematik, tetapi masih terhad kepada projek atau keperluan tertentu; dan\r\n• Organisasi mula menyedari pentingnya penggunaan teknologi terkini tetapi masih bergantung kepada standard lama atau secara manual; dan\r\n• Terdapat usaha untuk memperkenalkan standard, tetapi pelaksanaan tidak konsisten di seluruh organisasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA355', 'AE068', 'AS003', '• Proses dan telah lengkap Tahap 2; dan\r\n• Prosedur untuk penggunaan teknologi berdasarkan standard  terkini telah didokumentasikan dan dilaksanakan di seluruh organisasi; dan\r\n• Semua sistem dan aplikasi baru dibangunkan atau diperoleh dengan mematuhi standard  industri yang diiktiraf, seperti ISO atau NIST; dan\r\n• Teknologi yang digunakan diselaraskan dengan amalan terbaik dalam industri dan proses penilaian berkala dilakukan untuk memastikan standard  dikekalkan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA356', 'AE068', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Penggunaan teknologi disokong oleh analisis kuantitatif, di mana pematuhan terhadap standard  terkini diukur dan dipantau secara berkala; dan\r\n• Sistem pemantauan automatik digunakan untuk mengesan sebarang penyimpangan daripada standard  yang ditetapkan; dan\r\n• Organisasi menggunakan alat dan teknologi yang dioptimumkan untuk memastikan bahawa semua aplikasi dan sistem memenuhi standard terkini dan keperluan keselamatan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA357', 'AE068', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Penggunaan teknologi bersepadu sepenuhnya dengan amalan terbaik dan standard  terkini, dengan automasi yang membolehkan pemantauan dan pengemaskinian secara berterusan; dan\r\n• Sistem dan aplikasi sentiasa ditingkatkan untuk mematuhi perubahan standard  teknologi dan keperluan peraturan; dan\r\n• Organisasi menerapkan teknologi terkini, seperti AI, blockchain, atau cloud computing, selaras dengan standard  antarabangsa terkini, untuk meningkatkan prestasi, keselamatan, dan kecekapan operasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA358', 'AE041', 'AS001', '• Tiada proses formal untuk menilai dan mengkaji penggunaan teknologi terkini dalam organisasi; dan\r\n• Organisasi menggunakan teknologi berdasarkan keperluan segera tanpa mempertimbangkan keberkesanan atau relevansi teknologi terkini; \r\n• Kajian terhadap teknologi baru dilakukan secara ad hoc;\r\n• Kajian hanya dilakukan apabila berlaku masalah yang memerlukan penyelesaian segera.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA359', 'AE041', 'AS002', '• Proses untuk mengkaji teknologi baru mula diperkenalkan, tetapi masih dalam peringkat awal dan terhad kepada beberapa bahagian atau jabatan; dan\r\n• Kajian dilakukan berdasarkan keperluan projek tertentu;\r\n• Kajian dilakukan apabila terdapat tekanan dari pihak pengurusan bagi meningkatkan kecekapan operasi; dan\r\n• Penilaian teknologi yang terkini tidak konsisten atau sistematik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA360', 'AE041', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Terdapat proses yang jelas dan formal untuk mengkaji dan menilai penggunaan teknologi terkini di seluruh organisasi; dan\r\n• Penilaian dilakukan secara berkala dan melibatkan kajian menyeluruh terhadap tren teknologi semasa, termasuk potensi risiko dan faedah; dan\r\n• Organisasi mempunyai jawatankuasa yang didedikasikan untuk mengenal pasti dan menilai teknologi baru sebelum membuat keputusan bajet.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA361', 'AE041', 'AS004', '• Proses dan Telah lengkap Tahap 3; dan\r\n• Proses kajian dan penilaian teknologi terkini dilakukan secara kuantitatif, menggunakan metrik untuk mengukur impak teknologi terhadap produktiviti, keselamatan, dan keuntungan; dan\r\n• Kajian teknologi didorong oleh analisis data, dan keputusan dibuat berdasarkan bukti yang jelas; dan\r\n• Penggunaan teknologi baru diukur dari segi prestasi dan penyelarasan dengan objektif strategik organisasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA362', 'AE041', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Organisasi mengamalkan pendekatan proaktif dalam mengkaji dan menilai teknologi terkini, menggunakan alat canggih seperti AI dan pembelajaran mesin untuk meramalkan tren teknologi masa depan; dan\r\n• Proses ini bersepadu sepenuhnya dengan strategi organisasi , dan keputusan untuk melabur dalam teknologi baru didorong oleh analisis kos manfaat yang komprehensif; dan\r\n• Organisasi sentiasa berada di barisan hadapan dalam menerima-guna teknologi terkini untuk memacu inovasi dan kelebuhan daya saing, memastikan setiap penggunaan teknologi baru memberikan nilai tambah yang optimum.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA363', 'AE039', 'AS001', '• Tiada proses pemantauan yang berterusan terhadap aktiviti dan tingkah laku rangkaian serta infrastruktur sistem; dan\r\n• Pemantauan hanya dilakukan secara ad-hoc atau apabila berlaku insiden keselamatan; dan\r\n• Terdapat sedikit atau tiada alat teknologi yang digunakan untuk memantau rangkaian secara proaktif, menyebabkan kelemahan dalam mengenal pasti ancaman siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA364', 'AE039', 'AS002', '• Proses pemantauan asas telah dilaksanakan, tetapi masih terhad kepada aktiviti kritikal tertentu atau bergantung kepada tindakan manual; dan\r\n• Penggunaan alat pemantauan mula diperkenalkan untuk mengesan aktiviti yang mencurigakan, tetapi liputan tidak menyeluruh di seluruh rangkaian dan infrastruktur; dan\r\n• Pemantauan dilakukan secara berkala, tetapi respons terhadap insiden keselamatan lambat atau tidak konsisten.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA365', 'AE039', 'AS003', '• Telah lengkap Tahap 2; dan\r\n• Proses formal untuk pemantauan rangkaian dan infrastruktur sistem secara berterusan telah diwujudkan; dan\r\n• Alat pemantauan yang lebih komprehensif digunakan untuk memantau aktiviti rangkaian, mengenal pasti anomali, dan mengesan percubaan serangan; dan\r\n• Pemantauan dijalankan secara real-time, dengan sistem yang dapat memberi amaran tentang sebarang aktiviti yang mencurigakan atau penyimpangan daripada tingkah laku biasa.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA366', 'AE039', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Pemantauan rangkaian dan sistem dilakukan secara kuantitatif dengan analisis tingkah laku yang menggunakan data historikal untuk mengenal pasti corak ancaman yang lebih halus; dan\r\n• Proses pemantauan menggunakan teknologi automasi dan alat pengurusan insiden yang dapat memberikan respons yang cepat terhadap ancaman yang dikesan; dan\r\n• Penggunaan metrik keselamatan dan pemantauan berasaskan risiko membantu dalam membuat keputusan yang lebih tepat dan meningkatkan keberkesanan pertahanan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA367', 'AE039', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• Pemantauan aktiviti dan tingkah laku rangkaian serta sistem dijalankan secara automatik dan berterusan dengan bantuan teknologi AI dan Machine learning untuk mengesan ancaman dalam masa nyata; dan\r\n• Sistem pemantauan sentiasa ditingkatkan dan dikonfigurasi untuk mengenal pasti ancaman siber baru dan tingkah laku rangkaian yang tidak normal sebelum ia dapat menyebabkan kerosakan; dan\r\n• Proses pemantauan adalah proaktif, dengan pendekatan \"threat hunting\" yang mengesan ancaman yang belum diketahui berdasarkan analisis tingkah laku dan anomali sistem.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA368', 'AE043', 'AS001', '• Tiada penggunaan teknologi terkini yang signifikan dalam pelaksanaan dan pemantauan keselamatan siber; dan\r\n• Organisasi bergantung kepada teknologi keselamatan siber yang ketinggalan zaman atau tidak menggunakan teknologi automatik sama sekali; dan\r\n• Pemantauan keselamatan dilakukan secara manual dan terhad kepada langkah-langkah asas, seperti kata laluan dan antivirus yang standard.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA369', 'AE043', 'AS002', '• Teknologi keselamatan siber mula diperkenalkan, seperti firewall, antivirus, dan alat pemantauan rangkaian asas; dan\r\n• Walaupun beberapa proses pemantauan telah diotomatisasikan, penggunaan teknologi masih terhad kepada fungsi yang terasing, tanpa penyepaduan sepenuhnya dalam keseluruhan ekosistem keselamatan; dan\r\n• Organisasi menyedari keperluan untuk meningkatkan teknologi keselamatan siber, tetapi pelaksanaannya masih terhad.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA370', 'AE043', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Penggunaan teknologi terkini diterapkan secara formal dalam pelaksanaan dan pemantauan keselamatan siber, dengan penyepaduan sistem yang lebih baik; dan\r\n• Alat seperti SIEM (Security Information and Event Management) dan IDS/IPS (Intrusion Detection/Prevention Systems) telah diperkenalkan untuk pemantauan ancaman yang lebih efisien; dan\r\n• Organisasi mengikut standard  keselamatan terkini seperti ISO 27001 atau NIST dan memastikan penggunaan teknologi selaras dengan amalan terbaik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA371', 'AE043', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Teknologi terkini digunakan secara menyeluruh dan pemantauan keselamatan dilakukan secara automatik dengan alat yang mengesan ancaman dalam masa nyata; dan\r\n• Penggunaan teknologi seperti AI, pembelajaran mesin, dan analisis tingkah laku diterapkan untuk mengesan anomali atau ancaman yang lebih kompleks; dan\r\n• Organisasi mampu mengukur keberkesanan penggunaan teknologi keselamatan siber melalui metrik prestasi yang jelas, dan proses penambahbaikan diterapkan berdasarkan data yang dikumpulkan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA372', 'AE043', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Organisasi menggunakan teknologi terkini secara proaktif, dengan pemantauan keselamatan yang berterusan melalui penggunaan alat automatik yang sangat canggih; dan\r\n• Alat seperti blockchain, kecerdasan buatan (Artificial Intellignece- AI), dan pembelajaran mesin diintegrasikan sepenuhnya dalam rangkaian keselamatan siber untuk ramalan, pengesanan awal, dan respons automatik terhadap ancaman; dan\r\n• Organisasi sentiasa mengikuti perkembangan terkini dalam teknologi keselamatan dan menerapkan pendekatan bersepadu serta holistik untuk meminimakan risiko keselamatan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA373', 'AE042', 'AS001', '• Tiada SOC yang khusus untuk pemantauan dan pengesanan ancaman siber; dan\r\n• Pemantauan keselamatan dijalankan secara ad-hoc atau berdasarkan keperluan tertentu sahaja, tanpa menggunakan alat automatik atau berterusan; dan\r\n• Ancaman siber sering kali dikesan hanya selepas insiden berlaku, menyebabkan organisasi lambat bertindak balas terhadap ancaman.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA374', 'AE042', 'AS002', '• Organisasi mula mempunyai kapasiti asas SOC, tetapi ia masih terhad kepada pengesanan ancaman asas melalui alat manual atau teknologi sederhana; dan\r\n• SOC mula menggunakan beberapa alat pemantauan automatik, tetapi belum menyeluruh untuk semua aspek rangkaian, sistem, dan aplikasi; dan\r\n• Ancaman keselamatan dikesan lebih awal berbanding sebelumnya, namun proses pemantauan dan respons ancaman masih bergantung pada intervensi manusia.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA375', 'AE042', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• SOC telah diwujudkan dengan prosedur operasi standard yang jelas, membolehkan pemantauan dan pengesanan ancaman siber dilakukan secara konsisten; dan\r\n• Alat dan teknologi pemantauan automatik digunakan secara meluas untuk mengesan ancaman dan kejadian keselamatan dalam masa nyata; dan\r\n• SOC mula menerapkan standard  industri seperti NIST (National Institute Standard of Technology), ISO (Internasional Standard Organisation), atau CIS (Control Internet Security) bagi mematuhi amalan terbaik dalam pengurusan keselamatan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA376', 'AE042', 'AS004', '• Telah lengkap Tahap 3; dan\r\n• Proses pemantauan ancaman siber dilakukan secara kuantitatif dengan penggunaan metrik untuk mengukur keberkesanan sistem pengesanan; dan\r\n• SOC menggabungkan penggunaan alat canggih seperti SIEM (Security Information and Event Management) yang membolehkan pengesanan ancaman lebih mendalam dan analisis tingkah laku anomali; dan\r\n• Respons terhadap ancaman lebih pantas, dan SOC beroperasi secara bersepadu dengan pelan pemulihan bencana dan pengurusan risiko keselamatan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA377', 'AE042', 'AS005', '• Telah lengkap Tahap 4; dan\r\n• SOC berfungsi pada tahap optimum dengan penggunaan teknologi automatik canggih, seperti AI dan pembelajaran mesin, untuk proaktif dalam pengesanan dan pengurusan ancaman siber; dan\r\n• Pemantauan dilakukan secara berterusan dan dalam masa nyata, dengan pengesanan ancaman yang lebih awal dan respons automatik untuk mitigasi segera; dan\r\n• SOC mengamalkan pendekatan proaktif seperti \"threat hunting\" dan analisis tingkah laku yang dapat meramalkan dan menghalang serangan sebelum ia berlaku, sejajar dengan standard  keselamatan terkini dan keperluan peraturan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA378', 'AE069', 'AS001', '• Tiada proses formal untuk penilaian atau pemantauan keselamatan siber; dan\r\n• Penilaian operasi keselamatan siberdilakukan secara ad-hoc atau hanya selepas berlaku insiden keselamatan; dan\r\n• Tiada sistem pemantauan berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA379', 'AE069', 'AS002', '• Penilaian keselamatan siber mula dilaksanakan secara berkala, tetapi masih bersifat reaktif; dan\r\n• Pemantauan terhadap operasi keselamatan dilakukan menggunakan alat asas seperti log sistem dan audit dalaman yang tidak berterusan; dan\r\n• Pelaksanaan penilaian dan pemantauan berkala bagi operasi keselamatan siber belum menyeluruh atau teratur.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA380', 'AE069', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Penilaian dan pemantauan keselamatan siber dilaksanakan secara sistematik mengikut jadual yang tetap; dan\r\n• Organisasi mengamalkan standard  keselamatan siber yang diiktiraf, seperti ISO 27001, dan proses pemantauan dijalankan mengikut prosedur yang telah ditetapkan; dan\r\n• Penggunaan teknologi pemantauan secara automatik untuk mengesan anomali atau ancaman yang berpotensi diperkenalkan, dan penilaian prestasi keselamatan dilakukan secara lebih mendalam.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA381', 'AE069', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Proses penilaian dan pemantauan keselamatan dijalankan menggunakan metrik yang jelas untuk menilai keberkesanan operasi keselamatan siber; dan\r\n• Organisasi menggunakan alat automatik seperti SIEM (Security Information and Event Management) untuk pemantauan berterusan, dan ancaman dianalisis dalam masa nyata; dan\r\n• Penilaian keberkesanan pemantauan dijalankan dengan menggunakan data yang dikumpulkan dari sistem untuk memastikan peningkatan berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA382', 'AE069', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Organisasi mempunyai proses penilaian dan pemantauan keselamatan siber yang dioptimumkan sepenuhnya dengan penggunaan teknologi canggih seperti AI dan pembelajaran mesin; dan\r\n• Pemantauan dijalankan secara proaktif, dengan pengesanan ancaman yang cepat dan automatik serta sistem tindak balas pantas terhadap sebarang insiden keselamatan; dan\r\n• Penilaian berkala dijalankan untuk memastikan pematuhan dengan standard  keselamatan siber terkini dan amalan terbaik global, serta untuk mengesan keperluan peningkatan secara berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA383', 'AE044', 'AS001', '• Tiada pelan tindak balas insiden yang formal atau terdokumentasi. Respons terhadap insiden keselamatan siber dilakukan secara ad-hoc; dan\r\n• Apabila berlaku insiden keselamatan, tindakan diambil secara spontan, tanpa arahan atau prosedur yang jelas; dan\r\n• Tiada penilaian atau latihan khusus yang berkaitan dengan pengurusan insiden keselamatan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA384', 'AE044', 'AS002', '• Pelan tindak balas insiden mula diwujudkan, tetapi pelaksanaannya masih terhad dan tidak diterapkan secara konsisten; dan\r\n• Prosedur asas untuk mengenal pasti, melaporkan, dan menangani insiden keselamatan telah tersedia, namun tindak balas masih bergantung kepada individu tertentu; dan\r\n• Pelan ini tidak diuji secara berkala, dan kakitangan kurang latihan dalam melaksanakan pelan tersebut.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA385', 'AE044', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Pelan tindak balas insiden yang terdokumentasi sepenuhnya diterapkan dengan jelas, mengandungi peranan dan tanggungjawab setiap individu atau jabatan dalam menangani insiden keselamatan; dan\r\n• Organisasi mengadakan latihan berkala untuk menguji keberkesanan pelan tindak balas insiden; dan\r\n• Pelan ini merangkumi langkah-langkah untuk mengenal pasti, mengesahkan, menanggapi, dan memulihkan operasi selepas insiden keselamatan berlaku.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA386', 'AE044', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Proses tindak balas insiden dijalankan secara terukur dengan penggunaan metrik untuk menilai keberkesanan tindak balas terhadap insiden keselamatan siber; dan\r\n• Latihan simulasi insiden diadakan secara berkala untuk menguji pelan tindak balas insiden dan memastikan kakitangan bersedia menghadapi ancaman sebenar; dan\r\n• Tindakan pembaikan selepas insiden dikenalpasti dan diterapkan untuk mengelakkan insiden serupa daripada berulang.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA387', 'AE044', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Pelan tindak balas insiden berfungsi secara optimum, dengan proses automasi tindak balas terhadap insiden keselamatan menggunakan teknologi terkini seperti AI dan pembelajaran mesin; dan\r\n• Respons terhadap insiden keselamatan siber berlaku dengan segera dan selaras dengan standard  keselamatan global, seperti NIST atau ISO 27035; dan\r\n• Pelan ini dikaji dan dikemas kini secara berterusan berdasarkan pengalaman insiden terdahulu dan perkembangan terkini dalam teknologi keselamatan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA388', 'AE045', 'AS001', '• Tiada takrifan jelas mengenai peranan dan tanggungjawab dalam pasukan tindak balas insiden; dan\r\n• Tindak balas terhadap insiden siber dilakukan secara ad-hoc dengan kakitangan bertindak tanpa peranan atau tugas yang jelas; dan\r\n• Tiada struktur organisasi untuk mengurus tindak balas insiden, menyebabkan kekeliruan ketika menghadapi insiden keselamatan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA389', 'AE045', 'AS002', '• Peranan dan tanggungjawab mula ditakrifkan dalam pasukan tindak balas insiden, tetapi dokumen tidak lengkap atau tidak konsisten; dan\r\n• Ahli pasukan mengetahui peranan mereka, tetapi belum ada latihan berstruktur untuk memastikan pemahaman menyeluruh; dan\r\n• Proses ini mula diterapkan, namun pelaksanaannya belum menyeluruh atau sepenuhnya diikuti semasa insiden sebenar.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA390', 'AE045', 'AS003', '•	Telah lengkap Tahap 2; dan \r\n•	Peranan dan tanggungjawab ahli pasukan tindak balas insiden ditakrifkan dengan jelas dalam dokumentasi rasmi; dan\r\n•	Terdapat struktur organisasi yang jelas yang menyenaraikan setiap peranan ahli pasukan serta tanggungjawab yang perlu dilaksanakan semasa insiden berlaku; dan\r\n•	Latihan dan simulasi dilakukan secara berkala untuk memastikan semua ahli memahami dan boleh melaksanakan tugas mereka dengan baik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA391', 'AE045', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Peranan dan tanggungjawab pasukan tindak balas insiden bukan sahaja ditakrifkan, tetapi juga dinilai secara berkala berdasarkan metrik prestasi; dan\r\n• Proses penilaian ini digunakan untuk mengenal pasti kelemahan dan penambahbaikan yang boleh dilakukan untuk mengoptimumkan keberkesanan pasukan tindak balas.\r\n• Struktur organisasi pasukan disemak dan dikemas kini secara berkala berdasarkan pengalaman daripada insiden-insiden terdahulu.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA392', 'AE045', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Peranan dan tanggungjawab dalam pasukan tindak balas insiden sentiasa dioptimumkan dan disesuaikan berdasarkan perubahan landskap ancaman keselamatan siber; dan\r\n• Penggunaan teknologi canggih seperti AI dan automasi untuk menyokong tindak balas insiden serta mempercepat proses pengesanan dan mitigasi ancaman; dan\r\n• Pelan tindak balas insiden dikaji dan diubah suai secara berterusan, dengan input daripada pengalaman terdahulu dan ujian simulasi untuk memastikan peranan dan tanggungjawab ahli pasukan selaras dengan keperluan semasa.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA393', 'AE047', 'AS001', '• Tiada proses formal untuk menyiasat insiden keselamatan atau amaran yang diterima; dan\r\n• Insiden keselamatan ditangani secara reaktif, tanpa analisis mendalam tentang punca atau langkah pembaikan jangka panjang\r\n• Tiada dokumentasi mengenai insiden atau pelajaran yang diambil daripada insiden tersebut, menyebabkan kelemahan berterusan dalam sistem.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA394', 'AE047', 'AS002', '• Proses penyiasatan insiden mula dijalankan, tetapi masih pada peringkat asas dan tidak mendalam; dan\r\n• Amaran keselamatan mula diambil perhatian, namun pelan tindak balas dan pembaikan masih bersifat ad-hoc; dan\r\n• Pelan pembaikan disediakan berdasarkan keperluan semasa, namun tidak ada proses formal untuk memastikan pelan ini diikuti atau dikemas kini.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA395', 'AE047', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Proses penyiasatan insiden dan amaran keselamatan yang formal telah ditakrifkan dan didokumentasikan; dan\r\n• Setiap insiden yang berlaku dianalisis untuk mengenal pasti punca utama, dan pelan pembaikan khusus disediakan untuk mengelakkan kejadian berulangv\r\n• Sistem laporan dan pengurusan insiden diwujudkan untuk memastikan setiap insiden dan amaran dikendalikan mengikut prosedur yang jelas.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA396', 'AE047', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Proses penyiasatan insiden dijalankan dengan penggunaan metrik untuk mengukur keberkesanan respons dan pelan pembaikan; dan\r\n• Setiap insiden keselamatan dan amaran diikuti dengan laporan terperinci yang dianalisis dan digunakan untuk penambahbaikan sistem keselamatan; dan\r\n• Pelan pembaikan yang disediakan berasaskan data dan keputusan penyiasatan, dan kemajuan pelaksanaan pelan ini dipantau dengan teliti.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA397', 'AE047', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Penyiasatan insiden dan amaran keselamatan dijalankan secara proaktif dengan penggunaan teknologi canggih seperti AI dan analitik data; dan\r\n• Terdapat pelan pembaikan yang komprehensif dan dioptimumkan berdasarkan analisis insiden terdahulu, dan proses pembaikan dilaksanakan secara automatik atau separa automatik; dan\r\n• Proses ini sentiasa diperbaiki berdasarkan penilaian berterusan, dengan ujian simulasi dijalankan untuk memastikan keberkesanan pelan pembaikan serta pengurangan insiden serupa di masa hadapan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA398', 'AE048', 'AS001', '• Tiada pelan formal untuk penyemakan berkala pengurusan insiden; dan\r\n• Penyemakan dilakukan secara ad-hoc, hanya selepas insiden besar berlaku atau ketika diminta oleh pihak tertentu; dan\r\n• Tiada dokumentasi atau rekod yang sistematik mengenai penyemakan yang dilakukan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA399', 'AE048', 'AS002', '• Pelan penyemakan pengurusan insiden mula diterapkan, tetapi tidak dijalankan secara berkala dan konsisten.\r\n• Proses penyemakan hanya berlaku apabila terdapat keperluan mendesak, tanpa jadual yang tetap; dan\r\n• Tindakan yang diambil selepas penyemakan masih tidak berstruktur, dan tiada penambahbaikan berterusan dilakukan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA400', 'AE048', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Penyemakan pelan pengurusan insiden dijalankan secara berkala dan formal, berdasarkan jadual yang telah ditetapkan; dan\r\n• Pelan ini didokumentasikan dengan jelas dan setiap aspek pengurusan insiden diteliti secara teliti untuk memastikan pelan yang ada masih relevan dan berkesan; dan\r\n• Tindakan susulan diambil berdasarkan hasil penyemakan untuk mengemas kini dan memperbaiki pelan pengurusan insiden.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA401', 'AE048', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Penyemakan pelan pengurusan insiden dilakukan menggunakan metrik yang jelas untuk mengukur keberkesanan pelan yang sedia ada; dan\r\n• Jadual penyemakan disusun berdasarkan penilaian risiko dan pengalaman insiden terdahulu, memastikan pelan sentiasa ditambah baik; dan\r\n• Hasil penyemakan didokumentasikan dan digunakan untuk memperbaiki pelan sedia ada dengan perubahan atau penambahbaikan yang spesifik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA402', 'AE048', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Penyemakan pelan pengurusan insiden bukan sahaja dijalankan secara berkala, tetapi juga menggunakan teknologi automasi dan analitik untuk mempercepat dan memperbaiki proses penyemakan; dan\r\n• Penyemakan dilakukan secara proaktif, dengan penilaian berterusan terhadap pelan pengurusan insiden bagi memastikan keberkesanan maksimum dan penyesuaian kepada ancaman terkini; dan\r\n• Proses penyemakan adalah sebahagian daripada usaha berterusan untuk meningkatkan ketahanan siber organisasi, dengan penyemakan dilakukan secara dinamik berdasarkan keperluan dan perkembangan teknologi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA403', 'AE055', 'AS001', '• Tiada prosedur formal untuk tindak balas atau pemulihan daripada insiden keselamatan siber; dan\r\n• Tindak balas terhadap insiden dilakukan secara reaktif, tanpa perancangan atau garis panduan yang jelas; dan\r\n• Langkah pemulihan tidak dijalankan dengan konsisten, dan tiada panduan terperinci untuk proses pemulihan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA404', 'AE055', 'AS002', '• Prosedur asas tindak balas dan pemulihan mula diterapkan, tetapi masih tidak sepenuhnya didokumentasikan atau diselaraskan; dan\r\n• Terdapat garis panduan umum untuk tindak balas terhadap insiden keselamatan, tetapi prosedur pemulihan belum lengkap; dan\r\n• Organisasi mula menyedari keperluan untuk memperbaiki prosedur, namun pelaksanaan dan pemulihan masih dilakukan secara minimum.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA405', 'AE055', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Prosedur tindak balas dan pemulihan daripada insiden keselamatan siber telah ditakrifkan dengan jelas dan didokumentasikan; dan\r\n• Setiap langkah dalam tindak balas insiden diaturkan secara  proaktif dan formal, termasuk proses pemulihan yang jelas; dan\r\n• Latihan dan simulasi dijalankan untuk menguji keberkesanan prosedur tindak balas dan pemulihan, memastikan semua anggota pasukan mengetahui peranan mereka.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA406', 'AE055', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Prosedur tindak balas dan pemulihan diuruskan secara proaktif dan dinilai menggunakan metrik untuk mengukur keberkesanan; dan\r\n• Proses tindak balas dan pemulihan diaudit secara berkala untuk mengenal pasti kelemahan dan kawasan untuk penambahbaikan; dan\r\n• Organisasi menggunakan hasil daripada audit dan insiden terdahulu untuk terus memperkemaskan prosedur.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA407', 'AE055', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Prosedur tindak balas dan pemulihan dioptimumkan dengan menggunakan teknologi canggih seperti AI dan automasi untuk meningkatkan kecekapan; dan\r\n• Tindak balas terhadap insiden dijalankan secara proaktif, dengan pelan pemulihan yang fleksibel berdasarkan pengalaman dan analisis insiden terdahulu; dan\r\n• Prosedur ini sentiasa disemak dan diubah suai untuk memastikan respons yang cepat dan berkesan terhadap ancaman keselamatan yang berkembang.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA408', 'AE070', 'AS001', '• Tiada penyemakan berkala dilakukan terhadap prosedur tindak balas dan pemulihan; dan\r\n• Cyber Drills (latihan siber) sama ada tidak dijalankan atau hanya dilakukan secara minimum, tanpa impak kepada semakan prosedur; dan\r\n• Organisasi bertindak reaktif tanpa adanya proses yang jelas untuk mengemas kini prosedur berdasarkan hasil Cyber Drills.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA409', 'AE070', 'AS002', '• Cyber Drills mula dijalankan, tetapi penyemakan prosedur tindak balas dan pemulihan masih tidak berlaku secara konsisten atau berjadual; dan\r\n• Sebahagian hasil Cyber Drills digunakan untuk memperbaiki prosedur, tetapi tindakan ini dilakukan secara sekali sekala; dan\r\n• Prosedur tindak balas dan pemulihan mula dikemas kini, tetapi pelaksanaannya masih dalam peringkat awal tanpa jadual penyemakan yang tetap.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA410', 'AE070', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Prosedur penyemakan berkala telah ditetapkan, dengan latihan Cyber Drills dijalankan mengikut jadual untuk menilai keberkesanan tindak balas dan pemulihan; dan\r\n• Hasil daripada latihan Cyber Drills digunakan secara formal untuk mengemas kini dan memperbaiki prosedur sedia ada; dan\r\n• Proses penyemakan ini didokumentasikan dengan jelas, dan pelan tindak balas serta pemulihan diperbaiki secara konsisten berdasarkan hasil latihan tersebut.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA411', 'AE070', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Penyemakan prosedur dilakukan secara berkala dengan metrik prestasi yang ditetapkan untuk menilai keberkesanan Cyber Drills dan kesesuaian tindak balas serta pemulihan; dan\r\n• Analisis mendalam daripada latihan siber digunakan untuk menilai dan memperbaiki kelemahan dalam prosedur tindak balas; dan\r\n• Prosedur pemulihan dikemas kini berdasarkan data yang diperoleh daripada latihan, dengan tindakan susulan untuk memastikan penambahbaikan dilaksanakan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA412', 'AE070', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Penyemakan berkala prosedur tindak balas dan pemulihan dioptimumkan dengan menggunakan hasil daripada Cyber Drills terkini dan simulasi automatik; dan\r\n• Latihan siber dijalankan secara berterusan, dan hasilnya digunakan secara proaktif untuk memperbaiki prosedur dengan segera; dan\r\n• Prosedur ini sentiasa disemak dan dikemas kini berdasarkan perubahan landskap ancaman siber, memastikan tindak balas dan pemulihan sentiasa relevan dan efisien.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA413', 'AE049', 'AS001', '• Tiada usaha proaktif untuk mengenal pasti ancaman dan kerentanan keselamatan siber; dan\r\n• Organisasi hanya bertindak balas terhadap ancaman dan kerentanan apabila insiden keselamatan siber berlaku; dan\r\n• Tiada pemantauan atau pengesanan awal yang dilakukan, dan kesedaran terhadap ancaman adalah terhad.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA414', 'AE049', 'AS002', '• Pengenalpastian ancaman dan kerentanan mula diterapkan tetapi hanya berlaku secara asas dan tidak sepenuhnya konsisten; dan\r\n• Organisasi mula menggunakan alat asas untuk mengenal pasti kelemahan dalam sistem, namun tindakan yang diambil masih bersifat reaktif; dan\r\n• Walaupun ancaman diambil kira, usaha proaktif untuk mengatasi atau mencegahnya masih terhad.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA415', 'AE049', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Proses proaktif untuk mengenal pasti dan menilai ancaman serta kerentanan keselamatan siber telah ditakrifkan dan didokumentasikan; dan\r\n• Organisasi mula melaksanakan pemantauan berterusan terhadap ancaman dan kerentanan dengan menggunakan alat dan teknologi yang lebih canggih; dan\r\n• Pelan tindakan dan langkah pencegahan telah ditakrifkan dengan jelas untuk mengurangkan pendedahan kepada ancaman siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA416', 'AE049', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Ancaman dan kerentanan keselamatan siber dipantau secara berkala menggunakan metrik yang jelas dan analisis data untuk mengukur keberkesanan usaha pencegahan; dan\r\n• Usaha proaktif dilakukan secara berterusan untuk mengenal pasti kelemahan baru dan meminimumkan risiko melalui pelaksanaan langkah pencegahan yang teratur; dan\r\n• Analisis risiko dilakukan secara menyeluruh, dengan pelaporan berkala dan kemas kini prosedur berasaskan hasil pemantauan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA417', 'AE049', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Pembangunan dan pelaksanaan pengurusan ancaman dan kerentanan adalah proaktif dan dioptimumkan dengan penggunaan AI, analitik prediktif, dan automasi untuk mengesan ancaman baru; dan\r\n• Tindakan pencegahan dilaksanakan secara automatik untuk menutup kerentanan sebelum ancaman dapat dieksploitasi; dan\r\n• Organisasi sentiasa mengemas kini alat dan prosedur berdasarkan kajian terhadap landskap ancaman semasa, serta melibatkan maklum balas daripada pakar-pakar industri dan analisis data yang terkini.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA418', 'AE054', 'AS001', '• Tiada proses formal untuk penyediaan dan pengawalan versi dokumen yang berkaitan dengan prosedur ancaman dan kelemahan; dan\r\n• Dokumen disimpan secara tidak teratur;\r\n• Dokumen tidak dikemas kini secara berkala; dan\r\n• Tiada sistem untuk menjejaki versi dokumen terdahulu atau untuk memastikan semua pihak menggunakan versi terkini.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA419', 'AE054', 'AS002', '• Pelaksanaan penyediaan dan pengawalan versi dokumen masih tidak sepenuhnya konsisten; dan\r\n• Dokumen prosedur ancaman dan kelemahan yang dikemas kini secara berkala ada kekurangan dalam pengesanan versi terdahulu; dan\r\n• Pengawalan yang kurang terhadap akses kepada dokumen.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA420', 'AE054', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Proses pengawalan versi dokumen telah ditakrifkan dengan jelas dan didokumentasikan; dan\r\n• Mekanisme formal untuk mengemas kini dokumen prosedur ancaman dan kelemahan\r\n• Mekanisme formal untuk  mengesan perubahan dan versi dokumen prosedur yang direkod; dan\r\n• Pengesahan dan kawalan akses kepada versi terkini dokumen dilaksanakan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA421', 'AE054', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Proses penyediaan dan pengawalan versi dokumen dipantau dan diuruskan secara berkala menggunakan metrik yang jelas; dan\r\n• Setiap versi dokumen disemak dan diluluskan sebelum disebarkan, dengan prosedur kawalan yang memastikan hanya versi terkini digunakan dalam operasi; dan\r\n• Sistem pengurusan dokumen yang lebih maju digunakan untuk memastikan kawalan akses dan integriti dokumen sepanjang kitaran hayatnya.', '4', '2025-12-24', NULL, NULL, 'Active');
+INSERT INTO `score_element` (`se_ID`, `element_ID`, `score_ID`, `details`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`) VALUES
+('ASA422', 'AE054', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Pengawalan versi dokumen adalah automatik dan sepenuhnya dioptimumkan menggunakan alat teknologi seperti sistem Enterprise Content Management (ECM) atau Document Management System (DMS); dan\r\n• Perubahan pada dokumen dibuat dengan pantas dan dikawal ketat, dengan pengesanan versi secara automatik yang menyimpan sejarah perubahan, memudahkan audit dan kajian semula; dan\r\n• Proses ini selari dengan amalan terbaik dan standard  antarabangsa, memastikan dokumentasi ancaman dan kelemahan adalah tepat, terkini, dan mudah diakses oleh pihak yang berkepentingan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA423', 'AE050', 'AS001', '• Tiada penggunaan teknologi formal untuk pemantauan ancaman dan kerentanan; dan\r\n• Organisasi bergantung kepada kaedah manual atau minimum untuk mengenal pasti ancaman siber, tanpa penggunaan teknologi moden atau standard  terkini; dan\r\n• Tindak balas adalah reaktif dan tidak berdasarkan kepada pemantauan berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA424', 'AE050', 'AS002', '• Penggunaan teknologi asas untuk pemantauan ancaman dan kerentanan telah dimulakan, tetapi masih bersifat terhad dan kurang konsisten; dan\r\n• Teknologi tidak selaras sepenuhnya dengan standard  terkini, dan pengesanan ancaman masih dilakukan pada skala kecil; dan\r\n• Pemantauan masih dilakukan secara berkala tetapi tidak berterusan, dengan respons kepada ancaman yang masih lambat.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA425', 'AE050', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Proses pemantauan ancaman dan kerentanan telah ditakrifkan dan didokumentasikan dengan jelas; dan\r\n• Teknologi yang digunakan selari dengan standard  keselamatan terkini, seperti NIST, ISO 27001, atau CIS Controls; dan\r\n• Pemantauan ancaman siber dilakukan secara lebih aktif dan berterusan menggunakan teknologi yang boleh mengesan ancaman dalam masa nyata; dan\r\n• Proses-proses ini ditakrifkan dan digunakan secara meluas dalam organisasi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA426', 'AE050', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Teknologi pemantauan ancaman dan kerentanan diurus secara berkesan menggunakan alat yang diiktiraf berdasarkan standard  keselamatan siber terkini; dan\r\n• Data dari pemantauan digunakan untuk mengukur keberkesanan tindak balas terhadap ancaman dan untuk memperbaiki kelemahan dalam sistem keselamatan; dan\r\n• Pemantauan ancaman adalah berterusan dan berskala global, menggunakan teknologi yang lebih maju seperti SIEM (Security Information and Event Management) dan AI/ML untuk mengesan ancaman yang kompleks.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA427', 'AE050', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Organisasi menggunakan teknologi pemantauan ancaman dan kerentanan terkini yang dioptimumkan untuk automasi dan analitik canggih, seperti Threat Intelligence Platforms dan Behavioral Analytics; dan\r\n• Pemantauan dilakukan secara masa nyata dengan integrasi sepenuhnya kepada sistem keselamatan dan operasi organisasi, menjadikan tindak balas kepada ancaman lebih cepat dan proaktif; dan\r\n• Teknologi yang digunakan terus dikemas kini dan selari dengan standard  keselamatan terkini, memastikan organisasi sentiasa bersedia menghadapi ancaman baru dalam dunia siber yang semakin dinamik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA428', 'AE071', 'AS001', '• Tiada proses formal untuk mengkaji atau menilai penggunaan teknologi pemantauan ancaman dan kerentanan; dan\r\n• Penggunaan teknologi sedia ada adalah berdasarkan keperluan segera dan tidak melibatkan kajian yang berstruktur atau berdasarkan standard  industri; dan\r\n• Organisasi tidak mengamalkan penilaian berkala terhadap teknologi yang digunakan, menyebabkan potensi peninggalan teknologi usang.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA429', 'AE071', 'AS002', '• Kajian terhadap penggunaan teknologi pemantauan ancaman dan kerentanan dilakukan secara ad-hoc tetapi tidak terancang secara formal; dan\r\n• Penilaian teknologi dilakukan sesekali, namun masih belum ada proses rasmi yang diikuti secara konsisten; dan\r\n• Walaupun kajian berlaku, ia tidak berdasarkan standard  industri terkini atau tidak menyeluruh.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA430', 'AE071', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Proses mengkaji dan menilai teknologi pemantauan ancaman telah ditakrifkan dengan jelas dan didokumentasikan; dan\r\n• Organisasi mempunyai jadual penilaian berkala untuk menilai keberkesanan dan kesesuaian teknologi terhadap standard  terkini; dan\r\n• Kajian ini melibatkan perbandingan teknologi dengan standard  keselamatan yang diiktiraf seperti NIST, ISO, dan standard  industri yang berkaitan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA431', 'AE071', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Proses penilaian teknologi dijalankan secara berkala menggunakan metrik kuantitatif untuk mengukur keberkesanan dan prestasi teknologi; dan\r\n• Kajian terhadap teknologi dilakukan berasaskan data, dan laporan penilaian dihasilkan untuk mengesan potensi penambahbaikan atau keperluan untuk menaik taraf teknologi; dan\r\n• Organisasi juga mengikut perkembangan teknologi terkini dan amalan terbaik dalam industri keselamatan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA432', 'AE071', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Proses kajian dan penilaian teknologi adalah berterusan dan dioptimumkan melalui penggunaan alat analitik canggih dan AI untuk menilai keberkesanan teknologi pemantauan ancaman dan kerentanan; dan\r\n• Organisasi bukan sahaja melakukan kajian terhadap teknologi yang digunakan, tetapi juga membuat penilaian proaktif terhadap teknologi baru yang muncul untuk memastikan mereka berada di hadapan dalam perlindungan siber; dan\r\n• Teknologi sentiasa diselaraskan dengan perkembangan standard  keselamatan terkini, dan keputusan untuk menerapkan teknologi baru dibuat berdasarkan analisis risiko dan kos-faedah yang komprehensif.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA433', 'AE072', 'AS001', '• Tiada proses formal untuk pemantauan atau pengujian keselamatan siber terhadap rangkaian, sistem, dan aplikasi; dan\r\n• Pengujian dilakukan secara ad-hoc atau apabila insiden berlaku, tanpa pendekatan sistematik; dan\r\n• Tiada jadual atau struktur bagi pelaksanaan pengujian keselamatan secara berkala.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA434', 'AE072', 'AS002', '• Pengujian keselamatan siber telah mula dilaksanakan tetapi dilakukan secara minimum dan tidak konsisten; dan\r\n• Pengujian dilakukan hanya pada sistem atau aplikasi tertentu, dan masih tiada proses terpusat untuk memantau semua komponen rangkaian; dan\r\n• Jadual pengujian keselamatan wujud tetapi tidak dipatuhi sepenuhnya.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA435', 'AE072', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Proses pengujian keselamatan siber telah ditakrifkan dengan jelas dan dijalankan secara berkala mengikut jadual yang teratur; dan\r\n• Pengujian menyeluruh dilakukan terhadap semua rangkaian, sistem, dan aplikasi yang kritikal, dengan pemantauan berterusan terhadap hasil pengujian; dan\r\n• Proses ini mengikuti amalan terbaik dan standard  keselamatan siber yang relevan, seperti NIST, ISO 27001, dan OWASP.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA436', 'AE072', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Pengujian keselamatan siber dijalankan secara berkala dan dipantau menggunakan metrik dan indikator prestasi yang jelas; dan\r\n• Keberkesanan pengujian diukur, dan hasilnya dianalisis untuk mengenal pasti kelemahan dan peluang penambahbaikan; dan\r\n• Organisasi telah melaksanakan automasi untuk beberapa komponen pengujian, seperti vulnerability scanning, penetration testing, dan patch management.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA437', 'AE072', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Proses pengujian keselamatan siber dipantau dan diurus secara automatik menggunakan teknologi canggih seperti AI/ML untuk pengesanan ancaman secara masa nyata; dan\r\n• Pengujian keselamatan adalah berterusan dan diintegrasikan ke dalam DevSecOps, memastikan sistem, rangkaian, dan aplikasi diuji pada setiap peringkat pembangunan dan operasi; dan\r\n• Pengujian dilakukan berdasarkan pendekatan risk-based testing untuk memastikan bahawa semua risiko dinilai dan mitigasi dilakukan dengan segera, mengikut standard  terkini yang terus berkembang.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA438', 'AE051', 'AS001', '• Tiada proses atau rancangan formal untuk memastikan kesinambungan perkhidmatan ICT; dan\r\n• Perkhidmatan ICT terdedah kepada gangguan atau kegagalan tanpa pelan tindak balas yang jelas; dan\r\n• Tiada dokumentasi atau prosedur untuk menangani insiden yang menjejaskan perkhidmatan ICT.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA439', 'AE051', 'AS002', '• Pembangunan dan pelaksanaan pengurusan kesinambungan perkhidmatan ICT telah dimulakan, tetapi masih terhad kepada beberapa komponen; dan\r\n• Proses-proses ini dilaksanakan secara minimum tanpa kerangka yang menyeluruh; dan\r\n• Pelan tindak balas wujud tetapi tidak diuji secara konsisten, dan keupayaan pemulihan belum dioptimumkan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA440', 'AE051', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Pengurusan kesinambungan perkhidmatan ICT telah ditakrifkan dengan jelas dan terdokumentasi; dan\r\n• Pelan pemulihan bencana, pemulihan data, dan tindak balas terhadap gangguan ICT dijalankan secara konsisten; dan\r\n• Organisasi mempunyai panduan yang ditetapkan untuk menangani insiden dan memastikan perkhidmatan ICT dapat pulih dengan cepat berdasarkan amalan terbaik dalam industri.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA441', 'AE051', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Pengurusan kesinambungan perkhidmatan ICT dipantau secara berkala, dan pelan disesuaikan berdasarkan data prestasi dan insiden yang lepas; dan\r\n• Ujian berkala dijalankan bagi memastikan keberkesanan pelan pemulihan dan tindak balas terhadap gangguan; dan\r\n• Metrik yang kuantitatif digunakan untuk menilai keupayaan pemulihan dan kesinambungan perkhidmatan ICT, dan langkah-langkah penambahbaikan diterapkan secara berterusan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA442', 'AE051', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Pengurusan kesinambungan perkhidmatan ICT dilaksanakan secara automatik dengan proses dan teknologi yang optimum; dan\r\n• Organisasi menggunakan automasi dan teknologi canggih seperti disaster recovery as a service (DRaaS) untuk memastikan kesinambungan perkhidmatan ICT tanpa gangguan; dan\r\n• Proses kesinambungan dipantau secara berterusan, dan kajian penambahbaikan dilakukan secara proaktif untuk memastikan perkhidmatan ICT sentiasa berjalan dengan optimum, walaupun menghadapi cabaran besar.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA443', 'AE052', 'AS001', '• Tiada proses formal untuk menyemak pelan kesinambungan perkhidmatan ICT; dan\r\n• Penyemakan pelan dilakukan secara ad-hoc atau hanya apabila terdapat keperluan segera, seperti selepas berlaku insiden atau gangguan; dan\r\n• Dokumentasi dan penilaian keberkesanan pelan jarang dilakukan, jika ada.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA444', 'AE052', 'AS002', '• Penyemakan pelan telah mula dilaksanakan, namun ia masih bersifat reaktif, dilakukan selepas insiden atau berdasarkan keperluan minimum; dan\r\n• Penyemakan dilakukan pada sebahagian komponen perkhidmatan ICT, tetapi tiada jadual berkala atau pelaksanaan menyeluruh; dan\r\n• Kelemahan dan kekuatan pelan jarang dinilai secara sistematik.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA445', 'AE052', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Proses penyemakan pelan kesinambungan perkhidmatan ICT ditakrifkan dengan jelas dan dijalankan secara berkala; dan\r\n• Penyemakan ini melibatkan semua komponen utama perkhidmatan ICT dan memastikan pelan dikemaskini mengikut perubahan persekitaran teknologi dan peraturan; dan\r\n• Pelan yang disemak mengambil kira perubahan risiko, keperluan undang-undang, dan perkembangan teknologi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA446', 'AE052', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Penyemakan pelan dilakukan secara berkala dengan menggunakan metrik kuantitatif untuk menilai keberkesanan pelan kesinambungan; dan\r\n• Organisasi memantau prestasi dan hasil penyemakan, serta memperbaiki kelemahan yang dikesan; dan\r\n• Pelan yang disemak diukur terhadap standard  industri seperti ISO 22301 dan amalan terbaik keselamatan siber.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA447', 'AE052', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Penyemakan pelan dilakukan secara berterusan dan disokong oleh teknologi automasi yang memastikan pemantauan dan penilaian secara masa nyata; dan\r\n• Organisasi menggunakan analitik canggih dan pendekatan proaktif untuk mengesan kelemahan serta memperbaiki pelan kesinambungan dengan segera; dan\r\n• Penyemakan pelan bukan sahaja memenuhi standard  terkini, tetapi sentiasa dioptimumkan untuk menghadapi ancaman baru dan memastikan kesediaan penuh dalam semua senario.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA448', 'AE053', 'AS001', '• Tiada simulasi yang dijalankan atau hanya simulasi asas dilakukan secara ad-hoc; dan\r\n• Tiada pelan yang formal dan sistematik untuk menguji keberkesanan pelan kesinambungan perkhidmatan ICT; dan\r\n• Hanya bergantung pada tindak balas kecemasan semasa insiden berlaku tanpa sebarang simulasi yang terancang.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA449', 'AE053', 'AS002', '• Simulasi pelan kesinambungan perkhidmatan ICT dijalankan, namun masih dilakukan secara terhad dan tidak melibatkan keseluruhan perkhidmatan ICT; dan\r\n• Proses simulasi dilaksanakan mengikut keperluan atau selepas berlaku insiden, namun belum ada jadual berkala yang ketat; dan\r\n• Penyemakan hasil simulasi tidak dijalankan secara konsisten untuk memperbaiki pelan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA450', 'AE053', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Simulasi pelan kesinambungan perkhidmatan ICT dilakukan mengikut jadual yang tetap, dengan panduan dan prosedur yang jelas; dan\r\n• Semua komponen kritikal perkhidmatan ICT diuji secara berkala untuk memastikan kesiapsiagaan organisasi dalam menghadapi gangguan; dan\r\n• Hasil simulasi dianalisis, dan pelan diperbaiki berdasarkan penemuan dari simulasi tersebut.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA451', 'AE053', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Simulasi dijalankan secara sistematik dengan metrik untuk menilai keberkesanan pelan kesinambungan perkhidmatan ICT; dan\r\n• Organisasi menggunakan hasil simulasi untuk mengukur keupayaan pemulihan dan membuat penambahbaikan berdasarkan data yang dikumpulkan; dan\r\n• Simulasi dikaitkan dengan pengurusan risiko, dan pelan diperbaharui secara berkala berdasarkan perubahan dalam risiko organisasi  dan teknologi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA452', 'AE053', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Simulasi pelan kesinambungan dijalankan secara proaktif dan berterusan, menggunakan automasi dan teknologi canggih; dan\r\n• Organisasi sentiasa memantau keberkesanan pelan melalui simulasi berkala, dan pelan ini disesuaikan secara dinamik untuk menangani ancaman baru; dan\r\n• Ujian simulasi menyeluruh dilakukan secara masa nyata, memastikan pelan kesinambungan perkhidmatan ICT sentiasa berada pada tahap optimum dan mampu menangani sebarang insiden yang berpotensi mengganggu perkhidmatan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA453', 'AE073', 'AS001', '• Tiada prosedur formal atau simulasi yang jelas untuk menguji kesinambungan perkhidmatan ICT; dan\r\n• Organisasi bergantung kepada langkah tindak balas kecemasan yang belum diuji secara sistematik; dan\r\n• Prosedur simulasi tidak diwujudkan atau hanya dijalankan apabila berlaku insiden sebenar.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA454', 'AE073', 'AS002', '• Simulasi bagi kesinambungan perkhidmatan ICT telah mula dilaksanakan, namun masih secara tidak konsisten; dan\r\n• Proses simulasi hanya melibatkan sebahagian perkhidmatan ICT, dan tidak melibatkan semua komponen kritikal; dan\r\n• Penyemakan dilakukan secara minimum, dan bergantung kepada keperluan segera atau selepas insiden berlaku.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA455', 'AE073', 'AS003', '• Telah lengkap Tahap 2; dan \r\n• Prosedur simulasi kesinambungan perkhidmatan ICT ditakrifkan dengan jelas dan dilaksanakan secara berkala mengikut jadual yang tetap; dan\r\n• Penyemakan prosedur simulasi dijalankan melibatkan semua bahagian penting perkhidmatan ICT, dengan memastikan kesediaan sistem dan kakitangan diuji secara menyeluruh; dan\r\n• Hasil simulasi dianalisis untuk mengenal pasti kelemahan dan peluang untuk penambahbaikan.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA456', 'AE073', 'AS004', '• Telah lengkap Tahap 3; dan \r\n• Simulasi kesinambungan perkhidmatan ICT dijalankan secara berkala dengan menggunakan metrik untuk menilai keberkesanan prosedur; dan\r\n• Organisasi memantau keputusan simulasi dan membuat perubahan berdasarkan penilaian prestasi yang berterusan; dan\r\n• Penyemakan berkala terhadap prosedur simulasi memastikan pelan tindak balas yang disesuaikan dengan perubahan risiko dan teknologi.', '4', '2025-12-24', NULL, NULL, 'Active'),
+('ASA457', 'AE073', 'AS005', '• Telah lengkap Tahap 4; dan \r\n• Penyemakan dan simulasi kesinambungan perkhidmatan ICT dilakukan secara automatik dan proaktif, dengan penggunaan teknologi terkini seperti AI atau machine learning untuk menganalisis risiko dan meramalkan kegagalan perkhidmatan; dan\r\n• Simulasi diintegrasikan ke dalam proses operasi harian organisasi dan disesuaikan dengan ancaman baru serta perubahan teknologi; dan\r\n• Penyemakan simulasi dilakukan secara masa nyata untuk memastikan organisasi sentiasa bersedia menghadapi sebarang kemungkinan gangguan.', '4', '2025-12-24', NULL, NULL, 'Active');
 
 --
 -- Triggers `score_element`
@@ -791,6 +884,7 @@ INSERT INTO `sub_con` (`sec_ID`, `sub_con_ID`, `sub_con_name`) VALUES
 ('A6', 'A.6.6', 'Confidentiality or non-disclosure agreements'),
 ('A6', 'A.6.7', 'Remote working'),
 ('A6', 'A.6.8', 'Information security event reporting'),
+('A6', 'A.6.9', 'test control 9'),
 ('A7', 'A.7.1', 'Physical security perimeters'),
 ('A7', 'A.7.10', 'Storage media'),
 ('A7', 'A.7.11', 'Supporting utilities'),
@@ -848,19 +942,20 @@ CREATE TRIGGER `trg_generate_control_id` BEFORE INSERT ON `sub_con` FOR EACH ROW
     DECLARE next_num INT;
     DECLARE prefix VARCHAR(20);
 
-    SET prefix = NEW.sec_ID; 
-
-    SELECT MAX(CAST(SUBSTRING_INDEX(sub_con_ID, '.', -1) AS UNSIGNED))
-    INTO next_num
-    FROM sub_con
-    WHERE sec_ID = prefix;
-
-    IF next_num IS NULL THEN
-        SET next_num = 1;
+    -- FIX: If Section ID is like 'A6', turn it into 'A.6'
+    IF NEW.sec_ID REGEXP '^A[0-9]+$' THEN
+        SET prefix = CONCAT('A.', SUBSTRING(NEW.sec_ID, 2));
     ELSE
-        SET next_num = next_num + 1;
+        SET prefix = NEW.sec_ID;
     END IF;
 
+    -- Find the highest number for this section
+    SELECT IFNULL(MAX(CAST(SUBSTRING_INDEX(sub_con_ID, '.', -1) AS UNSIGNED)), 0) + 1
+    INTO next_num
+    FROM sub_con
+    WHERE sub_con_ID LIKE CONCAT(prefix, '.%');
+
+    -- Generate the final ID (e.g., A.6.1)
     SET NEW.sub_con_ID = CONCAT(prefix, '.', next_num);
 END
 $$
@@ -875,127 +970,128 @@ DELIMITER ;
 CREATE TABLE `sub_req` (
   `sec_ID` varchar(10) NOT NULL,
   `sub_req_ID` varchar(10) NOT NULL,
-  `sub_req_name` varchar(500) NOT NULL
+  `sub_req_name` varchar(500) NOT NULL,
+  `criteria_ID` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 --
 -- Dumping data for table `sub_req`
 --
 
-INSERT INTO `sub_req` (`sec_ID`, `sub_req_ID`, `sub_req_name`) VALUES
-('10', '10.1 (a)', 'Continual improvement - Improve the suitability, adequacy and effectiveness of ISMS'),
-('10', '10.2 (a)', 'Nonconformity and corrective action - React to nonconformity by correcting it and dealing with consequences'),
-('10', '10.2 (b)', 'Nonconformity and corrective action - Evaluate need for action by reviewing nonconformity, finding causes, and checking for similar cases'),
-('10', '10.2 (c)', 'Nonconformity and corrective action - Implement any action needed'),
-('10', '10.2 (d)', 'Nonconformity and corrective action - Review the effectiveness of any corrective action taken'),
-('10', '10.2 (e)', 'Nonconformity and corrective action - Make changes to the ISMS (if necessary)'),
-('10', '10.2 (f)', 'Nonconformity and corrective action - Document evidence of nonconformities and actions taken'),
-('10', '10.2 (g)', 'Nonconformity and corrective action - Document the result of corrective action'),
-('4', '4.1', 'Organisational context - Determine the organization\'s ISMS objectives and any issues that might affect its effectiveness'),
-('4', '4.2 (a)', 'Interested parties - Identify interested parties'),
-('4', '4.2 (b)', 'Interested parties - Determine their information security-relevant requirements and obligations'),
-('4', '4.2 (c)', 'Interested parties - Determine the requirments that will be addressed through ISMS.'),
-('4', '4.3 (a)', 'ISMS scope - Determine the external and internal issues'),
-('4', '4.3 (b)', 'ISMS scope - Determine the requirments'),
-('4', '4.3 (c)', 'ISMS scope - Determine interfaces and dependencies between perfomed by the organization or by other organization'),
-('4', '4.4', ' ISMS - Establish, implement, maintain and continually improve an ISMS according to the standard'),
-('5', '5.1 (a)', 'Leadership & commitment- Ensure ISMS objectives are established'),
-('5', '5.1 (b)', 'Leadership & commitment- Ensure integrate ISMS requirements into organizational processes'),
-('5', '5.1 (c)', 'Leadership & commitment- Ensure resource for the ISMS are available'),
-('5', '5.1 (d)', 'Leadership & commitment- Communicate the importance of effective ISMS and compliance with its requirements'),
-('5', '5.1 (e)', 'Leadership & commitment- Ensure the ISMS achieves its outcome'),
-('5', '5.1 (f)', 'Leadership & commitment- Direct and support person to ensure ISMS effectiveness'),
-('5', '5.1 (g)', 'Leadership & commitment- Promote continual improvement'),
-('5', '5.1 (h)', 'Leadership & commitment- Support management roles in demonstrating leadership with their responsibilities'),
-('5', '5.2 (a)', 'Policy - Establish the information security policy'),
-('5', '5.2 (b)', 'Policy - Include IS objectives or a framework for setting'),
-('5', '5.2 (c)', 'Policy - Commits to satisfy applicable IS requirements'),
-('5', '5.2 (d)', 'Policy - Commits to continual improvement of the ISMS'),
-('5', '5.2 (e)', 'Policy - Be available as documented information'),
-('5', '5.2 (f)', 'Policy - Communicate within organization'),
-('5', '5.2 (g)', 'Policy - Be available to interested parties'),
-('5', '5.3 (a)', 'Organizational roles, responsibilities & authorities - Ensure the ISMS conforms to document requirements'),
-('5', '5.3 (b)', 'Organizational roles, responsibilities & authorities - Report on the performance ISMS to top management'),
-('6', '6.1', 'Actions to address risks & opportunities'),
-('6', '6.1.1 (a)', 'General - Ensure the ISMS achieve the outcome(s)'),
-('6', '6.1.1 (b)', 'General - Prevent or reduce undesired effects'),
-('6', '6.1.1 (c)', 'General - Achieve continual improvement'),
-('6', '6.1.1 (d)', 'General - Organizational shall plan actions to address the risks and opportunities'),
-('6', '6.1.1 (e)', 'General - How to integrate and implement the actions into ISMS processes and evaluate its effectiveness'),
-('6', '6.1.2 (a)', 'Information security risk assessment - Establish and maintains IS risk criteria'),
-('6', '6.1.2 (b)', 'Information security risk assessment - Ensure IS risk assessments give consistent, valid, and comparable result'),
-('6', '6.1.2 (c)', 'Information security risk assessment - Identify the IS risks'),
-('6', '6.1.2 (d)', 'Information security risk assessment - Analyses the IS risks'),
-('6', '6.1.2 (e)', 'Information security risk assessment - Evaluate the IS risks'),
-('6', '6.1.3 (a)', 'Information security risk treatment - Select appropriate IS risk treatment options'),
-('6', '6.1.3 (b)', 'Information security risk treatment - Determine all controls to be implemented'),
-('6', '6.1.3 (c)', 'Information security risk treatment - Compare determined control with Annex A '),
-('6', '6.1.3 (d)', 'Information security risk treatment - Produce statement of applicability that contains necessary control, justification for inclusion, and the necessary controls are implemented or not'),
-('6', '6.1.3 (e)', 'Information security risk treatment - Formulate an IS risk treatment plan'),
-('6', '6.1.3 (f)', 'Information security risk treatment - Obtain risk owners\' approval of the treatment plan and acceptance of residual risks'),
-('6', '6.2 (a)', 'Information security objectives & plans - Consistency with IS policy'),
-('6', '6.2 (b)', 'Information security objectives & plans - Measurable'),
-('6', '6.2 (c)', 'Information security objectives & plans - Consider IS requirements and results from risk assessment and treatment'),
-('6', '6.2 (d)', 'Information security objectives & plans - Monitor'),
-('6', '6.2 (e)', 'Information security objectives & plans - Communicate'),
-('6', '6.2 (f)', 'Information security objectives & plans - Updated'),
-('6', '6.2 (g)', 'Information security objectives & plans - Available as document'),
-('6', '6.2 (h)', 'Information security objectives & plans - Define what will be done'),
-('6', '6.2 (i)', 'Information security objectives & plans - Define required resources'),
-('6', '6.2 (j)', 'Information security objectives & plans - Define the person who take responsibility'),
-('6', '6.2 (k)', 'Information security objectives & plans - Define when it will be completed'),
-('6', '6.2 (l)', 'Information security objectives & plans - Define how the result will be eavluated'),
-('6', '6.3', 'Planning of changes - Determine the need for changes to the ISMS'),
-('7', '7.1', 'Resources - Determine and provide the resources needed for the establishment, implementation, maintenance and continual improvement of the ISMS'),
-('7', '7.2 (a)', 'Competence - Determine competence of persons affecting IS performance'),
-('7', '7.2 (b)', 'Competence - Ensure persons are competent through education, training, or experience'),
-('7', '7.2 (c)', 'Competence - Take actions to gain needed competence and evaluate effectiveness'),
-('7', '7.2 (d)', 'Competence - Retain in document as evidence'),
-('7', '7.3 (a)', 'Awareness - Information security policy'),
-('7', '7.3 (b)', 'Awareness - Contribution to the effectiveness of the ISMS'),
-('7', '7.3 (c)', 'Awareness - Implications of not comforming with ISMS requirements'),
-('7', '7.4 (a)', 'Communication - What to communicate'),
-('7', '7.4 (b)', 'Communication - When to communicate'),
-('7', '7.4 (c)', 'Communication - with whom to communicate'),
-('7', '7.4 (d)', 'Communication - How to communicate'),
-('7', '7.5', 'Documented information'),
-('7', '7.5.1 (a)', 'General - Require documented information'),
-('7', '7.5.1 (b)', 'General - Determined by the organization for the effectiveness of ISMS'),
-('7', '7.5.2 (a)', 'Creating and updating - Identification and description'),
-('7', '7.5.2 (b)', 'Creating and updating - Format and media'),
-('7', '7.5.2 (c)', 'Creating and updating - Review and approval for suitability and adequacy'),
-('7', '7.5.3 (a)', 'Control of documented information - Document shall available and suitable of use when needed'),
-('7', '7.5.3 (b)', 'Control of documented information - Document shall be protected'),
-('7', '7.5.3 (c)', 'Control of documented information - The organization shall address distribution, access, retrieval and use'),
-('7', '7.5.3 (d)', 'Control of documented information - The organization shall address control of changes address storage and preservation including legibility'),
-('7', '7.5.3 (e)', 'Control of documented information - The organization shall address control of changes'),
-('7', '7.5.3 (f)', 'Control of documented information - The organization shall address retention and disposition'),
-('8', '8.1', 'Operational planning and control - Plan, implement, control & document ISMS processes to manage risks'),
-('8', '8.2', 'Information security risk assessment - Perform information security risk assessments regularly or when significant changes occur'),
-('8', '8.3', 'Information security risk treatment - Implement the IS risk treatment plan and retain documented of the result'),
-('9', '9.1 (a)', 'Monitoring, measurement, analysis and evaluation - Determine what needs to be monitored and measured'),
-('9', '9.1 (b)', 'Monitoring, measurement, analysis and evaluation - Determine the methods for monitoring, measurement, analysis, and evaluation'),
-('9', '9.1 (c)', 'Monitoring, measurement, analysis and evaluation - Determine when the monitoring and measuring shall be performed'),
-('9', '9.1 (d)', 'Monitoring, measurement, analysis and evaluation - Determine who shall monitor and measure'),
-('9', '9.1 (e)', 'Monitoring, measurement, analysis and evaluation - Determine when the result shall be analysed and evaluated'),
-('9', '9.1 (f)', 'Monitoring, measurement, analysis and evaluation - Determine who shall analyse and evalaute the result'),
-('9', '9.2', 'Internal audit'),
-('9', '9.2.1 (a)', 'General - Conforms to the organization\'s ISMS requirements and the document'),
-('9', '9.2.1 (b)', 'General - Identify the ISMS is effectively implemented and maintained'),
-('9', '9.2.2', 'Internal audit progamme - Plan, establish, implement and maintain ad auidt programme(s)'),
-('9', '9.2.2 (a)', 'Internal audit progamme - Define the audit criteria and scope for each audit'),
-('9', '9.2.2 (b)', 'Internal audit progamme - Select auditors and conduct audits'),
-('9', '9.2.2 (c)', 'Internal audit progamme - Report the result of audit to relevant management'),
-('9', '9.3', 'Management review'),
-('9', '9.3.1', 'General - Review the organization\'s ISMS at planned intervals'),
-('9', '9.3.2 (a)', 'Management review inputs - Considerate of the status of action from previous management reviews'),
-('9', '9.3.2 (b)', 'Management review inputs - Considerate changes in external and internal issue in ISMS'),
-('9', '9.3.2 (c)', 'Management review inputs - Considerate of change in needs and expectation of interested parties'),
-('9', '9.3.2 (d)', 'Management review inputs - Feedback on ISMS performance in nonconformities and corrective actions, monitoring and measurements results, audit result, and fulfilment of IS obejctives'),
-('9', '9.3.2 (e)', 'Management review inputs - Feedback from interested parties'),
-('9', '9.3.2 (f)', 'Management review inputs - Result of risk assessment and status of risk treatment plan'),
-('9', '9.3.2 (g)', 'Management review inputs - Considerate opportunities for continual improvement'),
-('9', '9.3.3', 'Management review result - Management review result must include improvement decisions, ISMS changes, and be documented as evidence');
+INSERT INTO `sub_req` (`sec_ID`, `sub_req_ID`, `sub_req_name`, `criteria_ID`) VALUES
+('10', '10.1 (a)', 'Continual improvement - Improve the suitability, adequacy and effectiveness of ISMS', NULL),
+('10', '10.2 (a)', 'Nonconformity and corrective action - React to nonconformity by correcting it and dealing with consequences', NULL),
+('10', '10.2 (b)', 'Nonconformity and corrective action - Evaluate need for action by reviewing nonconformity, finding causes, and checking for similar cases', NULL),
+('10', '10.2 (c)', 'Nonconformity and corrective action - Implement any action needed', NULL),
+('10', '10.2 (d)', 'Nonconformity and corrective action - Review the effectiveness of any corrective action taken', NULL),
+('10', '10.2 (e)', 'Nonconformity and corrective action - Make changes to the ISMS (if necessary)', NULL),
+('10', '10.2 (f)', 'Nonconformity and corrective action - Document evidence of nonconformities and actions taken', NULL),
+('10', '10.2 (g)', 'Nonconformity and corrective action - Document the result of corrective action', NULL),
+('4', '4.1', 'Organisational context - Determine the organization\'s ISMS objectives and any issues that might affect its effectiveness', 'AC001'),
+('4', '4.2 (a)', 'Interested parties - Identify interested parties', NULL),
+('4', '4.2 (b)', 'Interested parties - Determine their information security-relevant requirements and obligations', NULL),
+('4', '4.2 (c)', 'Interested parties - Determine the requirments that will be addressed through ISMS.', NULL),
+('4', '4.3 (a)', 'ISMS scope - Determine the external and internal issues', NULL),
+('4', '4.3 (b)', 'ISMS scope - Determine the requirments', NULL),
+('4', '4.3 (c)', 'ISMS scope - Determine interfaces and dependencies between perfomed by the organization or by other organization', NULL),
+('4', '4.4', ' ISMS - Establish, implement, maintain and continually improve an ISMS according to the standard', NULL),
+('5', '5.1 (a)', 'Leadership & commitment- Ensure ISMS objectives are established', NULL),
+('5', '5.1 (b)', 'Leadership & commitment- Ensure integrate ISMS requirements into organizational processes', NULL),
+('5', '5.1 (c)', 'Leadership & commitment- Ensure resource for the ISMS are available', NULL),
+('5', '5.1 (d)', 'Leadership & commitment- Communicate the importance of effective ISMS and compliance with its requirements', NULL),
+('5', '5.1 (e)', 'Leadership & commitment- Ensure the ISMS achieves its outcome', NULL),
+('5', '5.1 (f)', 'Leadership & commitment- Direct and support person to ensure ISMS effectiveness', NULL),
+('5', '5.1 (g)', 'Leadership & commitment- Promote continual improvement', NULL),
+('5', '5.1 (h)', 'Leadership & commitment- Support management roles in demonstrating leadership with their responsibilities', NULL),
+('5', '5.2 (a)', 'Policy - Establish the information security policy', NULL),
+('5', '5.2 (b)', 'Policy - Include IS objectives or a framework for setting', NULL),
+('5', '5.2 (c)', 'Policy - Commits to satisfy applicable IS requirements', NULL),
+('5', '5.2 (d)', 'Policy - Commits to continual improvement of the ISMS', NULL),
+('5', '5.2 (e)', 'Policy - Be available as documented information', NULL),
+('5', '5.2 (f)', 'Policy - Communicate within organization', NULL),
+('5', '5.2 (g)', 'Policy - Be available to interested parties', NULL),
+('5', '5.3 (a)', 'Organizational roles, responsibilities & authorities - Ensure the ISMS conforms to document requirements', NULL),
+('5', '5.3 (b)', 'Organizational roles, responsibilities & authorities - Report on the performance ISMS to top management', NULL),
+('6', '6.1', 'Actions to address risks & opportunities', NULL),
+('6', '6.1.1 (a)', 'General - Ensure the ISMS achieve the outcome(s)', 'AC001'),
+('6', '6.1.1 (b)', 'General - Prevent or reduce undesired effects', NULL),
+('6', '6.1.1 (c)', 'General - Achieve continual improvement', NULL),
+('6', '6.1.1 (d)', 'General - Organizational shall plan actions to address the risks and opportunities', NULL),
+('6', '6.1.1 (e)', 'General - How to integrate and implement the actions into ISMS processes and evaluate its effectiveness', NULL),
+('6', '6.1.2 (a)', 'Information security risk assessment - Establish and maintains IS risk criteria', NULL),
+('6', '6.1.2 (b)', 'Information security risk assessment - Ensure IS risk assessments give consistent, valid, and comparable result', NULL),
+('6', '6.1.2 (c)', 'Information security risk assessment - Identify the IS risks', NULL),
+('6', '6.1.2 (d)', 'Information security risk assessment - Analyses the IS risks', NULL),
+('6', '6.1.2 (e)', 'Information security risk assessment - Evaluate the IS risks', NULL),
+('6', '6.1.3 (a)', 'Information security risk treatment - Select appropriate IS risk treatment options', NULL),
+('6', '6.1.3 (b)', 'Information security risk treatment - Determine all controls to be implemented', NULL),
+('6', '6.1.3 (c)', 'Information security risk treatment - Compare determined control with Annex A ', NULL),
+('6', '6.1.3 (d)', 'Information security risk treatment - Produce statement of applicability that contains necessary control, justification for inclusion, and the necessary controls are implemented or not', NULL),
+('6', '6.1.3 (e)', 'Information security risk treatment - Formulate an IS risk treatment plan', NULL),
+('6', '6.1.3 (f)', 'Information security risk treatment - Obtain risk owners\' approval of the treatment plan and acceptance of residual risks', NULL),
+('6', '6.2 (a)', 'Information security objectives & plans - Consistency with IS policy', NULL),
+('6', '6.2 (b)', 'Information security objectives & plans - Measurable', NULL),
+('6', '6.2 (c)', 'Information security objectives & plans - Consider IS requirements and results from risk assessment and treatment', NULL),
+('6', '6.2 (d)', 'Information security objectives & plans - Monitor', NULL),
+('6', '6.2 (e)', 'Information security objectives & plans - Communicate', NULL),
+('6', '6.2 (f)', 'Information security objectives & plans - Updated', NULL),
+('6', '6.2 (g)', 'Information security objectives & plans - Available as document', NULL),
+('6', '6.2 (h)', 'Information security objectives & plans - Define what will be done', NULL),
+('6', '6.2 (i)', 'Information security objectives & plans - Define required resources', NULL),
+('6', '6.2 (j)', 'Information security objectives & plans - Define the person who take responsibility', NULL),
+('6', '6.2 (k)', 'Information security objectives & plans - Define when it will be completed', NULL),
+('6', '6.2 (l)', 'Information security objectives & plans - Define how the result will be eavluated', NULL),
+('6', '6.3', 'Planning of changes - Determine the need for changes to the ISMS', NULL),
+('7', '7.1', 'Resources - Determine and provide the resources needed for the establishment, implementation, maintenance and continual improvement of the ISMS', NULL),
+('7', '7.2 (a)', 'Competence - Determine competence of persons affecting IS performance', NULL),
+('7', '7.2 (b)', 'Competence - Ensure persons are competent through education, training, or experience', NULL),
+('7', '7.2 (c)', 'Competence - Take actions to gain needed competence and evaluate effectiveness', NULL),
+('7', '7.2 (d)', 'Competence - Retain in document as evidence', NULL),
+('7', '7.3 (a)', 'Awareness - Information security policy', NULL),
+('7', '7.3 (b)', 'Awareness - Contribution to the effectiveness of the ISMS', NULL),
+('7', '7.3 (c)', 'Awareness - Implications of not comforming with ISMS requirements', NULL),
+('7', '7.4 (a)', 'Communication - What to communicate', NULL),
+('7', '7.4 (b)', 'Communication - When to communicate', NULL),
+('7', '7.4 (c)', 'Communication - with whom to communicate', NULL),
+('7', '7.4 (d)', 'Communication - How to communicate', NULL),
+('7', '7.5', 'Documented information', NULL),
+('7', '7.5.1 (a)', 'General - Require documented information', NULL),
+('7', '7.5.1 (b)', 'General - Determined by the organization for the effectiveness of ISMS', NULL),
+('7', '7.5.2 (a)', 'Creating and updating - Identification and description', NULL),
+('7', '7.5.2 (b)', 'Creating and updating - Format and media', NULL),
+('7', '7.5.2 (c)', 'Creating and updating - Review and approval for suitability and adequacy', NULL),
+('7', '7.5.3 (a)', 'Control of documented information - Document shall available and suitable of use when needed', NULL),
+('7', '7.5.3 (b)', 'Control of documented information - Document shall be protected', NULL),
+('7', '7.5.3 (c)', 'Control of documented information - The organization shall address distribution, access, retrieval and use', NULL),
+('7', '7.5.3 (d)', 'Control of documented information - The organization shall address control of changes address storage and preservation including legibility', NULL),
+('7', '7.5.3 (e)', 'Control of documented information - The organization shall address control of changes', NULL),
+('7', '7.5.3 (f)', 'Control of documented information - The organization shall address retention and disposition', NULL),
+('8', '8.1', 'Operational planning and control - Plan, implement, control & document ISMS processes to manage risks', NULL),
+('8', '8.2', 'Information security risk assessment - Perform information security risk assessments regularly or when significant changes occur', NULL),
+('8', '8.3', 'Information security risk treatment - Implement the IS risk treatment plan and retain documented of the result', NULL),
+('9', '9.1 (a)', 'Monitoring, measurement, analysis and evaluation - Determine what needs to be monitored and measured', NULL),
+('9', '9.1 (b)', 'Monitoring, measurement, analysis and evaluation - Determine the methods for monitoring, measurement, analysis, and evaluation', NULL),
+('9', '9.1 (c)', 'Monitoring, measurement, analysis and evaluation - Determine when the monitoring and measuring shall be performed', NULL),
+('9', '9.1 (d)', 'Monitoring, measurement, analysis and evaluation - Determine who shall monitor and measure', NULL),
+('9', '9.1 (e)', 'Monitoring, measurement, analysis and evaluation - Determine when the result shall be analysed and evaluated', NULL),
+('9', '9.1 (f)', 'Monitoring, measurement, analysis and evaluation - Determine who shall analyse and evalaute the result', NULL),
+('9', '9.2', 'Internal audit', NULL),
+('9', '9.2.1 (a)', 'General - Conforms to the organization\'s ISMS requirements and the document', NULL),
+('9', '9.2.1 (b)', 'General - Identify the ISMS is effectively implemented and maintained', NULL),
+('9', '9.2.2', 'Internal audit progamme - Plan, establish, implement and maintain ad auidt programme(s)', NULL),
+('9', '9.2.2 (a)', 'Internal audit progamme - Define the audit criteria and scope for each audit', NULL),
+('9', '9.2.2 (b)', 'Internal audit progamme - Select auditors and conduct audits', NULL),
+('9', '9.2.2 (c)', 'Internal audit progamme - Report the result of audit to relevant management', NULL),
+('9', '9.3', 'Management review', NULL),
+('9', '9.3.1', 'General - Review the organization\'s ISMS at planned intervals', NULL),
+('9', '9.3.2 (a)', 'Management review inputs - Considerate of the status of action from previous management reviews', NULL),
+('9', '9.3.2 (b)', 'Management review inputs - Considerate changes in external and internal issue in ISMS', NULL),
+('9', '9.3.2 (c)', 'Management review inputs - Considerate of change in needs and expectation of interested parties', NULL),
+('9', '9.3.2 (d)', 'Management review inputs - Feedback on ISMS performance in nonconformities and corrective actions, monitoring and measurements results, audit result, and fulfilment of IS obejctives', NULL),
+('9', '9.3.2 (e)', 'Management review inputs - Feedback from interested parties', NULL),
+('9', '9.3.2 (f)', 'Management review inputs - Result of risk assessment and status of risk treatment plan', NULL),
+('9', '9.3.2 (g)', 'Management review inputs - Considerate opportunities for continual improvement', NULL),
+('9', '9.3.3', 'Management review result - Management review result must include improvement decisions, ISMS changes, and be documented as evidence', NULL);
 
 -- --------------------------------------------------------
 
@@ -1022,13 +1118,7 @@ CREATE TABLE `survey` (
 --
 
 INSERT INTO `survey` (`survey_ID`, `survey_name`, `department`, `start_date`, `end_date`, `status`, `survey_description`, `created_by`, `created_at`, `updated_id`, `updated_by`) VALUES
-('SV001', 'Survey 1', 'jabatan digital', '2025-11-21 10:00:00', '2025-11-21 15:08:00', 'Completed', 'testing survey 1', '4', '2025-11-21 00:00:00', '4', '2025-11-21'),
-('SV002', 'survey 2', 'FSKM', '2025-11-21 15:21:00', '2025-12-17 15:21:00', 'Active', 'test survey 2', '4', '2025-11-21 00:00:00', '4', '2025-12-09'),
-('SV003', 'test', 'hea', '2025-11-24 14:35:00', '2025-11-26 11:35:00', 'Archived', 'testing testing', '4', '2025-11-24 00:00:00', '4', '2025-11-26'),
-('SV004', 'test 232', 'kolej dahlia', '2025-11-30 14:59:00', '2025-12-15 14:59:00', 'Completed', 'testing 1234555', '4', '2025-11-24 00:00:00', '4', '2025-12-16'),
-('SV005', 'status test', 'FSKM', '2025-12-16 08:46:00', '2025-12-17 08:46:00', 'Completed', 'status test for survey', '4', '2025-12-16 08:47:01', '4', '2025-12-16'),
-('SV006', 'response', 'FSKM', '2025-12-16 10:25:00', '2025-12-17 10:25:00', 'Completed', 'response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing response survey testing', '4', '2025-12-16 10:25:57', '4', '2025-12-16'),
-('SV007', 'description survey test', 'FSKM', '2025-12-17 14:51:00', '2025-12-19 14:51:00', 'Active', 'enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter a brief description enter', '4', '2025-12-17 14:53:49', '4', '2025-12-17');
+('SV001', 'Survey 1', 'fskm', '2026-01-05 09:58:00', '2026-01-07 09:58:00', 'Active', 'descriptiondescriptiondescriptiondescriptiondescription', '4', '2026-01-05 09:59:25', '4', '2026-01-05');
 
 -- --------------------------------------------------------
 
@@ -1047,39 +1137,8 @@ CREATE TABLE `survey_domain` (
 --
 
 INSERT INTO `survey_domain` (`survey_domain_id`, `survey_id`, `domain_id`) VALUES
-(41, 'SV001', 'AD009'),
-(42, 'SV001', 'AD008'),
-(43, 'SV001', 'AD011'),
-(44, 'SV001', 'AD007'),
-(94, 'SV003', 'AD004'),
-(95, 'SV003', 'AD003'),
-(96, 'SV003', 'AD010'),
-(97, 'SV003', 'AD005'),
-(98, 'SV003', 'AD006'),
-(99, 'SV003', 'AD009'),
-(100, 'SV003', 'AD008'),
-(101, 'SV003', 'AD011'),
-(102, 'SV003', 'AD007'),
-(103, 'SV003', 'AD002'),
-(104, 'SV003', 'AD001'),
-(105, 'SV003', 'AD013'),
-(138, 'SV002', 'AD004'),
-(139, 'SV002', 'AD003'),
-(140, 'SV002', 'AD010'),
-(141, 'SV002', 'AD005'),
-(142, 'SV002', 'AD006'),
-(143, 'SV002', 'AD009'),
-(144, 'SV002', 'AD008'),
-(145, 'SV002', 'AD002'),
-(146, 'SV002', 'AD001'),
-(165, 'SV004', 'AD010'),
-(166, 'SV004', 'AD005'),
-(167, 'SV004', 'AD006'),
-(169, 'SV005', 'AD005'),
-(173, 'SV006', 'AD005'),
-(174, 'SV006', 'AD002'),
-(175, 'SV007', 'AD014'),
-(176, 'SV007', 'AD009');
+(217, 'SV001', 'AD002'),
+(218, 'SV001', 'AD001');
 
 -- --------------------------------------------------------
 
@@ -1110,14 +1169,26 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_ID`, `primary_email`, `password`, `google_sub_id`, `full_name`, `department`, `status`, `email_verified`, `last_login`, `created_at`, `updated_at`, `user_organization`, `user_position`, `user_phone_company`, `user_handphone_no`) VALUES
-(4, 'admin@uitm.edu.my', '$2y$10$UTKIVYNidiMD1AFK7jT79.PSK5vnDObgjMRM/QXfOJK8AWwqC5zBa', NULL, 'System Administrator', NULL, 'Active', 'Verified', '2025-12-17 14:51:02', '2025-10-29 06:29:06', '2025-12-17 14:51:02', NULL, NULL, NULL, NULL),
-(10, 'ali@gmail.com', '$2y$10$F2iHe.T65eU3qFrACN8BwOpEnwvVlG/JfzM68mHSKXu03bR0rfR6u', NULL, 'ali bin abuu', 'FSKM', 'Active', '', '2025-12-17 14:50:23', '2025-11-12 01:36:41', '2025-12-17 14:50:23', 'UiTM', 'Manager', '', '+60182396060'),
-(12, '2023864212@student.uitm.edu.my', '$2y$10$DEMeUh70OgYal7oSzY5hdOOgHGej7c4vTzfDj3LE5NdobA2AUMIL2', '110380624589280730990', 'IYLIA MAISARAH MOHD KHAIROL', '', 'Active', 'Verified', '2025-12-17 11:44:17', '2025-11-21 08:46:20', '2025-12-17 11:44:17', '', '', '', '+60182396090'),
+(4, 'admin@uitm.edu.my', '$2y$10$UTKIVYNidiMD1AFK7jT79.PSK5vnDObgjMRM/QXfOJK8AWwqC5zBa', NULL, 'System Administrator', NULL, 'Active', 'Verified', '2026-01-07 08:34:29', '2025-10-29 06:29:06', '2026-01-07 08:34:29', NULL, NULL, NULL, NULL),
+(10, 'ali@gmail.com', '$2y$10$F2iHe.T65eU3qFrACN8BwOpEnwvVlG/JfzM68mHSKXu03bR0rfR6u', NULL, 'ali bin abuu', 'FSKM', 'Active', '', '2025-12-22 16:41:14', '2025-11-12 01:36:41', '2025-12-22 16:41:14', 'UiTM', 'Manager', '', '+60182396060'),
+(12, '2023864212@student.uitm.edu.my', '$2y$10$DEMeUh70OgYal7oSzY5hdOOgHGej7c4vTzfDj3LE5NdobA2AUMIL2', '110380624589280730990', 'IYLIA MAISARAH MOHD KHAIROL', '', 'Active', 'Verified', '2026-01-05 10:00:07', '2025-11-21 08:46:20', '2026-01-05 10:00:07', '', '', '', '+60182396090'),
 (13, 'abu.bakar@student.uitm.edu.my', '$2y$10$7RXFWqkQbMZLo6AGAm03AO7Fke9oj2fhoeMZ8HyugWY20SfI/Hj5C', NULL, 'Abu Bakar', 'FSR', 'Active', 'Verified', '2025-12-15 12:55:28', '2025-12-10 08:18:52', '2025-12-15 12:55:28', 'UiTM', 'Student', NULL, '+60123456789'),
 (14, 'siti.aminah@uitm.edu.my', '$2y$10$zh/p1t6Fj234oORkAfVk6O7J/QbHo6P0RmmXgL0BQypHTU4m.zSjC', NULL, 'Siti Aminah', 'FSKM', 'Active', 'Verified', '2025-12-10 16:26:14', '2025-12-10 08:18:52', '2025-12-10 16:26:14', 'UiTM', 'Lecturer', '0355442000', '+60134567890'),
 (15, 'chong.wei@uitm.edu.my', '$2y$10$YHuTyDyNfSpuc6fW4njiM.aoR7G0idYfagakcgVTfPSIHfTZOBKHm', NULL, 'Chong Wei', 'Business Management', 'Active', 'Verified', '2025-12-12 11:01:37', '2025-12-10 08:18:52', '2025-12-12 11:01:37', 'UiTM', 'Senior Lecturer', '0355443000', '+60145678901'),
 (16, 'devi.muthu@uitm.edu.my', '$2y$10$RHAXuIP9g8oslfXkvRbAfegIym351W3i/vNmkyhRZGgHmeIYx0MJe', NULL, 'Devi Muthu', 'Academy of Language Studies', 'Active', 'Verified', NULL, '2025-12-10 08:18:52', '2025-12-10 08:25:32', 'UiTM', 'Coordinator', NULL, '+60156789012'),
 (17, 'salsabilashamsul896@gmail.com', '$2y$10$kvv2rkjbzbDsCjMYud.on.m.uw7.RipWNFFA8Ca4FNDbI9J/NXv0y', NULL, 'Salsabila Shamsul', 'FSKM', 'Active', '', '2025-12-15 13:07:48', '2025-12-15 13:07:35', '2025-12-15 13:07:48', 'UiTM', 'Student', '', '+60182037159');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_analysis`
+--
+
+CREATE TABLE `user_analysis` (
+  `id` int(11) NOT NULL,
+  `user_ID` int(11) DEFAULT NULL,
+  `GA_id` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -1165,40 +1236,14 @@ CREATE TABLE `user_survey` (
 --
 
 INSERT INTO `user_survey` (`user_survey_ID`, `survey_ID`, `user_ID`, `status`) VALUES
-('US00003', 'SV002', 10, 'In progress'),
-('US00004', 'SV002', 12, 'In progress'),
-('US00005', 'SV002', 4, 'Pending'),
-('US00006', 'SV004', 12, 'Completed'),
-('US00007', 'SV004', 10, 'Pending'),
-('US00008', 'SV004', 13, 'Completed'),
-('US00009', 'SV004', 15, 'Pending'),
-('US00010', 'SV004', 16, 'Pending'),
-('US00011', 'SV004', 14, 'Pending'),
-('US00012', 'SV004', 4, 'Pending'),
-('US00013', 'SV005', 13, 'Pending'),
-('US00014', 'SV005', 10, 'Completed'),
-('US00015', 'SV005', 15, 'Pending'),
-('US00016', 'SV005', 16, 'Pending'),
-('US00017', 'SV005', 12, 'Completed'),
-('US00018', 'SV005', 17, 'Pending'),
-('US00019', 'SV005', 14, 'Pending'),
-('US00020', 'SV005', 4, 'Pending'),
-('US00021', 'SV006', 13, 'Pending'),
-('US00022', 'SV006', 10, 'Completed'),
-('US00023', 'SV006', 15, 'Pending'),
-('US00024', 'SV006', 16, 'Pending'),
-('US00025', 'SV006', 12, 'Pending'),
-('US00026', 'SV006', 17, 'Pending'),
-('US00027', 'SV006', 14, 'Pending'),
-('US00028', 'SV006', 4, 'Pending'),
-('US00029', 'SV007', 13, 'Pending'),
-('US00030', 'SV007', 10, 'Pending'),
-('US00031', 'SV007', 15, 'Pending'),
-('US00032', 'SV007', 16, 'Pending'),
-('US00033', 'SV007', 12, 'Pending'),
-('US00034', 'SV007', 17, 'Pending'),
-('US00035', 'SV007', 14, 'Pending'),
-('US00036', 'SV007', 4, 'Pending');
+('US00001', 'SV001', 13, 'Pending'),
+('US00002', 'SV001', 10, 'Pending'),
+('US00003', 'SV001', 15, 'Pending'),
+('US00004', 'SV001', 16, 'Pending'),
+('US00005', 'SV001', 12, 'Pending'),
+('US00006', 'SV001', 17, 'Pending'),
+('US00007', 'SV001', 14, 'Pending'),
+('US00008', 'SV001', 4, 'Pending');
 
 --
 -- Triggers `user_survey`
@@ -1233,22 +1278,14 @@ DELIMITER ;
 --
 ALTER TABLE `criteria`
   ADD PRIMARY KEY (`criteria_ID`),
-  ADD KEY `domain_ID` (`domain_ID`),
-  ADD KEY `criteria_sub_con_FK` (`sub_con_ID`);
-
---
--- Indexes for table `criteria_control`
---
-ALTER TABLE `criteria_control`
-  ADD PRIMARY KEY (`link_ID`),
-  ADD KEY `fk_link_criteria` (`criteria_ID`),
-  ADD KEY `fk_link_control` (`sub_con_ID`);
+  ADD KEY `domain_ID` (`domain_ID`);
 
 --
 -- Indexes for table `domain`
 --
 ALTER TABLE `domain`
-  ADD PRIMARY KEY (`domain_ID`);
+  ADD PRIMARY KEY (`domain_ID`),
+  ADD KEY `idx_domain_section` (`sec_ID`);
 
 --
 -- Indexes for table `element`
@@ -1256,6 +1293,24 @@ ALTER TABLE `domain`
 ALTER TABLE `element`
   ADD PRIMARY KEY (`element_ID`),
   ADD KEY `criteria_ID` (`criteria_ID`);
+
+--
+-- Indexes for table `element_control`
+--
+ALTER TABLE `element_control`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `element_ID` (`element_ID`),
+  ADD KEY `sub_con_ID` (`sub_con_ID`);
+
+--
+-- Indexes for table `gap_analysis`
+--
+ALTER TABLE `gap_analysis`
+  ADD PRIMARY KEY (`GA_id`),
+  ADD KEY `domain_ID` (`domain_ID`),
+  ADD KEY `criteria_ID` (`criteria_ID`),
+  ADD KEY `element_ID` (`element_ID`),
+  ADD KEY `user_ID` (`user_ID`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -1274,6 +1329,13 @@ ALTER TABLE `response`
   ADD KEY `response_user_fk` (`user_ID`),
   ADD KEY `element_ID_fk` (`element_ID`),
   ADD KEY `idx_response_survey` (`survey_ID`);
+
+--
+-- Indexes for table `result_criteria`
+--
+ALTER TABLE `result_criteria`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `criteria_ID` (`criteria_ID`);
 
 --
 -- Indexes for table `result_domain`
@@ -1321,7 +1383,8 @@ ALTER TABLE `sub_con`
 --
 ALTER TABLE `sub_req`
   ADD PRIMARY KEY (`sub_req_ID`),
-  ADD KEY `sec_ID` (`sec_ID`);
+  ADD KEY `sec_ID` (`sec_ID`),
+  ADD KEY `fk_subreq_criteria` (`criteria_ID`);
 
 --
 -- Indexes for table `survey`
@@ -1349,6 +1412,14 @@ ALTER TABLE `user`
   ADD KEY `idx_user_active` (`status`);
 
 --
+-- Indexes for table `user_analysis`
+--
+ALTER TABLE `user_analysis`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_ID` (`user_ID`),
+  ADD KEY `GA_id` (`GA_id`);
+
+--
 -- Indexes for table `user_role`
 --
 ALTER TABLE `user_role`
@@ -1370,10 +1441,10 @@ ALTER TABLE `user_survey`
 --
 
 --
--- AUTO_INCREMENT for table `criteria_control`
+-- AUTO_INCREMENT for table `element_control`
 --
-ALTER TABLE `criteria_control`
-  MODIFY `link_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `element_control`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `password_reset_tokens`
@@ -1391,7 +1462,7 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `survey_domain`
 --
 ALTER TABLE `survey_domain`
-  MODIFY `survey_domain_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=177;
+  MODIFY `survey_domain_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -1416,17 +1487,32 @@ ALTER TABLE `criteria`
   ADD CONSTRAINT `criteria_ibfk_1` FOREIGN KEY (`domain_ID`) REFERENCES `domain` (`domain_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `criteria_control`
+-- Constraints for table `domain`
 --
-ALTER TABLE `criteria_control`
-  ADD CONSTRAINT `fk_link_control` FOREIGN KEY (`sub_con_ID`) REFERENCES `sub_con` (`sub_con_ID`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_link_criteria` FOREIGN KEY (`criteria_ID`) REFERENCES `criteria` (`criteria_ID`) ON DELETE CASCADE;
+ALTER TABLE `domain`
+  ADD CONSTRAINT `fk_domain_section` FOREIGN KEY (`sec_ID`) REFERENCES `section` (`sec_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Constraints for table `element`
 --
 ALTER TABLE `element`
   ADD CONSTRAINT `element_ibfk_1` FOREIGN KEY (`criteria_ID`) REFERENCES `criteria` (`criteria_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `element_control`
+--
+ALTER TABLE `element_control`
+  ADD CONSTRAINT `element_control_ibfk_1` FOREIGN KEY (`element_ID`) REFERENCES `element` (`element_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `element_control_ibfk_2` FOREIGN KEY (`sub_con_ID`) REFERENCES `sub_con` (`sub_con_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `gap_analysis`
+--
+ALTER TABLE `gap_analysis`
+  ADD CONSTRAINT `gap_analysis_ibfk_1` FOREIGN KEY (`domain_ID`) REFERENCES `domain` (`domain_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gap_analysis_ibfk_2` FOREIGN KEY (`criteria_ID`) REFERENCES `criteria` (`criteria_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gap_analysis_ibfk_3` FOREIGN KEY (`element_ID`) REFERENCES `element` (`element_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `gap_analysis_ibfk_4` FOREIGN KEY (`user_ID`) REFERENCES `user` (`user_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `password_reset_tokens`
@@ -1442,6 +1528,12 @@ ALTER TABLE `response`
   ADD CONSTRAINT `fk_response_to_survey` FOREIGN KEY (`survey_ID`) REFERENCES `survey` (`survey_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `response_ibfk_1` FOREIGN KEY (`se_ID`) REFERENCES `score_element` (`se_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `user_ID_fk` FOREIGN KEY (`user_ID`) REFERENCES `user` (`user_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `result_criteria`
+--
+ALTER TABLE `result_criteria`
+  ADD CONSTRAINT `result_criteria_ibfk_1` FOREIGN KEY (`criteria_ID`) REFERENCES `criteria` (`criteria_ID`);
 
 --
 -- Constraints for table `result_domain`
@@ -1466,6 +1558,7 @@ ALTER TABLE `sub_con`
 -- Constraints for table `sub_req`
 --
 ALTER TABLE `sub_req`
+  ADD CONSTRAINT `fk_subreq_criteria` FOREIGN KEY (`criteria_ID`) REFERENCES `criteria` (`criteria_ID`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `sub_req_ibfk_1` FOREIGN KEY (`sec_ID`) REFERENCES `section` (`sec_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
@@ -1474,6 +1567,13 @@ ALTER TABLE `sub_req`
 ALTER TABLE `survey_domain`
   ADD CONSTRAINT `survey_domain_ibfk_1` FOREIGN KEY (`survey_id`) REFERENCES `survey` (`survey_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `survey_domain_ibfk_2` FOREIGN KEY (`domain_id`) REFERENCES `domain` (`domain_ID`);
+
+--
+-- Constraints for table `user_analysis`
+--
+ALTER TABLE `user_analysis`
+  ADD CONSTRAINT `user_analysis_ibfk_1` FOREIGN KEY (`user_ID`) REFERENCES `user` (`user_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `user_analysis_ibfk_2` FOREIGN KEY (`GA_id`) REFERENCES `gap_analysis` (`GA_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `user_role`
