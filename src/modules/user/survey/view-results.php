@@ -1,7 +1,10 @@
 <?php
 /**
  * View Survey Results
- * Redesigned to match system styling.
+ * Logic:
+ * - Element % = Raw Score * 20
+ * - Criteria % = Average of Element %
+ * - Domain % = Average of Criteria %
  */
 
 require_once '../../../config/config.php';
@@ -31,7 +34,7 @@ if (!$assignment) {
     redirect('index.php');
 }
 
-// --- 2. Data Fetching ---
+// --- 2. Data Fetching & Organization ---
 
 // Fetch Hierarchical Data
 $sql_structure = "
@@ -67,18 +70,23 @@ $sql_responses = "
 ";
 $raw_responses = $db->fetchAll($sql_responses, [':uid' => $current_user_id, ':sid' => $survey_id]);
 
+// Map responses by element_ID
 $user_responses = [];
 foreach ($raw_responses as $resp) {
     $user_responses[$resp['element_ID']] = $resp;
 }
 
-// Group Data
+// --- 3. Calculation Logic ---
+
 $report_data = [];
+$domain_scores = []; // To store average for overall calculation
+
 foreach ($raw_structure as $row) {
     $d_id = $row['domain_ID'];
     $c_id = $row['criteria_ID'];
     $e_id = $row['element_ID'];
     
+    // Initialize structure if not exists
     if (!isset($report_data[$d_id])) {
         $report_data[$d_id] = [
             'name' => $row['domain_name'],
@@ -92,24 +100,59 @@ foreach ($raw_structure as $row) {
         ];
     }
     
+    // Process Element Score
     $response = $user_responses[$e_id] ?? null;
+    $raw_score = $response['score'] ?? 0; // 1 to 5
+    $percentage = $raw_score * 20; // 20, 40, 60, 80, 100
+    
     $report_data[$d_id]['criteria'][$c_id]['elements'][$e_id] = [
         'name' => $row['element_name'],
-        'response' => $response
+        'response' => $response,
+        'percentage' => $percentage
     ];
 }
 
-// Stats
-$total_elements = count($raw_structure);
-$answered_elements = count($user_responses);
-$completion_rate = ($total_elements > 0) ? round(($answered_elements / $total_elements) * 100) : 0;
+// Calculate Averages (Criteria & Domain)
+$total_survey_score = 0;
+$domain_count = 0;
 
-function getScoreColor($score) {
-    if ($score >= 5) return 'success';
-    if ($score >= 4) return 'primary';
-    if ($score == 3) return 'info';
-    if ($score == 2) return 'warning';
-    return 'danger';
+foreach ($report_data as $d_id => &$domain) {
+    $domain_criteria_sum = 0;
+    $criteria_count = 0;
+
+    foreach ($domain['criteria'] as $c_id => &$criteria) {
+        $element_sum = 0;
+        $element_count = 0;
+
+        foreach ($criteria['elements'] as $element) {
+            $element_sum += $element['percentage'];
+            $element_count++;
+        }
+
+        // Criteria Average = Sum of Elements / Count
+        $criteria['avg_score'] = ($element_count > 0) ? round($element_sum / $element_count, 1) : 0;
+        
+        $domain_criteria_sum += $criteria['avg_score'];
+        $criteria_count++;
+    }
+
+    // Domain Average = Sum of Criteria Averages / Count
+    $domain['avg_score'] = ($criteria_count > 0) ? round($domain_criteria_sum / $criteria_count, 1) : 0;
+    
+    $total_survey_score += $domain['avg_score'];
+    $domain_count++;
+}
+
+// Total Survey Average
+$overall_score = ($domain_count > 0) ? round($total_survey_score / $domain_count, 1) : 0;
+
+// Helper to determine color based on Percentage
+function getScoreClass($percent) {
+    if ($percent >= 80) return ['color' => 'success', 'label' => 'Teroptimum'];
+    if ($percent >= 60) return ['color' => 'primary', 'label' => 'Terurus'];
+    if ($percent >= 40) return ['color' => 'info', 'label' => 'Tertakrif'];
+    if ($percent >= 20) return ['color' => 'warning', 'label' => 'Terlaksana'];
+    return ['color' => 'danger', 'label' => 'Permulaan'];
 }
 
 $flash = getFlashMessage();
@@ -122,46 +165,30 @@ $flash = getFlashMessage();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        /* Global System Styling */
         html, body { height: 100%; background-color: #f8f9fa; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
         .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
         @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
         
-        /* Cards */
         .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.05); }
-        .card-header-clean { background: transparent; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1.5rem; }
-
-        /* Typography */
-        .domain-title { font-weight: 800; color: #32325d; letter-spacing: -0.5px; font-size: 1.5rem; }
-        .criteria-badge { background-color: #e9ecef; color: #495057; font-size: 0.75rem; font-weight: 700; padding: 5px 10px; border-radius: 8px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
-
-        /* Result Specifics */
-        .score-circle-lg {
-            width: 50px; height: 50px;
-            border-radius: 50%;
+        .result-detail-text { white-space: pre-wrap; color: #525f7f; line-height: 1.6; font-size: 0.9rem; }
+        
+        /* Progress Bars */
+        .progress-thin { height: 6px; border-radius: 3px; }
+        
+        /* Score Badges */
+        .score-box {
+            width: 40px; height: 40px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.25rem; font-weight: 800; color: white;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px; font-weight: 800; font-size: 1.1rem;
+            color: white;
         }
         
-        /* Important: Handles the bullet points from database */
-        .result-detail-text {
-            white-space: pre-wrap; 
-            color: #525f7f;
-            line-height: 1.6;
-            font-size: 0.9rem;
-        }
-
-        .btn-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; }
-        .btn-gradient-primary:hover { opacity: 0.9; color: white; }
-
         /* Print Styles */
         @media print {
             .sidebar, .btn-print, .breadcrumb, .no-print { display: none !important; }
             .main-content-wrapper { margin-left: 0 !important; width: 100% !important; }
             .card { border: 1px solid #ddd !important; box-shadow: none !important; break-inside: avoid; }
             body { background-color: white !important; }
-            .container-fluid { padding: 0 !important; }
         }
     </style>
 </head>
@@ -169,7 +196,7 @@ $flash = getFlashMessage();
     <div class="container-fluid p-0 h-100">
         <div class="row g-0 h-100">
             
-            <div class="col-md-3 col-lg-2 sidebar">
+            <div class="col-md-3 col-lg-2 sidebar no-print">
                 <?php include_once __DIR__ . '/../../includes/user_sidebar.php'; ?>
             </div>
             
@@ -191,108 +218,98 @@ $flash = getFlashMessage();
                         </div>
                     </div>
 
-                    <?php if ($flash): ?>
-                        <div class="alert alert-<?php echo $flash['type']; ?> no-print rounded-4 border-0 shadow-sm mb-4"><?php echo $flash['message']; ?></div>
-                    <?php endif; ?>
-
-                    <div class="card mb-5 border-0 shadow-sm rounded-4">
+                    <div class="card mb-5 border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
                             <div class="row align-items-center">
-                                <div class="col-lg-8">
-                                    <span class="badge bg-light text-primary border mb-2"><?php echo htmlspecialchars($assignment['department']); ?></span>
-                                    <h2 class="fw-bold mb-2 text-dark"><?php echo htmlspecialchars($assignment['survey_name']); ?></h2>
-                                    <p class="text-muted mb-4"><?php echo htmlspecialchars($assignment['survey_description']); ?></p>
+                                <div class="col-md-8">
+                                    <h5 class="text-uppercase text-muted fw-bold small mb-2"><?php echo htmlspecialchars($assignment['survey_name']); ?></h5>
+                                    <h2 class="fw-bold mb-1">Overall Maturity Score</h2>
+                                    <p class="text-muted mb-3">Average across all domains.</p>
                                     
-                                    <div class="d-flex flex-wrap gap-4 text-sm">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="bg-light rounded-circle p-2 text-primary"><i class="bi bi-info-circle-fill"></i></div>
-                                            <div>
-                                                <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Status</small>
-                                                <span class="fw-bold text-<?php echo $assignment['status'] === 'Completed' ? 'success' : 'warning'; ?>">
-                                                    <?php echo strtoupper($assignment['status']); ?>
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="bg-light rounded-circle p-2 text-primary"><i class="bi bi-calendar-event-fill"></i></div>
-                                            <div>
-                                                <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Due Date</small>
-                                                <span class="fw-bold text-dark"><?php echo date('d M Y', strtotime($assignment['end_date'])); ?></span>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="bg-light rounded-circle p-2 text-primary"><i class="bi bi-graph-up-arrow"></i></div>
-                                            <div>
-                                                <small class="text-uppercase text-muted fw-bold d-block" style="font-size: 0.7rem;">Completion</small>
-                                                <span class="fw-bold text-dark"><?php echo $completion_rate; ?>%</span>
-                                            </div>
+                                    <div class="d-flex align-items-center mt-4">
+                                        <?php $ov_style = getScoreClass($overall_score); ?>
+                                        <div class="display-3 fw-bold text-<?php echo $ov_style['color']; ?> me-3"><?php echo $overall_score; ?>%</div>
+                                        <div>
+                                            <span class="badge bg-<?php echo $ov_style['color']; ?>-subtle text-<?php echo $ov_style['color']; ?> px-3 py-2 rounded-pill text-uppercase fw-bold">
+                                                <?php echo $ov_style['label']; ?>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-4 text-center d-none d-lg-block border-start">
-                                    <div class="position-relative d-inline-block">
-                                        <svg width="120" height="120" viewBox="0 0 36 36">
-                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#f0f2f5" stroke-width="2" />
-                                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" 
-                                                  fill="none" stroke="<?php echo ($completion_rate == 100) ? '#2dce89' : '#5e72e4'; ?>" 
-                                                  stroke-width="2" stroke-dasharray="<?php echo $completion_rate; ?>, 100" />
-                                        </svg>
-                                        <div class="position-absolute top-50 start-50 translate-middle text-center">
-                                            <div class="h3 fw-bold mb-0 text-dark"><?php echo $completion_rate; ?>%</div>
-                                            <div class="small text-muted" style="font-size: 0.65rem;">COMPLETE</div>
-                                        </div>
-                                    </div>
+                                <div class="col-md-4 border-start">
+                                    <ul class="list-unstyled mb-0">
+                                        <li><strong>Domain Breakdown:</strong></li>
+                                        <?php foreach ($report_data as $domain): 
+                                            $d_style = getScoreClass($domain['avg_score']);
+                                        ?>
+                                            <li class="d-flex justify-content-between align-items-center mt-2 text-sm">
+                                                <span class="text-muted text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($domain['name']); ?></span>
+                                                <span class="fw-bold text-<?php echo $d_style['color']; ?>"><?php echo $domain['avg_score']; ?>%</span>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <?php if (empty($report_data)): ?>
-                        <div class="text-center p-5 card shadow-sm rounded-4">
-                            <h4 class="text-muted">No questions found.</h4>
-                        </div>
-                    <?php else: ?>
-                        
-                        <?php foreach ($report_data as $d_id => $domain): ?>
-                            <div class="mb-5 break-inside-avoid">
-                                <h3 class="domain-title mb-4 ps-2 border-start border-4 border-primary"><?php echo htmlspecialchars($domain['name']); ?></h3>
+                    <?php foreach ($report_data as $d_id => $domain): ?>
+                        <div class="card mb-5 rounded-4 shadow-sm break-inside-avoid">
+                            <div class="card-header bg-white p-4 border-bottom">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h4 class="mb-0 fw-bold text-dark"><?php echo htmlspecialchars($domain['name']); ?></h4>
+                                    <div class="text-end">
+                                        <div class="h4 fw-bold mb-0 text-primary"><?php echo $domain['avg_score']; ?>%</div>
+                                        <small class="text-muted">Domain Score</small>
+                                    </div>
+                                </div>
+                                <div class="progress progress-thin mt-3">
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: <?php echo $domain['avg_score']; ?>%"></div>
+                                </div>
+                            </div>
 
+                            <div class="card-body p-0">
                                 <?php foreach ($domain['criteria'] as $c_id => $criteria): ?>
-                                    <div class="card mb-4 rounded-4 shadow-sm border-0">
-                                        <div class="card-header-clean">
-                                            <span class="criteria-badge"><i class="bi bi-tag-fill me-1"></i> Criteria</span>
-                                            <h5 class="mb-0 fw-bold text-dark"><?php echo htmlspecialchars($criteria['name']); ?></h5>
+                                    <div class="p-4 border-bottom last-no-border">
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <h6 class="fw-bold text-secondary text-uppercase tracking-wide mb-0">
+                                                <i class="bi bi-diagram-3 me-2"></i> <?php echo htmlspecialchars($criteria['name']); ?>
+                                            </h6>
+                                            <span class="badge bg-light text-dark border">
+                                                Criteria Avg: <strong><?php echo $criteria['avg_score']; ?>%</strong>
+                                            </span>
                                         </div>
-                                        <div class="card-body p-0">
+
+                                        <div class="vstack gap-3">
                                             <?php foreach ($criteria['elements'] as $e_id => $element): 
                                                 $resp = $element['response'];
                                                 $score = $resp['score'] ?? 0;
-                                                $color = getScoreColor($score);
+                                                $percent = $element['percentage'];
+                                                $style = getScoreClass($percent);
+                                                $bg_color = ($score > 0) ? $style['color'] : 'secondary';
                                             ?>
-                                                <div class="p-4 border-bottom last-no-border">
-                                                    <h6 class="fw-bold text-dark mb-3"><?php echo htmlspecialchars($element['name']); ?></h6>
+                                                <div class="d-flex align-items-start gap-3 bg-light p-3 rounded-3">
+                                                    <div class="flex-shrink-0">
+                                                        <div class="score-box bg-<?php echo $bg_color; ?>">
+                                                            <?php echo ($score > 0) ? $score : '?'; ?>
+                                                        </div>
+                                                    </div>
                                                     
-                                                    <div class="bg-light p-3 rounded-3 d-flex gap-3 align-items-start">
+                                                    <div class="flex-grow-1">
+                                                        <div class="d-flex justify-content-between mb-1">
+                                                            <h6 class="fw-bold text-dark mb-0"><?php echo htmlspecialchars($element['name']); ?></h6>
+                                                            <span class="fw-bold text-<?php echo $bg_color; ?> small"><?php echo $percent; ?>%</span>
+                                                        </div>
+                                                        
                                                         <?php if ($score > 0): ?>
-                                                            <div class="score-circle-lg bg-<?php echo $color; ?> flex-shrink-0">
-                                                                <?php echo $score; ?>
+                                                            <div class="mb-2">
+                                                                <span class="text-uppercase fw-bold text-<?php echo $bg_color; ?>" style="font-size: 0.75rem;">
+                                                                    <?php echo htmlspecialchars($resp['selected_level_desc'] ?? ''); ?>
+                                                                </span>
                                                             </div>
-                                                            <div>
-                                                                <div class="fw-bold text-<?php echo $color; ?> text-uppercase small mb-1">
-                                                                    <?php echo htmlspecialchars($resp['selected_level_desc'] ?? "Level $score"); ?>
-                                                                </div>
-                                                                
-                                                                <div class="result-detail-text"><?php echo htmlspecialchars(trim($resp['selected_detail'] ?? 'No detail provided.')); ?></div>
-                                                                
-                                                                <div class="mt-2 text-muted" style="font-size: 0.75rem;">
-                                                                    <i class="bi bi-clock me-1"></i> Submitted: <?php echo date('d M Y, h:i A', strtotime($resp['input_at'])); ?>
-                                                                </div>
-                                                            </div>
+                                                            <div class="result-detail-text"><?php echo htmlspecialchars(trim($resp['selected_detail'] ?? 'No detail provided.')); ?></div>
                                                         <?php else: ?>
-                                                            <div class="score-circle-lg bg-secondary text-white-50 flex-shrink-0">?</div>
-                                                            <div class="align-self-center text-muted fst-italic">
-                                                                Not answered.
-                                                            </div>
+                                                            <span class="text-muted fst-italic small">Not answered.</span>
                                                         <?php endif; ?>
                                                     </div>
                                                 </div>
@@ -301,14 +318,13 @@ $flash = getFlashMessage();
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                        <?php endforeach; ?>
-
-                    <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
 
                     <div class="d-none d-print-block text-center mt-5 pt-5 border-top">
                         <p class="text-muted small">
                             Report generated on <?php echo date('d M Y, h:i A'); ?>.<br>
-                            <?php echo APP_NAME; ?> - User Result Report.
+                            <?php echo APP_NAME; ?> - Cybersecurity Maturity Assessment.
                         </p>
                     </div>
 
