@@ -69,7 +69,6 @@ if (!$targetItem) {
 // ---------------------------------------------------------
 // DETERMINE LOCK STATUS
 // ---------------------------------------------------------
-// Rule: Requirements are 1-to-1. If already mapped, lock the add form.
 $isLocked = false;
 if ($type === 'requirement' && count($mappedItems) > 0) {
     $isLocked = true;
@@ -82,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // ADD / UPDATE MAPPING
     if (isset($_POST['add_mapping'])) {
-        // Security check: Prevent adding if locked
         if ($isLocked) {
             setFlashMessage("error", "Action blocked: This item is already mapped.");
             header("Location: map_iso.php?type=$type&id=" . urlencode($id));
@@ -138,15 +136,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        html, body { background-color: #f8f9fa; height: 100%; }
+        html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
         .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
         @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
-        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); }
+        .btn-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; }
+        .btn-gradient-primary:hover { opacity: 0.9; color: white; }
     </style>
 </head>
 <body>
-    <div class="container-fluid p-0">
-        <div class="row g-0">
+    <div class="container-fluid p-0 h-100">
+        <div class="row g-0 h-100">
             <div class="col-auto">
                 <?php include_once __DIR__ . '/../../includes/admin_sidebar.php'; ?>
             </div>
@@ -154,17 +154,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="col main-content-wrapper">
                 <div class="main-content px-4 py-4">
                     
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="index.php?tab=<?php echo $type; ?>s">ISO List</a></li>
-                                <li class="breadcrumb-item active"><?php echo $pageTitle; ?></li>
-                            </ol>
-                        </nav>
-                        <a href="index.php?tab=<?php echo $type; ?>s" class="btn btn-outline-secondary btn-sm">
-                            <i class="bi bi-arrow-left me-1"></i> Back
-                        </a>
-                    </div>
+                    <nav aria-label="breadcrumb" class="mb-4">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="../dashboard.php" class="text-secondary text-decoration-none">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
+                            <li class="breadcrumb-item"><a href="index.php?tab=<?php echo $type; ?>s" class="text-secondary text-decoration-none">ISO Standards</a></li>
+                            <li class="breadcrumb-item active text-dark"><?php echo $pageTitle; ?></li>
+                        </ol>
+                    </nav>
 
                     <?php if ($msg = getFlashMessage()): ?>
                         <div class="alert alert-<?php echo ($msg['type'] === 'error') ? 'danger' : $msg['type']; ?> alert-dismissible fade show">
@@ -173,39 +170,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                     <?php endif; ?>
 
-                    <div class="card mb-4 border-start border-4 border-primary">
-                        <div class="card-body">
-                            <h6 class="text-uppercase text-muted fw-bold small">ISO <?php echo $type; ?></h6>
-                            <h3 class="mb-2 text-primary"><?php echo htmlspecialchars($targetItem['id']); ?></h3>
-                            <h5 class="mb-0 text-dark"><?php echo htmlspecialchars($targetItem['name']); ?></h5>
+                    <div class="card shadow-sm rounded-4 mb-4">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light rounded-circle p-3 me-3 text-primary">
+                                    <i class="bi bi-diagram-3 fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="text-uppercase text-muted fw-bold small mb-1">Mapping ISO <?php echo ucfirst($type); ?></h6>
+                                    <h4 class="mb-1 text-dark fw-bold"><?php echo htmlspecialchars($targetItem['id']); ?></h4>
+                                    <p class="mb-0 text-secondary"><?php echo htmlspecialchars($targetItem['name']); ?></p>
+                                </div>
+                                <div class="ms-auto">
+                                    <a href="index.php?tab=<?php echo $type; ?>s" class="btn btn-light text-secondary">
+                                        <i class="bi bi-arrow-left me-1"></i> Back to List
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-5 mb-4">
-                            <div class="card h-100">
-                                <div class="card-header bg-white py-3">
-                                    <h6 class="mb-0 fw-bold">Link to Internal Structure</h6>
+                    <div class="row g-4">
+                        <div class="col-lg-5">
+                            <div class="card h-100 shadow-sm rounded-4">
+                                <div class="card-header bg-white border-bottom py-3">
+                                    <h6 class="mb-0 fw-bold"><i class="bi bi-link me-2 text-primary"></i>Link Internal Item</h6>
                                 </div>
-                                <div class="card-body d-flex flex-column justify-content-center">
+                                <div class="card-body p-4 d-flex flex-column">
                                     
                                     <?php if ($isLocked): ?>
-                                        <div class="text-center py-4">
-                                            <div class="mb-3 text-warning">
-                                                <i class="bi bi-lock-fill display-1"></i>
+                                        <div class="text-center py-5 my-auto">
+                                            <div class="mb-3 text-warning opacity-75">
+                                                <i class="bi bi-lock-fill display-3"></i>
                                             </div>
-                                            <h5 class="fw-bold text-secondary">Mapping Locked</h5>
+                                            <h5 class="fw-bold text-dark">Mapping Locked</h5>
                                             <p class="text-muted small px-3">
                                                 This requirement is already mapped to a Criteria.<br>
-                                                To change it, please remove the existing link from the "Current Links" table first.
+                                                Please remove the existing link from the list on the right to assign a new one.
                                             </p>
                                         </div>
                                     <?php else: ?>
                                         <form method="POST">
                                             <input type="hidden" name="add_mapping" value="1">
                                             
-                                            <div class="mb-3">
-                                                <label class="form-label text-muted small fw-bold">Select 
+                                            <div class="mb-4">
+                                                <label class="form-label fw-bold small text-uppercase text-muted">Select 
                                                     <?php 
                                                         if($type == 'section') echo 'Domain';
                                                         elseif($type == 'requirement') echo 'Criteria';
@@ -213,21 +222,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                     ?>
                                                 </label>
                                                 <select name="selected_id" class="form-select" required>
-                                                    <option value="">-- Choose --</option>
+                                                    <option value="">-- Choose Item --</option>
                                                     <?php foreach ($availableItems as $item): ?>
                                                         <option value="<?php echo $item['id']; ?>">
                                                             <?php echo htmlspecialchars($item['id'] . ' - ' . $item['name']); ?>
                                                         </option>
                                                     <?php endforeach; ?>
                                                 </select>
-                                                <div class="form-text">
-                                                    Select the internal item to link with this ISO <?php echo $type; ?>.
+                                                <div class="form-text mt-2">
+                                                    Select the internal compliance item to map with this ISO <?php echo $type; ?>.
                                                 </div>
                                             </div>
 
-                                            <div class="d-grid">
-                                                <button type="submit" class="btn btn-primary">
-                                                    <i class="bi bi-link-45deg"></i> Add Mapping
+                                            <div class="d-grid mt-auto">
+                                                <button type="submit" class="btn btn-gradient-primary py-2">
+                                                    <i class="bi bi-plus-lg me-2"></i> Add Mapping
                                                 </button>
                                             </div>
                                         </form>
@@ -237,38 +246,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                         </div>
 
-                        <div class="col-lg-7 mb-4">
-                            <div class="card h-100">
-                                <div class="card-header bg-white py-3">
+                        <div class="col-lg-7">
+                            <div class="card h-100 shadow-sm rounded-4">
+                                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
                                     <h6 class="mb-0 fw-bold">Current Links</h6>
+                                    <span class="badge bg-light text-dark border"><?php echo count($mappedItems); ?> Item(s)</span>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-hover align-middle mb-0">
-                                        <thead class="table-light">
+                                        <thead class="bg-light">
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Internal Name</th>
-                                                <th class="text-end">Action</th>
+                                                <th class="ps-4 text-muted small fw-bold text-uppercase" style="width: 20%">ID</th>
+                                                <th class="text-muted small fw-bold text-uppercase">Internal Name</th>
+                                                <th class="text-end pe-4 text-muted small fw-bold text-uppercase" style="width: 15%">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <?php if (empty($mappedItems)): ?>
                                                 <tr>
-                                                    <td colspan="3" class="text-center py-4 text-muted small">
-                                                        No mappings found.
+                                                    <td colspan="3" class="text-center py-5 text-muted">
+                                                        <i class="bi bi-link-45deg fs-1 d-block mb-2 text-light-emphasis"></i>
+                                                        No mappings found for this item.
                                                     </td>
                                                 </tr>
                                             <?php else: ?>
                                                 <?php foreach ($mappedItems as $map): ?>
                                                     <tr>
-                                                        <td class="fw-bold"><?php echo htmlspecialchars($map['display_id']); ?></td>
+                                                        <td class="ps-4 fw-bold text-primary"><?php echo htmlspecialchars($map['display_id']); ?></td>
                                                         <td><?php echo htmlspecialchars($map['display_name']); ?></td>
-                                                        <td class="text-end">
-                                                            <form method="POST" onsubmit="return confirm('Remove this link?');">
+                                                        <td class="text-end pe-4">
+                                                            <form method="POST" onsubmit="return confirm('Are you sure you want to remove this link?');">
                                                                 <input type="hidden" name="remove_mapping" value="1">
                                                                 <input type="hidden" name="link_id" value="<?php echo $map['link_id']; ?>">
-                                                                <button type="submit" class="btn btn-sm btn-outline-danger border-0">
-                                                                    <i class="bi bi-x-circle-fill"></i>
+                                                                <button type="submit" class="btn btn-sm btn-light text-danger border hover-shadow" title="Remove Link">
+                                                                    <i class="bi bi-trash"></i>
                                                                 </button>
                                                             </form>
                                                         </td>
