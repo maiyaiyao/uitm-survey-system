@@ -1,8 +1,7 @@
 <?php
 /**
  * User Assessment Page
- * STRICT ISOLATION: Answers are unique to each survey.
- * No data is shared or pre-filled from previous surveys.
+ * UPDATED: Full text visibility for score descriptions.
  */
 
 require_once '../../../config/config.php';
@@ -43,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST['restart'])) {
             $db->beginTransaction();
 
-            // Only delete responses for THIS survey_ID
             $db->query("DELETE FROM response WHERE survey_ID = :sid AND user_ID = :uid", 
                 [':sid' => $survey_id, ':uid' => $current_user_id]);
 
@@ -64,18 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         $db->beginTransaction();
 
-        // 1. Check for EXISTING response STRICTLY for THIS survey
         $check_sql = "SELECT response_ID FROM response 
                       WHERE element_ID = :eid AND user_ID = :uid AND survey_ID = :sid";
         
-        // 2. Insert NEW response linked to THIS survey
         $insert_sql = "INSERT INTO response (response_ID, element_ID, survey_ID, se_ID, user_ID, score, input_at, updated_at) 
-                       VALUES (:rid, :eid, :sid, :seid, :uid, :score, NOW(), NOW())";
+                        VALUES (:rid, :eid, :sid, :seid, :uid, :score, NOW(), NOW())";
         
-        // 3. Update EXISTING response
         $update_sql = "UPDATE response SET se_ID = :seid, score = :score, updated_at = NOW() 
-                       WHERE response_ID = :rid";
-                       
+                        WHERE response_ID = :rid";
+                        
         $find_se_sql = "SELECT se_ID FROM score_element se 
                         JOIN score s ON se.score_ID = s.score_ID 
                         WHERE se.element_ID = :eid AND s.score_level = :lvl LIMIT 1";
@@ -87,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $existing = $db->fetchOne($check_sql, [
                 ':eid' => $element_id, 
                 ':uid' => $current_user_id,
-                ':sid' => $survey_id // <--- Strict Check
+                ':sid' => $survey_id
             ]);
 
             if ($existing) {
@@ -100,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $db->query($insert_sql, [
                     ':rid' => 'NEW', 
                     ':eid' => $element_id,
-                    ':sid' => $survey_id, // <--- Link to specific survey
+                    ':sid' => $survey_id,
                     ':seid' => $se_id,
                     ':uid' => $current_user_id,
                     ':score' => $score_level
@@ -108,7 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Update Status
         if ($is_finish) {
             $db->query("UPDATE user_survey SET status = 'Completed' WHERE user_survey_ID = :usid", 
                 [':usid' => $assignment['user_survey_ID']]);
@@ -141,9 +135,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// --- 3. Data Fetching (Strict Isolation) ---
-
-// A. Get Questions Structure
+// --- 3. Data Fetching ---
 $sql_structure = "
     SELECT 
         d.domain_ID, d.domain_name,
@@ -165,7 +157,6 @@ $sql_structure = "
 
 $raw_data = $db->fetchAll($sql_structure, [':sid' => $survey_id]);
 
-// Build Tree Structure
 $survey_structure = [];
 foreach ($raw_data as $row) {
     $d_id = $row['domain_ID'];
@@ -189,8 +180,6 @@ foreach ($raw_data as $row) {
     }
 }
 
-// B. Fetch Answers (STRICTLY for this Survey ID)
-// We removed the logic that looked for previous history.
 $current_answers_raw = $db->fetchAll("
     SELECT element_ID, score 
     FROM response 
@@ -202,12 +191,12 @@ foreach ($current_answers_raw as $r) {
     $user_responses[$r['element_ID']] = $r['score'];
 }
 
-// --- Pagination ---
 $domain_ids = array_keys($survey_structure);
 $total_domains = count($domain_ids);
 $current_page_num = max(1, min($total_domains, (int)($_GET['page'] ?? 1)));
 $current_domain_data = ($total_domains > 0) ? $survey_structure[$domain_ids[$current_page_num - 1]] : null;
 $flash = getFlashMessage();
+$progress_percent = ($total_domains > 0) ? round((($current_page_num - 1) / $total_domains) * 100) : 0;
 ?>
 
 <!DOCTYPE html>
@@ -218,14 +207,59 @@ $flash = getFlashMessage();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        html, body { height: 100%; background-color: #f8f9fa; }
-        .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
+        html, body { height: 100%; background-color: #f8f9fa; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); padding-bottom: 80px; }
         @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
-        .score-option { border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; cursor: pointer; background: #fff; transition: 0.2s; }
-        .score-option:hover { background-color: #f8f9fa; border-color: #adb5bd; }
-        .score-input:checked + .score-option { background-color: #e7f1ff; border-color: #0d6efd; box-shadow: 0 0 0 1px #0d6efd inset; }
-        .score-badge { width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: #e9ecef; color: #495057; font-weight: bold; margin-right: 12px; }
-        .score-input:checked + .score-option .score-badge { background: #0d6efd; color: white; }
+        
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.05); }
+        .card-header-clean { background: transparent; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1.5rem; }
+        .sticky-progress-bar { position: sticky; top: 0; z-index: 1020; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); }
+
+        /* Assessment Cards */
+        .assessment-group { display: flex; gap: 15px; flex-wrap: wrap; }
+        .assessment-option { 
+            flex: 1; 
+            min-width: 180px; /* Increased width to handle text */
+            position: relative; 
+            border: 2px solid #e9ecef; 
+            border-radius: 12px; 
+            padding: 20px; 
+            cursor: pointer; 
+            background: #fff; 
+            transition: all 0.2s ease;
+            text-align: left; /* Changed to left align for better reading */
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .assessment-option:hover { border-color: #dee2e6; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .assessment-input { position: absolute; opacity: 0; cursor: pointer; }
+        .assessment-input:checked + .assessment-option { 
+            border-color: #667eea; 
+            background-color: #f0f4ff; 
+            color: #5e72e4; 
+            box-shadow: 0 0 0 1px #667eea inset;
+        }
+        
+        .score-number { font-size: 1.5rem; font-weight: 800; color: #adb5bd; margin-bottom: 8px; }
+        .assessment-input:checked + .assessment-option .score-number { color: #5e72e4; }
+        .score-desc { font-weight: 700; font-size: 1rem; margin-bottom: 8px; display: block; }
+        
+        /* Full text visibility */
+        .score-detail { 
+            font-size: 0.85rem; 
+            color: #6c757d; 
+            line-height: 1.4; 
+            display: block; 
+            white-space: pre-wrap; /* Ensure text wraps */
+            margin-top: 5px;
+        }
+        
+        .btn-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; }
+        .btn-gradient-primary:hover { opacity: 0.9; color: white; }
+        .domain-title { font-weight: 800; color: #32325d; letter-spacing: -0.5px; }
+        .criteria-badge { background-color: #e9ecef; color: #495057; font-size: 0.75rem; font-weight: 700; padding: 5px 10px; border-radius: 8px; text-transform: uppercase; margin-bottom: 10px; display: inline-block; }
     </style>
 </head>
 <body>
@@ -234,117 +268,146 @@ $flash = getFlashMessage();
             <?php include_once __DIR__ . '/../../includes/user_sidebar.php'; ?>
             
             <div class="col-md-9 col-lg-10 main-content-wrapper">
-                <div class="main-content px-4 py-4">
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="index.php">My Surveys</a></li>
-                                <li class="breadcrumb-item active">Assessment</li>
-                            </ol>
-                        </nav>
-                        
-                        <?php if (!empty($user_responses)): ?>
-                            <form method="POST" onsubmit="return confirm('Are you sure you want to reset your answers for THIS survey?');">
-                                <input type="hidden" name="restart" value="1">
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    <i class="bi bi-arrow-counterclockwise"></i> Reset Survey
-                                </button>
-                            </form>
-                        <?php endif; ?>
+                <div class="sticky-progress-bar px-4 py-3 shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div><span class="text-uppercase text-muted fw-bold small">Survey Progress</span></div>
+                        <div class="fw-bold text-primary small">Page <?php echo $current_page_num; ?> / <?php echo $total_domains; ?></div>
                     </div>
+                    <div class="progress rounded-pill" style="height: 8px;">
+                        <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: <?php echo $progress_percent; ?>%"></div>
+                    </div>
+                </div>
 
+                <div class="main-content px-4 py-4">
                     <?php if ($flash): ?>
-                        <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show"><?php echo $flash['message']; ?> <button class="btn-close" data-bs-dismiss="alert"></button></div>
+                        <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show rounded-4 shadow-sm border-0 mb-4">
+                            <?php echo $flash['message']; ?> <button class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
                     <?php endif; ?>
 
                     <?php if (!$current_domain_data): ?>
-                        <div class="text-center p-5"><h3>No questions found.</h3><a href="index.php" class="btn btn-primary mt-3">Back</a></div>
+                        <div class="text-center p-5 card shadow-sm">
+                            <h3 class="text-muted">No questions found.</h3>
+                            <a href="index.php" class="btn btn-primary mt-3 px-4 rounded-pill">Back to Dashboard</a>
+                        </div>
                     <?php else: ?>
 
                         <form method="POST" id="assessmentForm">
                             <input type="hidden" name="page" value="<?php echo $current_page_num; ?>">
                             
-                            <div class="card shadow-sm mb-4 border-0">
-                                <div class="card-body p-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-8">
-                                            <h4 class="mb-1 fw-bold"><?php echo htmlspecialchars($assignment['survey_name']); ?></h4>
-                                            <p class="text-muted mb-0 small">Domain <?php echo $current_page_num; ?> of <?php echo $total_domains; ?>: <strong><?php echo htmlspecialchars($current_domain_data['name']); ?></strong></p>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="progress" style="height: 10px;">
-                                                <div class="progress-bar bg-success" style="width: <?php echo ($current_page_num / $total_domains) * 100; ?>%"></div>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div>
+                                    <h6 class="text-uppercase text-muted fw-bold mb-1"><?php echo htmlspecialchars($assignment['survey_name']); ?></h6>
+                                    <h2 class="domain-title mb-0"><?php echo htmlspecialchars($current_domain_data['name']); ?></h2>
+                                </div>
+                                <?php if (!empty($user_responses)): ?>
+                                    <button type="submit" name="restart" value="1" onclick="return confirm('Reset all answers for THIS survey?');" class="btn btn-light text-danger border-0 btn-sm rounded-pill px-3">
+                                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Answers
+                                    </button>
+                                <?php endif; ?>
+                            </div>
+
+                            <?php foreach ($current_domain_data['criteria'] as $crit): ?>
+                                <div class="card mb-4 rounded-4">
+                                    <div class="card-header-clean">
+                                        
+                                        <h5 class="mb-0 fw-bold text-dark"><?php echo htmlspecialchars($crit['name']); ?></h5>
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <?php 
+                                        $elem_count = 0;
+                                        foreach ($crit['elements'] as $elem_id => $elem): 
+                                            $elem_count++;
+                                            $is_last = $elem_count === count($crit['elements']);
+                                        ?>
+                                            <div class="mb-4" id="el_<?php echo $elem_id; ?>">
+                                                <div class="d-flex align-items-center mb-3">
+                                                    <div class="bg-light text-primary fw-bold rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; min-width: 32px;">
+                                                        <?php echo $elem_count; ?>
+                                                    </div>
+                                                    <h6 class="fw-bold text-dark mb-0"><?php echo htmlspecialchars($elem['name']); ?></h6>
+                                                </div>
+                                                
+                                                <div class="assessment-group ms-md-5">
+                                                    <?php $saved_score = $user_responses[$elem_id] ?? null; ?>
+                                                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                                                        <?php 
+                                                            $s = $elem['scores'][$i] ?? null;
+                                                            $desc = $s['desc_level'] ?? "Level $i";
+                                                            $detail = $s['details'] ?? 'No description.';
+                                                        ?>
+                                                        <input type="radio" class="btn-check assessment-input" 
+                                                               name="responses[<?php echo $elem_id; ?>]" 
+                                                               id="r_<?php echo $elem_id; ?>_<?php echo $i; ?>" 
+                                                               value="<?php echo $i; ?>" 
+                                                               <?php echo ($saved_score == $i) ? 'checked' : ''; ?> required>
+                                                        
+                                                        <label class="assessment-option" for="r_<?php echo $elem_id; ?>_<?php echo $i; ?>">
+                                                            <div class="d-flex justify-content-between">
+                                                                <span class="score-number"><?php echo $i; ?></span>
+                                                                <?php if($saved_score == $i): ?><i class="bi bi-check-circle-fill text-primary"></i><?php endif; ?>
+                                                            </div>
+                                                            <span class="score-desc"><?php echo htmlspecialchars($desc); ?></span>
+                                                            <span class="score-detail"><?php echo htmlspecialchars($detail); ?></span>
+                                                        </label>
+                                                    <?php endfor; ?>
+                                                </div>
+                                                <?php if(!$is_last): ?><hr class="my-4 text-muted opacity-25 ms-md-5"><?php endif; ?>
                                             </div>
-                                        </div>
+                                        <?php endforeach; ?>
                                     </div>
                                 </div>
-                            </div>
+                            <?php endforeach; ?>
 
-                            <div class="mb-5">
-                                <?php foreach ($current_domain_data['criteria'] as $crit): ?>
-                                    <div class="card shadow-sm mb-4 border-0">
-                                        <div class="card-header bg-white py-3 border-bottom"><h5 class="mb-0 text-primary"><?php echo htmlspecialchars($crit['name']); ?></h5></div>
-                                        <div class="card-body p-4">
-                                            <?php foreach ($crit['elements'] as $elem_id => $elem): ?>
-                                                <div class="mb-5" id="el_<?php echo $elem_id; ?>">
-                                                    <h6 class="fw-bold mb-3"><?php echo htmlspecialchars($elem['name']); ?></h6>
-                                                    
-                                                    <div class="score-selection">
-                                                        <?php $saved_score = $user_responses[$elem_id] ?? null; ?>
-                                                        <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                            <?php 
-                                                                $s = $elem['scores'][$i] ?? null;
-                                                                $desc = $s['desc_level'] ?? "Level $i";
-                                                                $detail = $s['details'] ?? 'No description.';
-                                                            ?>
-                                                            <div class="d-block mb-2">
-                                                                <input type="radio" class="btn-check score-input" 
-                                                                    name="responses[<?php echo $elem_id; ?>]" 
-                                                                    id="r_<?php echo $elem_id; ?>_<?php echo $i; ?>" 
-                                                                    value="<?php echo $i; ?>" 
-                                                                    <?php echo ($saved_score == $i) ? 'checked' : ''; ?> required>
-                                                                <label class="score-option d-flex align-items-center" for="r_<?php echo $elem_id; ?>_<?php echo $i; ?>">
-                                                                    <span class="score-badge"><?php echo $i; ?></span>
-                                                                    <div>
-                                                                        <div class="text-uppercase fw-bold text-muted small"><?php echo htmlspecialchars($desc); ?></div>
-                                                                        <div class="text-dark small"><?php echo htmlspecialchars($detail); ?></div>
-                                                                    </div>
-                                                                </label>
-                                                            </div>
-                                                        <?php endfor; ?>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-
-                            <div class="card shadow-sm fixed-bottom border-0 mt-4">
-                                <div class="card-body p-3 bg-white border-top d-flex justify-content-between">
-                                    <?php if ($current_page_num > 1): ?>
-                                        <a href="?survey_id=<?php echo $survey_id; ?>&page=<?php echo $current_page_num - 1; ?>" class="btn btn-outline-secondary">Previous</a>
-                                    <?php else: ?>
-                                        <a href="index.php" class="btn btn-outline-secondary">Cancel</a>
-                                    <?php endif; ?>
-
+                            <div class="fixed-bottom bg-white border-top shadow py-3 px-4" style="margin-left: 270px; z-index: 1030;">
+                                <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                        <?php if ($current_page_num < $total_domains): ?>
-                                            <button type="submit" class="btn btn-primary">Next Domain</button>
+                                        <?php if ($current_page_num > 1): ?>
+                                            <a href="?survey_id=<?php echo $survey_id; ?>&page=<?php echo $current_page_num - 1; ?>" class="btn btn-outline-secondary rounded-pill px-4">
+                                                <i class="bi bi-arrow-left me-1"></i> Previous
+                                            </a>
                                         <?php else: ?>
-                                            <button type="submit" name="save_draft" value="1" class="btn btn-outline-primary me-2">Save Draft</button>
-                                            <button type="submit" name="finish" value="1" class="btn btn-success" onclick="return confirm('Submit now?');">Submit</button>
+                                            <a href="index.php" class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" name="save_draft" value="1" class="btn btn-light text-primary fw-bold border-0 rounded-pill px-3">
+                                            <i class="bi bi-save me-1"></i> Save Draft
+                                        </button>
+                                        
+                                        <?php if ($current_page_num < $total_domains): ?>
+                                            <button type="submit" class="btn btn-gradient-primary rounded-pill px-4 shadow-sm">
+                                                Next Domain <i class="bi bi-arrow-right ms-1"></i>
+                                            </button>
+                                        <?php else: ?>
+                                            <button type="submit" name="finish" value="1" class="btn btn-success rounded-pill px-5 shadow-sm fw-bold" onclick="return confirm('Are you ready to submit your assessment?');">
+                                                Submit Assessment <i class="bi bi-check-lg ms-1"></i>
+                                            </button>
                                         <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
+                            
+                            <script>
+                                if (window.innerWidth < 992) {
+                                    document.querySelector('.fixed-bottom').style.marginLeft = '0';
+                                }
+                                window.addEventListener('resize', function() {
+                                    if (window.innerWidth < 992) {
+                                        document.querySelector('.fixed-bottom').style.marginLeft = '0';
+                                    } else {
+                                        document.querySelector('.fixed-bottom').style.marginLeft = '270px';
+                                    }
+                                });
+                            </script>
                         </form>
                     <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         let isDirty = false;
