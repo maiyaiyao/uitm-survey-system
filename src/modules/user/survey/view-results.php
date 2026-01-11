@@ -130,21 +130,23 @@ foreach ($report_data as $d_id => &$domain) {
         }
 
         // Criteria Average = Sum of Elements / Count
-        $criteria['avg_score'] = ($element_count > 0) ? round($element_sum / $element_count, 1) : 0;
+        $criteria['avg_score'] = ($element_count > 0) ? round($element_sum / $element_count, 2) : 0;
         
         $domain_criteria_sum += $criteria['avg_score'];
         $criteria_count++;
     }
+    unset($criteria);
 
     // Domain Average = Sum of Criteria Averages / Count
-    $domain['avg_score'] = ($criteria_count > 0) ? round($domain_criteria_sum / $criteria_count, 1) : 0;
+    $domain['avg_score'] = ($criteria_count > 0) ? round($domain_criteria_sum / $criteria_count, 2) : 0;
     
     $total_survey_score += $domain['avg_score'];
     $domain_count++;
 }
+unset($domain);
 
 // Total Survey Average
-$overall_score = ($domain_count > 0) ? round($total_survey_score / $domain_count, 1) : 0;
+$overall_score = ($domain_count > 0) ? round($total_survey_score / $domain_count, 2) : 0;
 
 // Helper to determine color based on Percentage
 function getScoreClass($percent) {
