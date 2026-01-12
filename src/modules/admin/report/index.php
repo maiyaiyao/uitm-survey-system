@@ -33,6 +33,13 @@ $latest_survey = $db->fetchOne("SELECT * FROM survey ORDER BY created_at DESC LI
             <div class="col main-content-wrapper">
                 <div class="main-content px-4 py-4">
                     
+                    <nav aria-label="breadcrumb" class="mb-4">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
+                            <li class="breadcrumb-item active text-dark" aria-current="page">Reports</li>
+                        </ol>
+                    </nav>
+
                     <h3 class="fw-bold mb-4">Analytics & Reporting Hub</h3>
 
                     <div class="row g-4 mb-5">
