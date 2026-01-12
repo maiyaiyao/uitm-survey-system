@@ -70,7 +70,7 @@ function getProgClass($p) {
         .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); }
         .accordion-item { border: none; border-radius: 16px !important; box-shadow: 0 2px 4px rgba(0,0,0,0.05); margin-bottom: 1rem; overflow: hidden; }
         .accordion-button { border-radius: 16px !important; background-color: white; font-weight: 600; color: #344767; box-shadow: none !important; }
-        .accordion-button:not(.collapsed) { background-color: #03050700; color: #667eea; }
+        .accordion-button:not(.collapsed) { background-color: #f8f9fa; color: #667eea; }
         .accordion-button::after { background-size: 1rem; }
         .accordion-body { background-color: #f8f9fa; padding: 1.5rem; }
 

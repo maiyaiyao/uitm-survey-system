@@ -105,7 +105,7 @@ $latest_survey = $db->fetchOne("SELECT * FROM survey ORDER BY created_at DESC LI
                                             <div class="icon-box bg-info bg-opacity-10 text-info me-3">
                                                 <i class="bi bi-gear-wide-connected fs-4"></i>
                                             </div>
-                                            <h5 class="fw-bold text-dark mb-0">System Configuration</h5>
+                                            <h5 class="fw-bold text-dark mb-0">Audit Readiness</h5>
                                         </div>
                                         <p class="text-muted small">Check ISO 27001 mapping completeness for Requirements and Controls.</p>
                                     </div>

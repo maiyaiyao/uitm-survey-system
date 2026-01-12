@@ -85,6 +85,14 @@ $missing_cons = $db->fetchAll("
 
             <div class="col main-content-wrapper">
                 <div class="main-content px-4 py-4">
+
+                <nav aria-label="breadcrumb" class="mb-4">    
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Reports</a></li>
+                        <li class="breadcrumb-item active text-dark" aria-current="page">Audit Readiness</li>
+                    </ol>
+                </nav>
                     
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
