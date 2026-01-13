@@ -59,7 +59,7 @@ $completed_surveys = $db->fetchAll($sql, [':uid' => $user_ID]);
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb mb-2">
                                     <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-muted">Dashboard</a></li>
-                                    <li class="breadcrumb-item active text-dark" aria-current="page">Reports</li>
+                                    <li class="breadcrumb-item active text-dark" aria-current="page">My Reports</li>
                                 </ol>
                             </nav>
                             <h3 class="fw-bold mb-1">Reports & Certificates</h3>
@@ -132,7 +132,7 @@ $completed_surveys = $db->fetchAll($sql, [':uid' => $user_ID]);
                                                 </td>
                                                 <td class="text-end pe-4">
                                                     <div class="btn-group">
-                                                        <a href="survey/view-results.php?id=<?php echo $row['survey_ID']; ?>" 
+                                                        <a href="view.php?id=<?php echo $row['survey_ID']; ?>" 
                                                            class="btn btn-sm btn-outline-secondary">
                                                             <i class="bi bi-eye"></i> Report
                                                         </a>

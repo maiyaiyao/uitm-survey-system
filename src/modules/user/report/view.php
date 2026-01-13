@@ -208,8 +208,10 @@ $flash = getFlashMessage();
                     <div class="d-flex justify-content-between align-items-center mb-4 no-print">
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0">
-                                <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-muted">My Surveys</a></li>
-                                <li class="breadcrumb-item active text-dark" aria-current="page">View Results</li>
+                                <li class="breadcrumb-item">
+                                    <a href="index.php" class="text-decoration-none text-muted">My Reports</a>
+                                </li>
+                                <li class="breadcrumb-item active text-dark" aria-current="page">View Report</li>
                             </ol>
                         </nav>
                         <div class="d-flex gap-2">
