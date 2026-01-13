@@ -84,7 +84,7 @@ function getBadge($user_status, $survey_status, $end_date) {
 function getActionBtn($user_status, $survey_status, $survey_id) {
     // If completed or closed, show "View"
     if ($user_status === 'Completed' || $survey_status !== 'Active') {
-        return '<a href="view-results.php?id=' . $survey_id . '" class="btn btn-sm btn-outline-secondary px-3"><i class="bi bi-eye me-1"></i> View</a>';
+        return '<a href="../report/view.php?id=' . $survey_id . '" class="btn btn-sm btn-outline-secondary px-3"><i class="bi bi-eye me-1"></i> View</a>';
     }
     
     // Otherwise show "Start" or "Continue"
