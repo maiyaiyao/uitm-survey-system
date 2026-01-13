@@ -338,7 +338,7 @@ function getStatusBadge($status) {
                                             </div>
                                         </a>
 
-                                        <a href="reports.php" class="btn btn-outline-info py-3 text-start d-flex align-items-center">
+                                        <a href="report/index.php" class="btn btn-outline-info py-3 text-start d-flex align-items-center">
                                             <div class="icon-shape bg-info-subtle text-info rounded-circle me-3" style="width: 40px; height: 40px;">
                                                 <i class="bi bi-printer-fill"></i>
                                             </div>

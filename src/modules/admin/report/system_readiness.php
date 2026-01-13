@@ -1,7 +1,7 @@
 <?php
-// Adjust this path if your folder structure is different (e.g. ../../config/config.php)
+// Path: src/modules/admin/report/system_readiness.php
 require_once '../../../config/config.php';
-requireRole(['admin', 'auditor']); // Assuming you might have an auditor role later
+requireRole(['admin', 'auditor']);
 
 $db = new Database();
 
@@ -10,7 +10,6 @@ $db = new Database();
 // ---------------------------------------------------------
 
 // A. Requirements Coverage (Clauses)
-// Count Total Requirements vs. Those with a linked Criteria
 $req_stats = $db->fetchOne("
     SELECT 
         COUNT(*) as total,
@@ -19,7 +18,6 @@ $req_stats = $db->fetchOne("
 ");
 
 // B. Controls Coverage (Annex A)
-// Count Total Controls vs. Those that exist in the element_control bridge table
 $con_stats = $db->fetchOne("
     SELECT 
         (SELECT COUNT(*) FROM sub_con) as total,
@@ -30,8 +28,7 @@ $con_stats = $db->fetchOne("
 $req_percent = ($req_stats['total'] > 0) ? round(($req_stats['mapped'] / $req_stats['total']) * 100) : 0;
 $con_percent = ($con_stats['total'] > 0) ? round(($con_stats['mapped'] / $con_stats['total']) * 100) : 0;
 
-// D. Gap Analysis: Get Top 5 Missing Requirements
-// These are high priority for the admin to fix
+// D. Gap Analysis: Top 5 Missing Requirements
 $missing_reqs = $db->fetchAll("
     SELECT sr.sub_req_ID, sr.sub_req_name, s.sec_name 
     FROM sub_req sr
@@ -41,7 +38,7 @@ $missing_reqs = $db->fetchAll("
     LIMIT 5
 ");
 
-// E. Gap Analysis: Get Top 5 Missing Controls
+// E. Gap Analysis: Top 5 Missing Controls
 $missing_cons = $db->fetchAll("
     SELECT sc.sub_con_ID, sc.sub_con_name, s.sec_name
     FROM sub_con sc
@@ -50,7 +47,6 @@ $missing_cons = $db->fetchAll("
     ORDER BY sc.sub_con_ID ASC
     LIMIT 5
 ");
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,10 +58,15 @@ $missing_cons = $db->fetchAll("
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
-        .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
-        @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
+        .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; padding: 0; }
+        .main-content-wrapper { margin-left: 16.66667%; width: 83.33333%; }
         
-        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); transition: transform 0.2s; }
+        @media (max-width: 991.98px) {
+            .sidebar { position: relative; width: 100%; height: auto; }
+            .main-content-wrapper { margin-left: 0; width: 100%; }
+        }
+        
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); transition: transform 0.2s; }
         .card:hover { transform: translateY(-2px); }
         
         .icon-shape { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
@@ -79,29 +80,32 @@ $missing_cons = $db->fetchAll("
 <body>
     <div class="container-fluid p-0 h-100">
         <div class="row g-0 h-100">
-            <div class="col-auto">
+            
+            <div class="col-md-2 col-lg-2 sidebar">
                 <?php include_once __DIR__ . '/../../includes/admin_sidebar.php'; ?>
             </div>
 
-            <div class="col main-content-wrapper">
+            <div class="col-md-10 col-lg-10 main-content-wrapper">
                 <div class="main-content px-4 py-4">
 
-                <nav aria-label="breadcrumb" class="mb-4">    
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Reports</a></li>
-                        <li class="breadcrumb-item active text-dark" aria-current="page">Audit Readiness</li>
-                    </ol>
-                </nav>
+                    <nav aria-label="breadcrumb" class="mb-4">    
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Reports</a></li>
+                            <li class="breadcrumb-item active text-dark" aria-current="page">Audit Readiness</li>
+                        </ol>
+                    </nav>
                     
-                    <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
                         <div>
                             <h3 class="fw-bold mb-1">Audit Readiness Dashboard</h3>
                             <p class="text-muted mb-0">Overview of ISO 27001 mapping completeness and compliance gaps.</p>
                         </div>
-                        <button onclick="window.print()" class="btn btn-white shadow-sm border">
-                            <i class="bi bi-printer me-2"></i> Print Report
-                        </button>
+                        <div class="d-flex gap-2">
+                            <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Hub
+                            </a>
+                        </div>
                     </div>
 
                     <div class="row g-4 mb-5">
@@ -186,7 +190,9 @@ $missing_cons = $db->fetchAll("
                                         <h6 class="text-uppercase text-muted ls-1 mb-1">Gap Analysis</h6>
                                         <h5 class="h3 mb-0 text-danger">Action Required</h5>
                                     </div>
-                                    <a href="../iso/index.php" class="btn btn-sm btn-outline-primary">Fix Gaps</a>
+                                    <a href="../iso/index.php" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                        <i class="bi bi-wrench me-1"></i> Fix Gaps
+                                    </a>
                                 </div>
                                 <div class="card-body p-0">
                                     <div class="list-group list-group-flush">

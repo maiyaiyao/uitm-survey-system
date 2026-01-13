@@ -230,7 +230,6 @@
 
             <div class="nav-item">
                 <?php 
-                    // Check if URL contains '/user/survey/' OR if it is '/assessment.php'
                     $is_survey_active = (strpos($current_page, '/user/survey/') !== false || strpos($current_page, '/assessment.php') !== false) ? 'active' : '';
                 ?>
                 <a class="nav-link <?php echo $is_survey_active; ?>" 
@@ -241,8 +240,11 @@
             </div>
 
             <div class="nav-item">
-                <a class="nav-link <?php echo is_user_nav_active($current_page, '/reports.php'); ?>" 
-                   href="<?php echo BASE_URL; ?>/modules/user/reports.php" title="My Reports">
+                <?php 
+                    $is_report_active = (strpos($current_page, '/user/report/') !== false) ? 'active' : '';
+                ?>
+                <a class="nav-link <?php echo $is_report_active; ?>" 
+                   href="<?php echo BASE_URL; ?>/modules/user/report/index.php" title="My Reports">
                     <div class="nav-link-icon"><i class="bi bi-file-earmark-bar-graph-fill"></i></div>
                     <span>My Reports</span>
                 </a>
