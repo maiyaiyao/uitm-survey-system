@@ -29,8 +29,8 @@ $current_user = getCurrentUser();
 
 // --- 2. Fetch Statistics ---
 $stats_sql = "SELECT 
-    COUNT(DISTINCT CASE WHEN s.status = 'Active' THEN s.survey_ID END) AS active_surveys,
-    COUNT(DISTINCT CASE WHEN s.status = 'Completed' THEN s.survey_ID END) AS completed_surveys,
+    COUNT(DISTINCT CASE WHEN us.status IN ('Pending', 'In progress') AND s.status = 'Active' THEN s.survey_ID END) AS active_surveys,
+    COUNT(DISTINCT CASE WHEN us.status = 'Completed' THEN s.survey_ID END) AS completed_surveys,
     COUNT(DISTINCT s.survey_ID) AS total_surveys
 FROM survey s
 INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
@@ -296,17 +296,17 @@ function getStatusBadge($status) {
                                                             </div>
                                                         </td>
                                                         <td class="text-center">
-                                                            <?php echo getStatusBadge($row['status']); ?>
+                                                            <?php echo getStatusBadge($row['user_survey_status']); ?>
                                                         </td>
                                                         <td class="text-end pe-4">
-                                                            <?php if($row['status'] === 'Active'): ?>
+                                                            <?php if($row['status'] === 'Active' && $row['user_survey_status'] !== 'Completed'): ?>
                                                                 <a href="survey/assessment.php?survey_id=<?php echo $row['survey_ID']; ?>" 
                                                                    class="btn btn-sm btn-primary px-3 rounded-3"
                                                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                                                     Start
                                                                 </a>
                                                             <?php else: ?>
-                                                                <a href="view-results.php?survey_id=<?php echo $row['survey_ID']; ?>" 
+                                                                <a href="report/view.php?id=<?php echo $row['survey_ID']; ?>" 
                                                                    class="btn btn-sm btn-outline-secondary px-3 rounded-3">
                                                                     View
                                                                 </a>
