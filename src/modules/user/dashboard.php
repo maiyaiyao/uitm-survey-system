@@ -184,9 +184,6 @@ function getStatusBadge($status) {
                         </div>
                         <div class="d-flex align-items-center gap-3">
                             <span class="text-muted small"><?php echo date('l, d F Y'); ?></span>
-                            <div class="bg-white p-2 rounded-circle shadow-sm text-primary">
-                                <i class="bi bi-bell-fill"></i>
-                            </div>
                         </div>
                     </div>
 
