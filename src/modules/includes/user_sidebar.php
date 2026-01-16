@@ -12,22 +12,26 @@
 ?>
 
 <style>
-    /* Force width on desktop */
+    /* Force width on desktop - using fixed pixel width */
     @media (min-width: 992px) {
         .sidebar {
             width: 270px !important;
+            min-width: 270px !important;
+            max-width: 270px !important;
             flex: 0 0 270px !important;
-            transition: width 0.3s ease;
+            transition: all 0.3s ease;
         }
         .main-content-wrapper {
             margin-left: 270px !important;
             width: calc(100% - 270px) !important;
-            transition: margin-left 0.3s ease, width 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         /* --- COLLAPSED STATE STYLES --- */
         body.sb-collapsed .sidebar {
             width: 80px !important;
+            min-width: 80px !important;
+            max-width: 80px !important;
             flex: 0 0 80px !important;
         }
         body.sb-collapsed .main-content-wrapper {
@@ -43,23 +47,23 @@
             display: none !important;
         }
 
-        /* 2. Brand Section Layout (Fixes Overlap) */
+        /* 2. Brand Section Layout */
         body.sb-collapsed .sidebar .sidebar-brand {
             display: flex;
-            flex-direction: column; /* Stack logo and button vertically */
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 1.5rem 0;
-            gap: 20px; /* Add space between Logo and Toggle Button */
+            gap: 20px;
         }
         
         body.sb-collapsed .sidebar .sidebar-brand-icon {
             margin-right: 0;
         }
 
-        /* 3. Toggle Button Layout (Fixes Overlap) */
+        /* 3. Toggle Button Layout */
         body.sb-collapsed #sidebarToggle {
-            position: static !important; /* Force it into the flex flow */
+            position: static !important;
             margin: 0;
             top: auto;
             right: auto;
@@ -81,21 +85,81 @@
         }
     }
 
+    /* Tablet and smaller screens - Overlay Sidebar */
+    @media (max-width: 991.98px) {
+        .sidebar {
+            position: fixed !important;
+            left: -100% !important;
+            width: 280px !important;
+            min-width: 280px !important;
+            max-width: 280px !important;
+            height: 100vh !important;
+            transition: left 0.3s ease !important;
+            z-index: 1050 !important;
+        }
+        
+        /* Show sidebar when active */
+        .sidebar.show {
+            left: 0 !important;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+        }
+        
+        .main-content-wrapper {
+            margin-left: 0 !important;
+            width: 100% !important;
+        }
+        
+        /* Mobile toggle button */
+        #sidebarToggle {
+            display: none !important;
+        }
+        
+        #mobileMenuToggle {
+            display: flex !important;
+        }
+        
+        /* Overlay backdrop */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1040;
+        }
+        
+        .sidebar-overlay.show {
+            display: block;
+        }
+    }
+    
+    /* Desktop - hide mobile elements */
+    @media (min-width: 992px) {
+        #mobileMenuToggle {
+            display: none !important;
+        }
+        
+        .sidebar-overlay {
+            display: none !important;
+        }
+    }
+
     /* --- STANDARD STYLES --- */
     .sidebar {
         position: fixed; 
         top: 0; 
         bottom: 0; 
         left: 0;
-        width: 16.6667%;
         z-index: 1000;
         background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
         color: white;
         overflow-y: auto;
+        overflow-x: hidden;
         padding-right: 0 !important;
         display: flex;
         flex-direction: column;
-        overflow-x: hidden;
     }
 
     /* Sidebar Brand */
@@ -116,7 +180,7 @@
         white-space: nowrap;
     }
 
-    /* Toggle Button - Default (Expanded) Position */
+    /* Toggle Button - Default Position */
     #sidebarToggle {
         background: rgba(255,255,255,0.1);
         border: none;
@@ -129,8 +193,6 @@
         justify-content: center;
         cursor: pointer;
         transition: all 0.2s;
-        
-        /* Absolute position only when expanded */
         position: absolute;
         top: 24px;
         right: 15px;
@@ -200,9 +262,38 @@
         color: #a61e4d;
         transform: translateY(-1px);
     }
+    
+    /* Mobile Menu Toggle Button */
+    #mobileMenuToggle {
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 1060;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.2s;
+    }
+    
+    #mobileMenuToggle:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+    
+    #mobileMenuToggle i {
+        font-size: 1.5rem;
+    }
 </style>
 
-<div class="col-md-3 col-lg-2 px-0 sidebar min-vh-100 d-flex flex-column" id="userSidebar">
+<div class="sidebar min-vh-100 d-flex flex-column" id="userSidebar">
     
     <div class="sidebar-brand d-flex align-items-center p-4 position-relative">
         <div class="sidebar-brand-icon">
@@ -268,14 +359,25 @@
     </div>
 </div>
 
+<!-- Mobile Menu Toggle Button -->
+<button id="mobileMenuToggle" title="Menu">
+    <i class="bi bi-list"></i>
+</button>
+
+<!-- Sidebar Overlay for Mobile -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const toggleBtn = document.getElementById('sidebarToggle');
+    const mobileToggle = document.getElementById('mobileMenuToggle');
+    const sidebar = document.getElementById('userSidebar');
+    const overlay = document.getElementById('sidebarOverlay');
     const body = document.body;
     
-    // Check local storage for preference
+    // Desktop toggle functionality
     const isCollapsed = localStorage.getItem('sb|sidebar-toggle') === 'true';
-    if (isCollapsed) {
+    if (isCollapsed && window.innerWidth >= 992) {
         body.classList.add('sb-collapsed');
     }
 
@@ -283,10 +385,44 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleBtn.addEventListener('click', function(e) {
             e.preventDefault();
             body.classList.toggle('sb-collapsed');
-            
-            // Save state
             localStorage.setItem('sb|sidebar-toggle', body.classList.contains('sb-collapsed'));
         });
     }
+    
+    // Mobile toggle functionality
+    if(mobileToggle) {
+        mobileToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            sidebar.classList.toggle('show');
+            overlay.classList.toggle('show');
+        });
+    }
+    
+    // Close sidebar when clicking overlay
+    if(overlay) {
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        });
+    }
+    
+    // Close sidebar when clicking a link on mobile
+    const navLinks = sidebar.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if(window.innerWidth < 992) {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            }
+        });
+    });
+    
+    // Handle window resize
+    window.addEventListener('resize', function() {
+        if(window.innerWidth >= 992) {
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+    });
 });
 </script>

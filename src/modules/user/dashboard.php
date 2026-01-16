@@ -70,48 +70,12 @@ function getStatusBadge($status) {
         }
         
         /* Sidebar Styles */
-        .sidebar {
-            position: fixed; top: 0; bottom: 0; left: 0;
-            width: 270px; /* Fixed width matching Admin */
-            z-index: 100; padding: 0;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex; flex-direction: column;
-        }
         .main-content-wrapper { 
             margin-left: 270px; /* Matching fixed width */
             width: calc(100% - 270px); 
         }
         
-        /* Sidebar Links */
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 1rem 1.5rem;
-            border-left: 3px solid transparent;
-            display: flex; align-items: center; gap: 12px;
-            transition: all 0.15s ease-in-out;
-        }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            border-left-color: white;
-        }
-        .nav-link-icon {
-            width: 28px; height: 28px;
-            display: flex; justify-content: center; align-items: center;
-            color: rgba(255,255,255,0.9);
-            background: rgba(255,255,255,0.15);
-            border-radius: 6px;
-        }
-        .sidebar .nav-link.active .nav-link-icon {
-            background: white; color: #764ba2;
-        }
 
-        /* Responsive Sidebar */
-        @media (max-width: 991.98px) {
-            .sidebar { position: relative; width: 100%; height: auto; }
-            .main-content-wrapper { margin-left: 0; width: 100%; }
-        }
 
         /* --- Stat Cards (Matching Admin) --- */
         .stat-card {
