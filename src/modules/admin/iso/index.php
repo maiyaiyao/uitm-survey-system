@@ -218,6 +218,15 @@ if ($active_tab === 'sections') {
                                             </td>
                                         </tr>
                                     <?php else: ?>
+                                        <?php                                         
+                                        $urlParams = "";
+                                        if (!empty($search)) {
+                                            $urlParams .= "&search=" . urlencode($search);
+                                        }
+                                        if (!empty($filter)) {
+                                            $urlParams .= "&filter=" . urlencode($filter);
+                                        } 
+                                        ?>
                                         <?php foreach ($data as $row): ?>
                                             <?php
                                                 // Prepare Variables
@@ -261,12 +270,12 @@ if ($active_tab === 'sections') {
                                                                 <i class="bi bi-check-circle-fill me-1"></i> Mapped
                                                             </span>
                                                         </div>
-                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
+                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?><?php echo $urlParams; ?>" 
                                                         class="btn btn-sm btn-link text-decoration-none text-muted" style="font-size: 0.8rem;">
                                                         Edit Link
                                                         </a>
                                                     <?php else: ?>
-                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
+                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?><?php echo $urlParams; ?>" 
                                                         class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
                                                             <i class="bi bi-link-45deg me-1"></i> Map Now
                                                         </a>
@@ -340,6 +349,9 @@ if ($active_tab === 'sections') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        const currentSearch = "<?php echo addslashes($search); ?>";
+        const currentFilter = "<?php echo addslashes($filter); ?>";
+
         function viewDetails(type, id, event) {
             // Show Modal
             const modalEl = document.getElementById('isoDetailsModal');
@@ -386,7 +398,12 @@ if ($active_tab === 'sections') {
 
                     // Update "Manage Mapping" button link
                     const mapBtn = document.getElementById('modalMapBtn');
-                    mapBtn.href = `map_iso.php?type=${type}&id=${id}`;
+                    let targetUrl = `map_iso.php?type=${type}&id=${encodeURIComponent(id)}`;
+                    
+                    if (currentSearch) targetUrl += `&search=${encodeURIComponent(currentSearch)}`;
+                    if (currentFilter) targetUrl += `&filter=${encodeURIComponent(currentFilter)}`;
+                    
+                    mapBtn.href = targetUrl;
 
                     // Show Content / Hide Loader
                     document.getElementById('modalLoader').style.display = 'none';

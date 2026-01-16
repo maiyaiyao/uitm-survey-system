@@ -65,6 +65,13 @@ if ($type === 'section') {
 if (!$targetItem) {
     die("Item not found.");
 }
+$search = $_GET['search'] ?? '';
+$filter = $_GET['filter'] ?? '';
+
+// Build a reusable query string
+$queryParams = "";
+if (!empty($search)) $queryParams .= "&search=" . urlencode($search);
+if (!empty($filter)) $queryParams .= "&filter=" . urlencode($filter);
 
 // ---------------------------------------------------------
 // DETERMINE LOCK STATUS
@@ -83,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add_mapping'])) {
         if ($isLocked) {
             setFlashMessage("error", "Action blocked: This item is already mapped.");
-            header("Location: map_iso.php?type=$type&id=" . urlencode($id));
+            header("Location: map_iso.php?type=$type&id=" . urlencode($id) . $queryParams);
             exit;
         }
 
@@ -106,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 setFlashMessage("error", "Mapping already exists.");
             }
         }
-        header("Location: map_iso.php?type=$type&id=" . urlencode($id));
+        header("Location: map_iso.php?type=$type&id=" . urlencode($id) . $queryParams);
         exit;
     }
 
@@ -122,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->query("DELETE FROM element_control WHERE id = :pk", [':pk' => $linkID]);
         }
         setFlashMessage("success", "Mapping removed.");
-        header("Location: map_iso.php?type=$type&id=" . urlencode($id));
+        header("Location: map_iso.php?type=$type&id=" . urlencode($id) . $queryParams);
         exit;
     }
 }
@@ -182,7 +189,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     <p class="mb-0 text-secondary"><?php echo htmlspecialchars($targetItem['name']); ?></p>
                                 </div>
                                 <div class="ms-auto">
-                                    <a href="index.php?tab=<?php echo $type; ?>s" class="btn btn-light text-secondary">
+                                    <a href="index.php?tab=<?php echo $type; ?>s<?php echo $queryParams; ?>" class="btn btn-light text-secondary">
                                         <i class="bi bi-arrow-left me-1"></i> Back to List
                                     </a>
                                 </div>
