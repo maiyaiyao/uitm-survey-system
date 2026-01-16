@@ -58,6 +58,11 @@ require_once CONFIG_PATH . '/database.php';
 // Timezone
 date_default_timezone_set('Asia/Kuala_Lumpur');
 
+//app pass
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_USER', 'iyliamaisarah050205@gmail.com');
+define('SMTP_PASS', 'ayreadfbqhivwyzh');
+
 /**
  * Autoload helper functions
  */

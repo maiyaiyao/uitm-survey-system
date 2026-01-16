@@ -1,4 +1,15 @@
 <?php
+// 1. IMPORT PHPMAILER CLASSES AT THE TOP
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+// 2. LOAD DEPENDENCIES
+// If you used Composer:
+if (file_exists('../../vendor/autoload.php')) {
+    require '../../vendor/autoload.php';
+} 
+
 require_once '../../config/config.php';
 require_once '../../includes/models/User.php';
 
@@ -38,17 +49,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':expires_at' => $expires_at
             ]);
             
-            // TODO: Send email with reset link
-            // For now, we'll just show success message
             $reset_link = BASE_URL . "/modules/auth/reset-password.php?token=" . $token;
-            error_log("Password reset link: " . $reset_link);
+            
+            // --- START PHPMAILER LOGIC ---
+            $mail = new PHPMailer(true);
+
+            // Server settings
+            $mail->isSMTP();        
+            $mail->SMTPAuth   = true;                       
+            $mail->Username   = SMTP_USER;     
+            $mail->Password   = SMTP_PASS; 
+            $mail->Host     = SMTP_HOST;         
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; 
+            $mail->Port       = 587;                        
+
+            // Recipients
+            $mail->setFrom('no-reply@uitm.edu.my', 'UiTM Survey System');
+            $mail->addAddress($email);                        // Add a recipient
+
+            // Content
+            $mail->isHTML(true);                              // Set email format to HTML
+            $mail->Subject = 'Reset Your Password';
+            $mail->Body    = "
+                <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
+                    <h2 style='color: #667eea;'>Password Reset Request</h2>
+                    <p>We received a request to reset your password for the UiTM Survey System.</p>
+                    <p>Click the button below to reset it:</p>
+                    <p>
+                        <a href='$reset_link' style='background-color: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>Reset Password</a>
+                    </p>
+                    <p style='font-size: 12px; color: #777;'>If the button doesn't work, copy and paste this link:<br>$reset_link</p>
+                    <p>This link will expire in 1 hour.</p>
+                </div>
+            ";
+            $mail->AltBody = "Reset your password here: $reset_link";
+
+            $mail->send();
+            // --- END PHPMAILER LOGIC ---
+            
+            error_log("Password reset link sent to: " . $email);
         }
         
         // Always show success message (security best practice)
         $success = 'If your email is registered, you will receive a password reset link shortly.';
         
     } catch (Exception $e) {
-        $error = $e->getMessage();
+        // Log the actual error for debugging, but show a generic error to user if it's a mailer error
+       $error = "<b>DEBUG ERROR:</b> " . $e->getMessage();
     }
 }
 ?>
