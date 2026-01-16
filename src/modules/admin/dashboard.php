@@ -63,48 +63,120 @@ function getStatusBadge($status) {
     <style>
         /* Page Layout */
         html, body { 
-            height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; 
+            height: 100%; 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden; 
+            background-color: #f8f9fa; 
         }
         
-        /* Sidebar Adjustment for Fixed Layout */
-        .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; padding: 0; }
-        .main-content-wrapper { margin-left: 16.66667%; width: 83.33333%; }
-        
-        @media (max-width: 991.98px) {
-            .sidebar { position: relative; width: 100%; height: auto; }
-            .main-content-wrapper { margin-left: 0; width: 100%; }
+        /* Main Container */
+        .page-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
         }
 
-        /* Table Styles (Matching Domain Page) */
+        /* Sidebar Adjustment for Fixed Layout */
+        .sidebar { 
+            position: fixed; 
+            top: 0; 
+            bottom: 0; 
+            left: 0; 
+            z-index: 100; 
+            padding: 0; 
+        }
+        
+        /* Main Content Wrapper - Desktop */
+        @media (min-width: 992px) {
+            .main-content-wrapper { 
+                margin-left: 270px;
+                width: calc(100% - 270px);
+                min-height: 100vh;
+                transition: all 0.3s ease;
+            }
+            
+            body.sb-collapsed .main-content-wrapper {
+                margin-left: 80px;
+                width: calc(100% - 80px);
+            }
+        }
+        
+        /* Mobile Layout */
+        @media (max-width: 991.98px) {
+            .sidebar { 
+                position: relative !important; 
+                width: 100% !important; 
+                height: auto !important; 
+            }
+            .main-content-wrapper { 
+                margin-left: 0 !important; 
+                width: 100% !important; 
+            }
+        }
+
+        /* Main Content Padding */
+        .main-content {
+            padding: 2rem;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Responsive Content */
+        @media (max-width: 991.98px) {
+            .main-content {
+                padding: 1rem;
+                padding-top: 4.5rem; /* Space for mobile menu button */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+                padding-top: 4.5rem;
+            }
+        }
+
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .table th {
             font-weight: 700;
-            background-color: #9d83b7ff; /* Purple Header */
+            background-color: #9d83b7ff;
             border-bottom: 2px solid #f0f2f5;
             color: black;
             text-transform: uppercase;
             font-size: 0.75rem;
             padding: 1rem;
+            white-space: nowrap;
         }
+        
         .table td {
             padding: 1rem;
             vertical-align: middle;
-            color: #67748e; /* Specific Grey Text */
+            color: #67748e;
             font-size: 0.875rem;
         }
+        
         .table-hover tbody tr:hover {
             background-color: #f8f9fa;
         }
         
-        /* Stat Cards (Matching Domain Page) */
+        /* Stat Cards */
         .stat-card {
             border: none;
             border-radius: 16px;
             box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
             transition: transform 0.2s;
             background: white;
-            position: relative; /* Added to fix stretched-link issue */
+            position: relative;
             overflow: hidden;
+            min-height: 120px;
         }
+        
         .stat-card:hover {
             transform: translateY(-3px);
         }
@@ -118,228 +190,262 @@ function getStatusBadge($status) {
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
+        
         .icon-shape i {
             font-size: 1.25rem;
         }
         
-        /* Avatar / User Text */
+        /* User Meta */
         .user-meta {
             display: flex;
             flex-direction: column;
             line-height: 1.3;
         }
+        
         .user-meta .name {
             font-weight: 600;
             color: #344767;
         }
+        
         .user-meta .date {
             font-size: 0.75rem;
             color: #adb5bd;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 576px) {
+            .stat-card {
+                min-height: 100px;
+            }
+            
+            .icon-shape {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.5rem;
+            }
+            
+            .table td, .table th {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Card responsiveness */
+        .card {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Button responsive */
+        @media (max-width: 576px) {
+            .btn {
+                font-size: 0.875rem;
+                padding: 0.5rem 1rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="container-fluid p-0 h-100">
-        <div class="row g-0 h-100">
-            
-            <!-- Sidebar -->
-            <div class="col-md-2 col-lg-2 sidebar">
-                <?php include_once __DIR__ . '/../includes/admin_sidebar.php'; ?>
-            </div>
-            
-            <!-- Main Content -->
-            <div class="col-md-10 col-lg-10 main-content-wrapper">
-                <div class="main-content px-4 py-4">
+    <div class="page-container">
+        
+        <!-- Sidebar -->
+        <?php include_once __DIR__ . '/../includes/admin_sidebar.php'; ?>
+        
+        <!-- Main Content -->
+        <div class="main-content-wrapper">
+            <div class="main-content">
+                
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item active text-dark" aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+                    <div>
+                        <h3 class="fw-bold mb-1">Overview</h3>
+                        <p class="text-muted mb-0">Welcome back, <?php echo htmlspecialchars($current_user['full_name']); ?>!</p>
+                    </div>
                     
-                    <nav aria-label="breadcrumb" class="mb-4">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active text-dark" aria-current="page">Dashboard</li>
-                        </ol>
-                    </nav>
+                    <div class="d-flex gap-2">
+                        <a href="survey/form-survey.php" 
+                            class="btn btn-primary shadow-sm px-4 py-2 rounded-3" 
+                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                            <i class="bi bi-plus-lg me-2"></i>Create Survey
+                        </a>
+                    </div>
+                </div>
 
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
-                        <div>
-                            <h3 class="fw-bold mb-1">Overview</h3>
-                            <p class="text-muted mb-0">Welcome back, <?php echo htmlspecialchars($current_user['full_name']); ?>!</p>
-                        </div>
-                        
-                        <div class="d-flex gap-2">
-                            <a href="survey/form-survey.php" 
-                                class="btn btn-primary shadow-sm px-4 py-2 rounded-3" 
-                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                <i class="bi bi-plus-lg me-2"></i>Create Survey
-                            </a>
+                <?php if (isset($db_error)): ?>
+                    <div class="alert alert-danger shadow-sm border-0 mb-4">
+                        <?php echo htmlspecialchars($db_error); ?>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Stats Row -->
+                <div class="row g-3 g-md-4 mb-4 mb-md-5">
+                    
+                    <!-- Total Users -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Total Users</p>
+                                    <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_users; ?></h3>
+                                </div>
+                                <div class="icon-shape bg-primary text-white shadow text-center">
+                                    <i class="bi bi-people-fill"></i>
+                                </div>
+                            </div>
+                            <a href="user/index.php" class="stretched-link"></a>
                         </div>
                     </div>
 
-                    <?php if (isset($db_error)): ?>
-                        <div class="alert alert-danger shadow-sm border-0 mb-4">
-                            <?php echo htmlspecialchars($db_error); ?>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Stats Row -->
-                    <div class="row g-4 mb-5">
-                        
-                        <!-- Total Users -->
-                        <div class="col-xl-3 col-sm-6">
-                            <div class="stat-card p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Total Users</p>
-                                        <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_users; ?></h3>
-                                    </div>
-                                    <div class="icon-shape bg-primary text-white shadow text-center">
-                                        <i class="bi bi-people-fill"></i>
-                                    </div>
+                    <!-- Active Surveys -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Active Surveys</p>
+                                    <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_active; ?></h3>
                                 </div>
-                                <a href="user/index.php" class="stretched-link"></a>
-                            </div>
-                        </div>
-
-                        <!-- Active Surveys -->
-                        <div class="col-xl-3 col-sm-6">
-                            <div class="stat-card p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Active Surveys</p>
-                                        <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_active; ?></h3>
-                                    </div>
-                                    <div class="icon-shape bg-success text-white shadow text-center">
-                                        <i class="bi bi-clipboard-check-fill"></i>
-                                    </div>
+                                <div class="icon-shape bg-success text-white shadow text-center">
+                                    <i class="bi bi-clipboard-check-fill"></i>
                                 </div>
-                                <a href="survey/index.php?status=Active" class="stretched-link"></a>
                             </div>
-                        </div>
-
-                        <!-- Draft Surveys -->
-                        <div class="col-xl-3 col-sm-6">
-                            <div class="stat-card p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Draft Surveys</p>
-                                        <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_draft; ?></h3>
-                                    </div>
-                                    <div class="icon-shape bg-warning text-white shadow text-center">
-                                        <i class="bi bi-hourglass-split"></i>
-                                    </div>
-                                </div>
-                                <a href="survey/index.php?status=Draft" class="stretched-link"></a>
-                            </div>
-                        </div>
-
-                        <!-- Completed Surveys -->
-                        <div class="col-xl-3 col-sm-6">
-                            <div class="stat-card p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Completed</p>
-                                        <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_completed; ?></h3>
-                                    </div>
-                                    <div class="icon-shape bg-info text-white shadow text-center">
-                                        <i class="bi bi-check-circle-fill"></i>
-                                    </div>
-                                </div>
-                                <a href="survey/index.php?status=Completed" class="stretched-link"></a>
-                            </div>
+                            <a href="survey/index.php?status=Active" class="stretched-link"></a>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-8">
-                            <div class="card border-0 shadow-sm rounded-4 h-100">
-                                <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
-                                    <h5 class="mb-0">Recent Surveys</h5>
-                                    <a href="survey/index.php" class="btn btn-sm btn-outline-secondary">View All</a>
+                    <!-- Draft Surveys -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Draft Surveys</p>
+                                    <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_draft; ?></h3>
                                 </div>
-                                <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
-                                        <thead>
+                                <div class="icon-shape bg-warning text-white shadow text-center">
+                                    <i class="bi bi-hourglass-split"></i>
+                                </div>
+                            </div>
+                            <a href="survey/index.php?status=Draft" class="stretched-link"></a>
+                        </div>
+                    </div>
+
+                    <!-- Completed Surveys -->
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <p class="text-sm mb-0 text-uppercase font-weight-bold text-muted">Completed</p>
+                                    <h3 class="font-weight-bolder mb-0 mt-2"><?php echo $total_completed; ?></h3>
+                                </div>
+                                <div class="icon-shape bg-info text-white shadow text-center">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                </div>
+                            </div>
+                            <a href="survey/index.php?status=Completed" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row g-3 g-md-4">
+                    <div class="col-12 col-lg-8">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Recent Surveys</h5>
+                                <a href="survey/index.php" class="btn btn-sm btn-outline-secondary">View All</a>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="ps-4">Survey Name</th>
+                                            <th>Department</th>
+                                            <th>Created By</th>
+                                            <th class="text-center">Status</th>
+                                            <th class="text-end pe-4">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($recent_surveys)): ?>
                                             <tr>
-                                                <th class="ps-4">Survey Name</th>
-                                                <th>Department</th>
-                                                <th>Created By</th>
-                                                <th class="text-center">Status</th>
-                                                <th class="text-end pe-4">Actions</th>
+                                                <td colspan="5" class="text-center py-5">
+                                                    <div class="text-muted">
+                                                        <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                                        No surveys found.
+                                                    </div>
+                                                </td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php if (empty($recent_surveys)): ?>
-                                                <tr>
-                                                    <td colspan="5" class="text-center py-5">
-                                                        <div class="text-muted">
-                                                            <i class="bi bi-inbox display-4 d-block mb-2"></i>
-                                                            No surveys found.
+                                        <?php else: ?>
+                                            <?php foreach ($recent_surveys as $survey): ?>
+                                                <tr onclick="window.location.href='survey/view-details.php?id=<?php echo $survey['survey_ID']; ?>';" 
+                                                    style="cursor: pointer;">
+                                                    <td class="ps-4">
+                                                        <div class="d-flex flex-column">
+                                                            <span class="fw-bold text-dark"><?php echo htmlspecialchars($survey['survey_name']); ?></span>
                                                         </div>
                                                     </td>
+                                                    <td>
+                                                        <span class="text-secondary text-sm font-weight-bold"><?php echo htmlspecialchars($survey['department']); ?></span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="user-meta">
+                                                            <span class="name"><?php echo htmlspecialchars($survey['created_by_name'] ?? 'System'); ?></span>
+                                                            <span class="date"><?php echo date('d M Y', strtotime($survey['created_at'])); ?></span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <?php echo getStatusBadge($survey['status']); ?>
+                                                    </td>
+                                                    <td class="text-end pe-4" onclick="event.stopPropagation();">
+                                                        <a href="survey/preview.php?id=<?php echo $survey['survey_ID']; ?>" 
+                                                        class="btn btn-sm btn-link text-dark px-2" 
+                                                        title="View Details">
+                                                            <i class="bi bi-eye fs-6"></i>
+                                                        </a>
+                                                        <a href="survey/form-survey.php?id=<?php echo $survey['survey_ID']; ?>" 
+                                                        class="btn btn-sm btn-link text-primary px-2" 
+                                                        title="Edit Survey">
+                                                            <i class="bi bi-pencil-square fs-6"></i>
+                                                        </a>
+                                                    </td>
                                                 </tr>
-                                            <?php else: ?>
-                                                <?php foreach ($recent_surveys as $survey): ?>
-                                                    <tr onclick="window.location.href='survey/view-details.php?id=<?php echo $survey['survey_ID']; ?>';" 
-                                                        style="cursor: pointer;">
-                                                        <td class="ps-4">
-                                                            <div class="d-flex flex-column">
-                                                                <span class="fw-bold text-dark"><?php echo htmlspecialchars($survey['survey_name']); ?></span>
-                                                            </div>
-                                                        </td>
-                                                        <td>
-                                                            <span class="text-secondary text-sm font-weight-bold"><?php echo htmlspecialchars($survey['department']); ?></span>
-                                                        </td>
-                                                        <td>
-                                                            <div class="user-meta">
-                                                                <span class="name"><?php echo htmlspecialchars($survey['created_by_name'] ?? 'System'); ?></span>
-                                                                <span class="date"><?php echo date('d M Y', strtotime($survey['created_at'])); ?></span>
-                                                            </div>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <?php echo getStatusBadge($survey['status']); ?>
-                                                        </td>
-                                                        <td class="text-end pe-4" onclick="event.stopPropagation();">
-                                                            <a href="survey/preview.php?id=<?php echo $survey['survey_ID']; ?>" 
-                                                            class="btn btn-sm btn-link text-dark px-2" 
-                                                            title="View Details">
-                                                                <i class="bi bi-eye fs-6"></i>
-                                                            </a>
-                                                            <a href="survey/form-survey.php?id=<?php echo $survey['survey_ID']; ?>" 
-                                                            class="btn btn-sm btn-link text-primary px-2" 
-                                                            title="Edit Survey">
-                                                                <i class="bi bi-pencil-square fs-6"></i>
-                                                            </a>
-                                                        </td>
-                                                    </tr>
-                                                <?php endforeach; ?>
-                                            <?php endif; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <div class="card border-0 shadow-sm rounded-4 h-100">
-                                <div class="card-header bg-white border-bottom py-3 rounded-top-4">
-                                    <h5 class="mb-0">Quick Actions</h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="d-grid gap-2">
-                                        <a href="user/form-user.php" class="btn btn-outline-primary py-2">
-                                            <i class="bi bi-person-plus me-2"></i>Add New User
-                                        </a>
-                                        <a href="survey/form-survey.php" class="btn btn-outline-success py-2">
-                                            <i class="bi bi-plus-circle me-2"></i>Create Survey
-                                        </a>
-                                        <a href="report/index.php" class="btn btn-outline-info py-2">
-                                            <i class="bi bi-file-earmark-text me-2"></i>View Reports
-                                        </a>
-                                    </div>
-                                </div>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
 
+                    <div class="col-12 col-lg-4">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-header bg-white border-bottom py-3 rounded-top-4">
+                                <h5 class="mb-0">Quick Actions</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="d-grid gap-2">
+                                    <a href="user/form-user.php" class="btn btn-outline-primary py-2">
+                                        <i class="bi bi-person-plus me-2"></i>Add New User
+                                    </a>
+                                    <a href="survey/form-survey.php" class="btn btn-outline-success py-2">
+                                        <i class="bi bi-plus-circle me-2"></i>Create Survey
+                                    </a>
+                                    <a href="report/index.php" class="btn btn-outline-info py-2">
+                                        <i class="bi bi-file-earmark-text me-2"></i>View Reports
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
