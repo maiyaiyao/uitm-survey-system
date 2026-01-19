@@ -205,7 +205,7 @@ function getStatusBadgeDomain($status) {
                             <table class="table table-hover align-middle mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="ps-4" style="width: 25%;">Domain Name</th>
+                                        <th class="ps-4" style="width: 45%;">Domain Name</th>
                                         <th class="text-center">Structure</th>
                                         <th>Created</th>
                                         <th>Last Updated</th>

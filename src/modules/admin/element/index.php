@@ -124,8 +124,7 @@ $flash = getFlashMessage();
                             <table class="table table-hover mb-0">
                                 <thead>
                                     <tr>
-                                        <th style="width: 35%;">Element Name</th>
-                                        <th>Context (Domain > Criteria)</th>
+                                        <th style="width: 55%;">Element Name</th>
                                         <th>Created</th>
                                         <th>Last Updated</th>
                                         <th class="text-center">Status</th>
@@ -140,15 +139,8 @@ $flash = getFlashMessage();
                                         
                                         <td class="ps-4">
                                             <span class="fw-bold text-dark">
-                                                <?php echo htmlspecialchars(mb_strimwidth($row['element_name'], 0, 60, "...")); ?>
+                                                <?php echo htmlspecialchars($row['element_name']); ?>
                                             </span>
-                                        </td>
-                                        
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <small class="fw-bold text-dark"><?php echo htmlspecialchars($row['domain_name']); ?></small>
-                                                <small class="text-muted"><i class="bi bi-arrow-return-right me-1"></i><?php echo htmlspecialchars(mb_strimwidth($row['criteria_name'], 0, 40, "...")); ?></small>
-                                            </div>
                                         </td>
 
                                         <td>

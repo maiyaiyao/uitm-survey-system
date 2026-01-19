@@ -151,8 +151,7 @@ function getStatusBadgeCriteria($status) {
                             <table class="table table-hover align-middle mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="ps-4" style="width: 30%;">Criteria Name</th>
-                                        <th style="width: 20%;">Parent Domain</th>
+                                        <th class="ps-4" style="width: 45%;">Criteria Name</th>
                                         <th class="text-center">Elements</th>
                                         <th>Created</th>
                                         <th>Last Updated</th>
@@ -173,14 +172,6 @@ function getStatusBadgeCriteria($status) {
                                         
                                         <td class="ps-4">
                                             <span class="fw-bold text-dark"><?php echo htmlspecialchars($row['criteria_name']); ?></span>
-                                        </td>
-                                        
-                                        <td>
-                                            <a href="view-criteria.php?id=<?php echo $row['domain_ID']; ?>" class="text-decoration-none" onclick="event.stopPropagation();">
-                                                <span class="badge bg-light text-dark border">
-                                                    <?php echo htmlspecialchars($row['domain_name']); ?>
-                                                </span>
-                                            </a>
                                         </td>
                                         
                                         <td class="text-center">
