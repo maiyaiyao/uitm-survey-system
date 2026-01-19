@@ -158,45 +158,53 @@ if (!function_exists('truncate')) {
                             <li class="breadcrumb-item">
                                 <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($criteria['domain_ID']); ?>"
                                    class="text-decoration-none text-secondary"
-                                   title="Domain: <?php echo htmlspecialchars($criteria['domain_name']); ?>">
-                                   Domain <?php echo htmlspecialchars(truncate($criteria['domain_name'], 20)); ?>
+                                   title="<?php echo htmlspecialchars($criteria['domain_name']); ?>">
+                                   <?php echo htmlspecialchars(truncate($criteria['domain_name'], 20)); ?>
                                 </a>
                             </li>
                             <li class="breadcrumb-item active text-dark">
                                 <a href="view-element.php?id=<?php echo htmlspecialchars($criteria['criteria_ID']); ?>"
                                    class="text-decoration-none text-dark"
-                                   title="Criteria: <?php echo htmlspecialchars($criteria['criteria_name']); ?>">
-                                   Criteria <?php echo htmlspecialchars(truncate($criteria['criteria_name'], 20)); ?>
+                                   title="<?php echo htmlspecialchars($criteria['criteria_name']); ?>">
+                                  <?php echo htmlspecialchars(truncate($criteria['criteria_name'], 20)); ?>
                                 </a>
                             </li>
                         </ol>
                     </nav>
 
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                        <div>
-                            <p class="text-muted mb-2 mt-1 ms-1">
-                                Domain: <span class="fw-semibold"><?php echo htmlspecialchars($criteria['domain_name']); ?></span>
-                            </p>
-
-                            <div class="d-flex align-items-center gap-2">
+                    <div class="bg-white rounded-4 shadow-sm p-4 mb-4 border">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                            
+                            <div class="d-flex align-items-center gap-3">
                                 <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($criteria['domain_ID']); ?>" 
-                                class="btn btn-outline-secondary btn-sm rounded-circle shadow-sm" 
+                                class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" 
+                                style="width: 40px; height: 40px;"
                                 title="Back">
                                     <i class="bi bi-arrow-left"></i>
                                 </a>
-                                <h3 class="fw-bold mb-0">Criteria - <?php echo htmlspecialchars($criteria['criteria_name']); ?></h3>
+
+                                <div>
+                                    <div class="text-uppercase text-muted fw-bold lh-1 mb-1" style="font-size: 0.75rem;">
+                                        Domain: <?php echo htmlspecialchars($criteria['domain_name']); ?>
+                                    </div>
+                                    <h2 class="fw-bold text-dark mb-0 fs-4">
+                                        <?php echo htmlspecialchars($criteria['criteria_name']); ?>
+                                    </h2>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="d-flex gap-2 ms-auto">
-                            <a href="../criteria/edit-criteria.php?id=<?php echo urlencode($criteria_id); ?>" class="btn btn-outline-primary shadow-sm px-3 rounded-3">
-                                <i class="bi bi-pencil me-2"></i>Edit Criteria
-                            </a>
-                            <a href="add-element.php?criteria_id=<?php echo $criteria_id; ?>" 
-                               class="btn btn-primary shadow-sm px-3 rounded-3"
-                               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                <i class="bi bi-plus-lg me-2"></i>Add Element
-                            </a>
+
+                            <div class="d-flex gap-2">
+                                <a href="../criteria/edit-criteria.php?id=<?php echo urlencode($criteria_id); ?>" 
+                                class="btn btn-outline-primary shadow-sm px-3 rounded-3">
+                                    <i class="bi bi-pencil me-2"></i>Edit Criteria
+                                </a>
+                                
+                                <a href="add-element.php?criteria_id=<?php echo $criteria_id; ?>" 
+                                class="btn btn-primary shadow-sm px-3 rounded-3"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                                    <i class="bi bi-plus-lg me-2"></i>Add Element
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -250,10 +258,6 @@ if (!function_exists('truncate')) {
                     </div>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
-                        <div class="card-header bg-white border-bottom py-3 rounded-top-4">
-                            <h5 class="mb-0">Elements List</h5>
-                        </div>
-
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
                                 <thead>

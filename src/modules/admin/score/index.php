@@ -124,40 +124,54 @@ $criteria_name = $element['criteria_name'];
                             <li class="breadcrumb-item">
                                 <a href="../criteria/view-criteria.php?id=<?php echo $element['domain_ID']; ?>" 
                                 class="text-decoration-none text-secondary"
-                                title="Domain: <?php echo htmlspecialchars($element['domain_name']); ?>"> Domain <?php echo htmlspecialchars(truncate($element['domain_name'], 20)); ?>
+                                title="<?php echo htmlspecialchars($element['domain_name']); ?>"><?php echo htmlspecialchars(truncate($element['domain_name'], 20)); ?>
                                 </a>
                             </li>
                             <li class="breadcrumb-item">
                                 <a href="../element/view-element.php?id=<?php echo $element['criteria_ID']; ?>" 
                                 class="text-decoration-none text-secondary"
-                                title="Criteria: <?php echo htmlspecialchars($element['criteria_name']); ?>"> Criteria <?php echo htmlspecialchars(truncate($element['criteria_name'], 20)); ?> 
+                                title="<?php echo htmlspecialchars($element['criteria_name']); ?>"><?php echo htmlspecialchars(truncate($element['criteria_name'], 20)); ?> 
                                 </a>
                             </li>
                             <li class="breadcrumb-item active text-dark" aria-current="page"
-                                title="Element: <?php echo htmlspecialchars($element['element_name']); ?>"> Element <?php echo htmlspecialchars(truncate($element['element_name'], 25)); ?> 
+                                title="<?php echo htmlspecialchars($element['element_name']); ?>"><?php echo htmlspecialchars(truncate($element['element_name'], 25)); ?> 
                             </li>
                         </ol>
                     </nav>
 
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                        <div>
-                            <p class="text-muted mb-0 mt-1 ms-1">
-                                Criteria: <span class="fw-semibold"><?php echo htmlspecialchars($criteria_name); ?></span>
-                            </p>
-                            <div class="d-flex align-items-center gap-2">
-                                <a href="../element/view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>" class="btn btn-outline-secondary btn-sm rounded-circle" title="Back">
+                    <div class="bg-white rounded-4 shadow-sm p-4 mb-4 border">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="../element/view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>" 
+                                class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" 
+                                style="width: 40px; height: 40px;"
+                                title="Back">
                                     <i class="bi bi-arrow-left"></i>
                                 </a>
-                                <h3 class="fw-bold mb-0">Element - <?php echo htmlspecialchars($element['element_name']); ?></h3>
+
+                                <div>
+                                    <div class="text-uppercase text-muted fw-bold lh-1 mb-1" style="font-size: 0.75rem;">
+                                        Criteria: <?php echo htmlspecialchars($criteria_name); ?>
+                                    </div>
+                                    <h2 class="fw-bold text-dark mb-0 fs-4">
+                                        <?php echo htmlspecialchars($element['element_name']); ?>
+                                    </h2>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="d-flex gap-2 ms-auto">
-                            <a href="form-score.php?element_id=<?php echo $element_id; ?>" 
-                               class="btn btn-primary shadow-sm px-3 rounded-3"
-                               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                <i class="bi bi-plus-lg me-2"></i>Add Score
-                            </a>
+
+                            <div class="d-flex gap-2">
+                                <a href="../element/edit-element.php?id=<?php echo urlencode($element_id); ?>" 
+                                class="btn btn-outline-primary shadow-sm px-3 rounded-3">
+                                    <i class="bi bi-pencil me-2"></i>Edit Element
+                                </a>
+
+                                <a href="form-score.php?element_id=<?php echo $element_id; ?>" 
+                                class="btn btn-primary shadow-sm px-3 rounded-3"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                                    <i class="bi bi-plus-lg me-2"></i>Add Score
+                                </a>
+                            </div>
                         </div>
                     </div>
 

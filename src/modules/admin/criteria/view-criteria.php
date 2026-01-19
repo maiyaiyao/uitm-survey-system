@@ -135,30 +135,44 @@ function getStatusBadge($status) {
                             </li>
 
                             <li class="breadcrumb-item active text-dark" aria-current="page" 
-                                title="Domain: <?php echo htmlspecialchars($domain['domain_name']); ?>"> Domain <?php echo htmlspecialchars(truncate($domain['domain_name'], 30)); ?>
+                                title="<?php echo htmlspecialchars($domain['domain_name']); ?>"><?php echo htmlspecialchars(truncate($domain['domain_name'], 30)); ?>
                             </li>
                         </ol>
                     </nav>
 
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
-                        <div>
-                            <div class="d-flex align-items-center gap-2">
-                                <a href="../domain/index.php" class="btn btn-outline-secondary btn-sm rounded-circle" title="Back">
+                    <div class="bg-white rounded-4 shadow-sm p-4 mb-4 border">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+                            
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="../domain/index.php" 
+                                class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" 
+                                style="width: 40px; height: 40px;"
+                                title="Back">
                                     <i class="bi bi-arrow-left"></i>
                                 </a>
-                                <h3 class="fw-bold mb-0">Domain - <?php echo htmlspecialchars($domain['domain_name']); ?></h3>
+
+                                <div>
+                                    <div class="text-uppercase text-muted fw-bold lh-1 mb-1" style="font-size: 0.75rem;">
+                                        Domain
+                                    </div>
+                                    <h2 class="fw-bold text-dark mb-0 fs-4">
+                                        <?php echo htmlspecialchars($domain['domain_name']); ?>
+                                    </h2>
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="d-flex gap-2">
-                            <a href="../domain/edit-domain.php?id=<?php echo urlencode($domain_id); ?>" class="btn btn-outline-primary shadow-sm px-3 rounded-3">
-                                <i class="bi bi-pencil me-2"></i>Edit Domain
-                            </a>
-                            <a href="../criteria/add-criteria.php?domain_id=<?php echo $domain_id; ?>" 
-                               class="btn btn-primary shadow-sm px-3 rounded-3"
-                               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+
+                            <div class="d-flex gap-2">
+                                <a href="../domain/edit-domain.php?id=<?php echo urlencode($domain_id); ?>" 
+                                class="btn btn-outline-primary shadow-sm px-3 rounded-3">
+                                    <i class="bi bi-pencil me-2"></i>Edit
+                                </a>
+
+                                <a href="../criteria/add-criteria.php?domain_id=<?php echo $domain_id; ?>"
+                                class="btn btn-primary shadow-sm px-3 rounded-3"
+                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                 <i class="bi bi-plus-lg me-2"></i>Add Criteria
-                            </a>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -212,10 +226,6 @@ function getStatusBadge($status) {
                     </div>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
-                        <div class="card-header bg-white border-bottom py-3 rounded-top-4">
-                            <h5 class="mb-0">Criteria List</h5>
-                        </div>
-
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0">
                                 <thead>
