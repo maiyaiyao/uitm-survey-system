@@ -134,7 +134,7 @@ $flash = getFlashMessage();
                                 <tbody>
                                     <?php foreach ($all_elements as $row): 
                                         // Row click redirects to the Criteria View where this element belongs
-                                        $redirectUrl = "view-element.php?id=" . $row['criteria_ID'];
+                                        $redirectUrl = "../score/index.php?element_id=" . $row['element_ID'];
                                     ?>
                                     <tr onclick="window.location.href='<?php echo $redirectUrl; ?>';" style="cursor: pointer; transition: background-color 0.2s;">
                                         
