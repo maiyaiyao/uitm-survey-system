@@ -131,12 +131,6 @@ function getStatusBadgeCriteria($status) {
                                     </button>
                                 </div>
                             </form>
-
-                            <a href="add-criteria.php" 
-                            class="btn btn-primary shadow-sm px-4 py-2 rounded-3" 
-                            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                <i class="bi bi-plus-lg me-2"></i>Add Criteria
-                            </a>
                         </div>
 
                     </div>
