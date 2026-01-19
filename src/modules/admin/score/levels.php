@@ -25,6 +25,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $post_id = $_POST['score_id'] ?? null; // ID from hidden input
 
     try {
+        if ($level < 0) {
+            throw new Exception("Score Level cannot be a negative number.");
+        }
+
         if (!empty($post_id)) {
             // === UPDATE ===
             $sql = "UPDATE score SET 
@@ -143,7 +147,7 @@ $levels = $db->fetchAll("SELECT * FROM score ORDER BY score_level ASC");
 
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold text-secondary text-uppercase">Score Level (Number)</label>
-                                            <input type="number" name="score_level" class="form-control" required 
+                                            <input type="number" name="score_level" min ="0" class="form-control" required 
                                                    placeholder="e.g., 6" 
                                                    value="<?php echo $is_edit ? htmlspecialchars($edit_data['score_level']) : ''; ?>">
                                             <div class="form-text">Enter the numeric value for sorting.</div>
