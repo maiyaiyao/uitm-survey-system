@@ -106,7 +106,6 @@ function getStatusBadgeCriteria($status) {
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
-                            <li class="breadcrumb-item"><a href="../domain/index.php" class="text-decoration-none text-secondary">Domain</a></li>
                             <li class="breadcrumb-item active text-dark" aria-current="page">Criteria</li>
                         </ol>
                     </nav>
