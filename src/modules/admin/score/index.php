@@ -156,7 +156,7 @@ $criteria_name = $element['criteria_name'];
                             <a href="form-score.php?element_id=<?php echo $element_id; ?>" 
                                class="btn btn-primary shadow-sm px-3 rounded-3"
                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                <i class="bi bi-plus-lg me-2"></i>Add Description
+                                <i class="bi bi-plus-lg me-2"></i>Add Score
                             </a>
                         </div>
                     </div>
