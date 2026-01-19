@@ -228,14 +228,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                                         else echo 'Element'; 
                                                     ?>
                                                 </label>
-                                                <select name="selected_id" class="form-select" required>
-                                                    <option value="">-- Choose Item --</option>
-                                                    <?php foreach ($availableItems as $item): ?>
-                                                        <option value="<?php echo $item['id']; ?>">
-                                                            <?php echo htmlspecialchars($item['id'] . ' - ' . $item['name']); ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                
+                                                <div class="input-group mb-2">
+                                                    <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                                    <input type="text" id="searchAvailable" class="form-control border-start-0" placeholder="Type to filter list...">
+                                                </div>
+
+                                                <div class="border rounded" style="overflow-x: auto; max-width: 100%;">
+                                                    <select name="selected_id" id="availableSelect" class="form-select border-0" size="8" required style="min-width: 100%; width: max-content;">
+                                                        <option value="" disabled selected>-- Choose Item --</option>
+                                                        <?php foreach ($availableItems as $item): ?>
+                                                            <option value="<?php echo $item['id']; ?>" class="py-1">
+                                                                <?php echo htmlspecialchars($item['id'] . ' - ' . $item['name']); ?>
+                                                            </option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+                                                </div>
                                                 <div class="form-text mt-2">
                                                     Select the internal compliance item to map with this ISO <?php echo $type; ?>.
                                                 </div>
@@ -255,12 +263,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                         <div class="col-lg-7">
                             <div class="card h-100 shadow-sm rounded-4">
-                                <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-                                    <h6 class="mb-0 fw-bold">Current Links</h6>
-                                    <span class="badge bg-light text-dark border"><?php echo count($mappedItems); ?> Item(s)</span>
+                                <div class="card-header bg-white border-bottom py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                    <div class="d-flex align-items-center">
+                                        <h6 class="mb-0 fw-bold me-2">Current Links</h6>
+                                        <span class="badge bg-light text-dark border"><?php echo count($mappedItems); ?></span>
+                                    </div>
+                                    <div class="input-group input-group-sm" style="max-width: 250px;">
+                                        <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
+                                        <input type="text" id="searchMapped" class="form-control border-start-0" placeholder="Search mapped items...">
+                                    </div>
                                 </div>
                                 <div class="table-responsive">
-                                    <table class="table table-hover align-middle mb-0">
+                                    <table class="table table-hover align-middle mb-0" id="mappedTable">
                                         <thead class="bg-light">
                                             <tr>
                                                 <th class="ps-4 text-muted small fw-bold text-uppercase" style="width: 20%">ID</th>
@@ -305,5 +319,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // 1. FILTER AVAILABLE ITEMS (DROPDOWN)
+            const searchInput = document.getElementById('searchAvailable');
+            const selectBox = document.getElementById('availableSelect');
+            
+            if (searchInput && selectBox) {
+                // Store original options to restore them later
+                const originalOptions = Array.from(selectBox.options);
+                
+                searchInput.addEventListener('keyup', function() {
+                    const filter = this.value.toLowerCase();
+                    
+                    // Clear current options
+                    selectBox.innerHTML = '';
+                    
+                    let hasMatch = false;
+                    originalOptions.forEach(option => {
+                        const text = option.text.toLowerCase();
+                        // Always keep the disabled "Choose Item" placeholder or matching items
+                        if (option.disabled || text.includes(filter)) {
+                            selectBox.appendChild(option);
+                            if (!option.disabled) hasMatch = true;
+                        }
+                    });
+
+                    // If no matches, you could optionally add a "No results" placeholder
+                    if (!hasMatch && filter !== '') {
+                        const noResult = document.createElement('option');
+                        noResult.text = "No items match your search";
+                        noResult.disabled = true;
+                        selectBox.appendChild(noResult);
+                    }
+                });
+            }
+
+            // 2. FILTER MAPPED ITEMS (TABLE)
+            const searchMapped = document.getElementById('searchMapped');
+            const mappedTable = document.getElementById('mappedTable');
+
+            if (searchMapped && mappedTable) {
+                searchMapped.addEventListener('keyup', function() {
+                    const filter = this.value.toLowerCase();
+                    const rows = mappedTable.querySelectorAll('tbody tr');
+
+                    rows.forEach(row => {
+                        // Skip if it's the "No mappings found" row
+                        if (row.querySelector('td[colspan]')) return;
+
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(filter) ? '' : 'none';
+                    });
+                });
+            }
+        });
+    </script>
 </body>
 </html>
