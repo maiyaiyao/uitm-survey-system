@@ -159,22 +159,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email_list = preg_split('/[\s,]+/', $post_data['allowed_emails'], -1, PREG_SPLIT_NO_EMPTY);
         $email_list = array_unique($email_list);
         
-        // A. Resolve submitted emails to User IDs
         $new_user_ids = [];
         $not_found_emails = [];
-        $sql_find_user = "SELECT user_ID FROM user WHERE primary_email = :email LIMIT 1";
-        
-        foreach ($email_list as $email) {
-            $email = trim($email);
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) continue;
+
+        // --- NEW LOGIC START: Check for special "*ALL*" token ---
+        if (in_array('*ALL*', $email_list)) {
+            // Fetch ALL active user IDs from the database
+            $all_active_users = $db->fetchAll("SELECT user_ID FROM user WHERE status = 'Active'");
+            $new_user_ids = array_column($all_active_users, 'user_ID');
+        } else {
+            // Standard behavior: Resolve individual emails
+            $sql_find_user = "SELECT user_ID FROM user WHERE primary_email = :email LIMIT 1";
             
-            $u = $db->fetchOne($sql_find_user, [':email' => $email]);
-            if ($u) {
-                $new_user_ids[] = $u['user_ID'];
-            } else {
-                $not_found_emails[] = $email;
+            foreach ($email_list as $email) {
+                $email = trim($email);
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) continue;
+                
+                $u = $db->fetchOne($sql_find_user, [':email' => $email]);
+                if ($u) {
+                    $new_user_ids[] = $u['user_ID'];
+                } else {
+                    $not_found_emails[] = $email;
+                }
             }
         }
+        // --- NEW LOGIC END ---
         
         // B. Fetch Current Participants (Only needed for Edit mode)
         $current_user_ids = [];
@@ -494,11 +503,37 @@ $flash = getFlashMessage();
 
             function renderChips() {
                 container.querySelectorAll('.email-chip').forEach(c => c.remove());
+
+                // NEW: Check for the special "All Users" flag
+                if (emails.includes('*ALL*')) {
+                    input.style.display = 'none'; // Hide the text input
+                    const chip = document.createElement('div');
+                    chip.className = 'email-chip bg-primary text-white pe-3'; // Special styling
+                    chip.innerHTML = `<span><i class="bi bi-people-fill me-2"></i>All Active Users</span><button type="button" class="btn-close btn-close-white ms-2"></button>`;
+                    
+                    // Logic to remove "All Users"
+                    chip.querySelector('.btn-close').addEventListener('click', (e) => { 
+                        e.stopPropagation(); 
+                        emails = []; // Clear the list
+                        renderChips(); 
+                        updateHiddenInput(); 
+                    });
+                    container.insertBefore(chip, input);
+                    return; // Stop here, don't render other emails
+                }
+
+                // Standard behavior (if "All Users" is NOT selected)
+                input.style.display = 'block'; 
                 emails.forEach((email, index) => {
                     const chip = document.createElement('div');
                     chip.className = 'email-chip';
                     chip.innerHTML = `<span>${email}</span><button type="button" class="btn-close btn-close-white ms-2"></button>`;
-                    chip.querySelector('.btn-close').addEventListener('click', (e) => { e.stopPropagation(); emails.splice(index, 1); renderChips(); updateHiddenInput(); });
+                    chip.querySelector('.btn-close').addEventListener('click', (e) => { 
+                        e.stopPropagation(); 
+                        emails.splice(index, 1); 
+                        renderChips(); 
+                        updateHiddenInput(); 
+                    });
                     container.insertBefore(chip, input);
                 });
             }
@@ -540,16 +575,21 @@ $flash = getFlashMessage();
             });
             document.addEventListener('click', (e) => { if(!container.contains(e.target)) suggestionList.style.display = 'none'; });
 
-            // Add All Users
+            // Add All Users (UPDATED)
             if (addAllBtn) {
                 addAllBtn.addEventListener('click', function() {
-                    if (!confirm('Add ALL active users?')) return;
-                    this.textContent = 'Processing...';
-                    fetch('search_users.php?all=1').then(r => r.json()).then(data => {
-                        emails = data.map(u => u.primary_email);
-                        renderChips(); updateHiddenInput();
-                        this.textContent = 'Add All Active Users';
-                    });
+                    // Check if already added
+                    if (emails.includes('*ALL*')) return;
+
+                    // Confirmation
+                    if (!confirm('Add ALL active users? This will clear any currently selected individual users.')) return;
+                    
+                    // Set the special flag
+                    emails = ['*ALL*'];
+                    
+                    // Update UI and Hidden Input
+                    renderChips(); 
+                    updateHiddenInput();
                 });
             }
         });
