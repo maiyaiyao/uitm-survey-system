@@ -10,8 +10,6 @@ $search = $_GET['search'] ?? '';
 $params = [];
 
 // --- 1. SQL Query Update ---
-// Added GROUP_CONCAT to fetch the list of criteria names separated by '|||'
-// --- 1. SQL Query Update ---
 $sql = "
     SELECT d.*, 
            uc.full_name AS created_by_name,
@@ -233,11 +231,19 @@ function getStatusBadgeDomain($status) {
                                         </td>
                                         
                                         <td class="text-center pe-4" onclick="event.stopPropagation();">
+                                            
+                                            <a href="../criteria/view-criteria.php?id=<?php echo $row['domain_ID']; ?>" 
+                                               class="btn btn-sm btn-link <?php echo $isActive ? 'text-info' : 'text-secondary'; ?> px-2" 
+                                               title="View Criteria"
+                                               onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before viewing details.'); return false;" : ""; ?>">
+                                                <i class="bi bi-eye fs-6"></i>
+                                            </a>
+
                                             <a href="edit-domain.php?id=<?php echo $row['domain_ID']; ?>" 
-                                                class="btn btn-sm btn-link <?php echo $isActive ? 'text-primary' : 'text-secondary'; ?> px-2" 
-                                                title="Edit Domain"
-                                                onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before editing.'); return false;" : ""; ?>">
-                                                    <i class="bi bi-pencil-square fs-6"></i>
+                                               class="btn btn-sm btn-link <?php echo $isActive ? 'text-primary' : 'text-secondary'; ?> px-2" 
+                                               title="Edit Domain"
+                                               onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before editing.'); return false;" : ""; ?>">
+                                                <i class="bi bi-pencil-square fs-6"></i>
                                             </a>
 
                                             <button class="btn btn-sm btn-link text-<?php echo $isActive ? 'danger' : 'success'; ?> px-2" 
@@ -296,8 +302,6 @@ function getStatusBadgeDomain($status) {
                                                         <?php endif; ?>
                                                     </div>
 
-                                                    
-
                                                     <div class="row g-2 mt-3 pt-3 border-top">
                                                         <div class="col-6">
                                                             <small class="text-muted d-block" style="font-size: 0.7rem;">CREATED BY</small>
@@ -324,40 +328,35 @@ function getStatusBadgeDomain($status) {
                                                     </div>
 
                                                 </div>
-                                               <div class="modal-footer border-top-0 pt-0 px-4 pb-4 d-flex justify-content-between align-items-center">
-    <div>
-        <?php if ($row['usage_count'] == 0): ?>
-            <button type="button" class="btn btn-outline-danger rounded-3 px-3" 
-                    onclick="deleteDomain('<?php echo $row['domain_ID']; ?>')">
-                <i class="bi bi-trash me-2"></i>Delete
-            </button>
-        <?php else: ?>
-            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Cannot delete: Associated with completed surveys">
-                <button class="btn btn-outline-danger rounded-3 px-3" disabled>
-                    <i class="bi bi-trash me-2"></i>Delete
-                </button>
-            </span>
-        <?php endif; ?>
-    </div>
+                                                <div class="modal-footer border-top-0 pt-0 px-4 pb-4 d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <?php if ($row['usage_count'] == 0): ?>
+                                                            <button type="button" class="btn btn-outline-danger rounded-3 px-3" 
+                                                                    onclick="deleteDomain('<?php echo $row['domain_ID']; ?>')">
+                                                                <i class="bi bi-trash me-2"></i>Delete
+                                                            </button>
+                                                        <?php else: ?>
+                                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Cannot delete: Associated with completed surveys">
+                                                                <button class="btn btn-outline-danger rounded-3 px-3" disabled>
+                                                                    <i class="bi bi-trash me-2"></i>Delete
+                                                                </button>
+                                                            </span>
+                                                        <?php endif; ?>
+                                                    </div>
 
-    <div class="d-flex gap-2">
-        <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Close</button>
-        
-        <a href="../criteria/add-criteria.php?domain_id=<?php echo $row['domain_ID']; ?>" 
-           class="btn btn-outline-primary shadow-sm px-3 py-2 rounded-3 d-flex align-items-center"
-           title="Add new criteria to this domain"
-           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before adding criteria.'); return false;" : ""; ?>">
-            <i class="bi bi-plus-lg me-2"></i>Add Criteria
-        </a>
+                                                    <div class="d-flex gap-2">
+                                                        <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Close</button>
+                                                        
+                                                        
 
-        <a href="edit-domain.php?id=<?php echo $row['domain_ID']; ?>" 
-           class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
-           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;" 
-           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before editing.'); return false;" : ""; ?>">
-            Edit
-        </a>
-    </div>
-</div>
+                                                        <a href="edit-domain.php?id=<?php echo $row['domain_ID']; ?>" 
+                                                           class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
+                                                           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;" 
+                                                           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before editing.'); return false;" : ""; ?>">
+                                                            Edit
+                                                        </a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

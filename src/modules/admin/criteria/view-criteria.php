@@ -133,97 +133,88 @@ function getStatusBadge($status) {
                             <li class="breadcrumb-item">
                                 <a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a>
                             </li>
-
+                            <li class="breadcrumb-item">
+                                <a href="../domain/index.php" class="text-decoration-none text-secondary">Domain</a>
+                            </li>
                             <li class="breadcrumb-item active text-dark" aria-current="page" 
                                 title="<?php echo htmlspecialchars($domain['domain_name']); ?>"><?php echo htmlspecialchars(truncate($domain['domain_name'], 30)); ?>
                             </li>
                         </ol>
                     </nav>
 
-                    <div class="bg-white rounded-4 shadow-sm p-4 mb-4 border">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                            
-                            <div class="d-flex align-items-center gap-3">
-                                <a href="../domain/index.php" 
-                                class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" 
-                                style="width: 40px; height: 40px;"
-                                title="Back">
-                                    <i class="bi bi-arrow-left"></i>
-                                </a>
+                    <!-- Header Section -->
+<div class="bg-white rounded-3 shadow-sm p-4 mb-4">
+    <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+        <!-- Left: Back Button + Title -->
+        <div class="d-flex align-items-center gap-3">
+            <a href="../domain/index.php" 
+               class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0" 
+               style="width: 40px; height: 40px;"
+               title="Back to Domains">
+                <i class="bi bi-arrow-left"></i>
+            </a>
 
-                                <div>
-                                    <div class="text-uppercase text-muted fw-bold lh-1 mb-1" style="font-size: 0.75rem;">
-                                        Domain
-                                    </div>
-                                    <h2 class="fw-bold text-dark mb-0 fs-4">
-                                        <?php echo htmlspecialchars($domain['domain_name']); ?>
-                                    </h2>
-                                </div>
-                            </div>
+            <div>
+                <div class="text-muted small mb-1">
+                    Domain
+                </div>
+                <h1 class="h4 fw-bold mb-0">
+                    <?php echo htmlspecialchars($domain['domain_name']); ?>
+                </h1>
+            </div>
+        </div>
 
-                            <div class="d-flex gap-2">
-                                <a href="../domain/edit-domain.php?id=<?php echo urlencode($domain_id); ?>" 
-                                class="btn btn-outline-primary shadow-sm px-3 rounded-3">
-                                    <i class="bi bi-pencil me-2"></i>Edit
-                                </a>
+        <!-- Right: Action Buttons -->
+        <div class="d-flex gap-2 flex-shrink-0">
+            <a href="../domain/edit-domain.php?id=<?php echo urlencode($domain_id); ?>" 
+               class="btn btn-outline-secondary">
+                <i class="bi bi-pencil"></i>
+                <span class="d-none d-sm-inline ms-1">Edit</span>
+            </a>
 
-                                <a href="../criteria/add-criteria.php?domain_id=<?php echo $domain_id; ?>"
-                                class="btn btn-primary shadow-sm px-3 rounded-3"
-                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                <i class="bi bi-plus-lg me-2"></i>Add Criteria
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <a href="../criteria/add-criteria.php?domain_id=<?php echo $domain_id; ?>"
+               class="btn btn-primary shadow-sm px-3 rounded-3"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                <i class="bi bi-plus-lg"></i>
+                <span class="d-none d-sm-inline ms-1">Add Criteria</span>
+            </a>
+        </div>
+    </div>
 
-                    <?php if ($flash): ?>
-                        <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show border-0 shadow-sm mb-4">
-                            <?php echo $flash['message']; ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
+    <!-- Stats Grid -->
+    <div class="row g-3">
+        <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Total Criteria</div>
+                <div class="h5 fw-bold mb-0"><?php echo count($criteria); ?></div>
+            </div>
+        </div>
 
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Total Criteria</div>
-                                        <div class="stat-card-value"><?php echo count($criteria); ?></div>
-                                    </div>
-                                    <div class="stat-icon bg-primary-subtle text-primary">
-                                        <i class="bi bi-list-check"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Total Elements</div>
-                                        <div class="stat-card-value"><?php echo array_sum(array_column($criteria, 'element_count')); ?></div>
-                                    </div>
-                                    <div class="stat-icon bg-info-subtle text-info">
-                                        <i class="bi bi-layers"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Domain Status</div>
-                                        <div class="mt-1"><?php echo getStatusBadge($domain['status']); ?></div>
-                                    </div>
-                                    <div class="stat-icon bg-warning-subtle text-warning">
-                                        <i class="bi bi-shield-check"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Total Elements</div>
+                <div class="h5 fw-bold mb-0"><?php echo array_sum(array_column($criteria, 'element_count')); ?></div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Status</div>
+                <div class="fw-semibold">
+                    <?php echo getStatusBadge($domain['status']); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flash Message -->
+<?php if ($flash): ?>
+    <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show mb-4">
+        <?php echo $flash['message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
                         <div class="table-responsive">

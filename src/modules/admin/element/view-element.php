@@ -155,6 +155,7 @@ if (!function_exists('truncate')) {
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
+                            <li class="breadcrumb-item"><a href="../domain/index.php" class="text-decoration-none text-secondary">Domain</a></li>
                             <li class="breadcrumb-item">
                                 <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($criteria['domain_ID']); ?>"
                                    class="text-decoration-none text-secondary"
@@ -162,6 +163,7 @@ if (!function_exists('truncate')) {
                                    <?php echo htmlspecialchars(truncate($criteria['domain_name'], 20)); ?>
                                 </a>
                             </li>
+                            <li class="breadcrumb-item"><a href="../criteria/index.php" class="text-decoration-none text-secondary">Criteria</a></li>
                             <li class="breadcrumb-item active text-dark">
                                 <a href="view-element.php?id=<?php echo htmlspecialchars($criteria['criteria_ID']); ?>"
                                    class="text-decoration-none text-dark"
@@ -172,90 +174,77 @@ if (!function_exists('truncate')) {
                         </ol>
                     </nav>
 
-                    <div class="bg-white rounded-4 shadow-sm p-4 mb-4 border">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                            
-                            <div class="d-flex align-items-center gap-3">
-                                <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($criteria['domain_ID']); ?>" 
-                                class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" 
-                                style="width: 40px; height: 40px;"
-                                title="Back">
-                                    <i class="bi bi-arrow-left"></i>
-                                </a>
+                    <!-- Header Section -->
+<div class="bg-white rounded-3 shadow-sm p-4 mb-4">
+    <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+        <!-- Left: Back Button + Title -->
+        <div class="d-flex align-items-center gap-3">
+            <a href="../criteria/index.php" 
+               class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0" 
+               style="width: 40px; height: 40px;"
+               title="Back to Criteria">
+                <i class="bi bi-arrow-left"></i>
+            </a>
 
-                                <div>
-                                    <div class="text-uppercase text-muted fw-bold lh-1 mb-1" style="font-size: 0.75rem;">
-                                        Domain: <?php echo htmlspecialchars($criteria['domain_name']); ?>
-                                    </div>
-                                    <h2 class="fw-bold text-dark mb-0 fs-4">
-                                        <?php echo htmlspecialchars($criteria['criteria_name']); ?>
-                                    </h2>
-                                </div>
-                            </div>
+            <div>
+                <div class="text-muted small mb-1">
+                    <?php echo htmlspecialchars($criteria['domain_name']); ?>
+                </div>
+                <h1 class="h4 fw-bold mb-0">
+                    <?php echo htmlspecialchars($criteria['criteria_name']); ?>
+                </h1>
+            </div>
+        </div>
 
-                            <div class="d-flex gap-2">
-                                <a href="../criteria/edit-criteria.php?id=<?php echo urlencode($criteria_id); ?>" 
-                                class="btn btn-outline-primary shadow-sm px-3 rounded-3">
-                                    <i class="bi bi-pencil me-2"></i>Edit Criteria
-                                </a>
-                                
-                                <a href="add-element.php?criteria_id=<?php echo $criteria_id; ?>" 
-                                class="btn btn-primary shadow-sm px-3 rounded-3"
-                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                    <i class="bi bi-plus-lg me-2"></i>Add Element
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+        <!-- Right: Action Buttons -->
+        <div class="d-flex gap-2 flex-shrink-0">
+            <a href="../criteria/edit-criteria.php?id=<?php echo urlencode($criteria_id); ?>" 
+               class="btn btn-outline-secondary">
+                <i class="bi bi-pencil"></i>
+                <span class="d-none d-sm-inline ms-1">Edit</span>
+            </a>
 
-                    <?php if ($flash): ?>
-                        <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show border-0 shadow-sm mb-4">
-                            <?php echo $flash['message']; ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
+            <a href="add-element.php?criteria_id=<?php echo $criteria_id; ?>" 
+               class="btn btn-primary shadow-sm px-3 rounded-3"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                <i class="bi bi-plus-lg"></i>
+                <span class="d-none d-sm-inline ms-1">Add Element</span>
+            </a>
+        </div>
+    </div>
 
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Total Elements</div>
-                                        <div class="stat-card-value"><?php echo $total_elements; ?></div>
-                                    </div>
-                                    <div class="stat-icon bg-primary-subtle text-primary">
-                                        <i class="bi bi-card-checklist"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Active Elements</div>
-                                        <div class="stat-card-value"><?php echo $active_elements; ?></div>
-                                    </div>
-                                    <div class="stat-icon bg-success-subtle text-success">
-                                        <i class="bi bi-check-circle"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Inactive Elements</div>
-                                        <div class="stat-card-value"><?php echo $inactive_elements; ?></div>
-                                    </div>
-                                    <div class="stat-icon bg-danger-subtle text-danger">
-                                        <i class="bi bi-dash-circle"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Stats Grid -->
+    <div class="row g-3">
+        <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Total Elements</div>
+                <div class="h5 fw-bold mb-0"><?php echo $total_elements; ?></div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Active Elements</div>
+                <div class="h5 fw-bold mb-0 text-success"><?php echo $active_elements; ?></div>
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Inactive Elements</div>
+                <div class="h5 fw-bold mb-0 text-danger"><?php echo $inactive_elements; ?></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Flash Message -->
+<?php if ($flash): ?>
+    <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show mb-4">
+        <?php echo $flash['message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
                         <div class="table-responsive">

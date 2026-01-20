@@ -114,96 +114,108 @@ $criteria_name = $element['criteria_name'];
 
                     <nav aria-label="breadcrumb" class="mb-4">
                         <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li> 
+                            <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
+                            
+                            <li class="breadcrumb-item"><a href="../domain/index.php" class="text-decoration-none text-secondary">Domain</a></li>
                             <li class="breadcrumb-item">
-                                <a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a>
+                                <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($element['domain_ID']); ?>"
+                                class="text-decoration-none text-secondary"
+                                title="<?php echo htmlspecialchars($element['domain_name']); ?>">
+                                <?php echo htmlspecialchars(truncate($element['domain_name'], 20)); ?>
+                                </a>
                             </li>
                             
+                            <li class="breadcrumb-item"><a href="../criteria/index.php" class="text-decoration-none text-secondary">Criteria</a></li>
                             <li class="breadcrumb-item">
-                                <a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a>
+                                <a href="../element/view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>"
+                                class="text-decoration-none text-secondary"
+                                title="<?php echo htmlspecialchars($element['criteria_name']); ?>">
+                                <?php echo htmlspecialchars(truncate($element['criteria_name'], 20)); ?>
+                                </a>
                             </li>
-                            <li class="breadcrumb-item">
-                                <a href="../element/index.php" class="text-decoration-none text-secondary">Element</a>
-                            </li>
+                            
+                            <li class="breadcrumb-item"><a href="../element/index.php" class="text-decoration-none text-secondary">Element</a></li>
                             <li class="breadcrumb-item active text-dark" aria-current="page"
                                 title="<?php echo htmlspecialchars($element['element_name']); ?>">Score Levels 
                             </li>
                         </ol>
                     </nav>
 
-<!-- Header Section -->
-<div class="bg-white rounded-3 shadow-sm p-4 mb-4">
-    <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
-        <!-- Left: Back Button + Title -->
-        <div class="d-flex align-items-center gap-3">
-            <a href="../element/index.php" 
-               class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0" 
-               style="width: 40px; height: 40px;"
-               title="Back to Criteria">
-                <i class="bi bi-arrow-left"></i>
-            </a>
+                    <!-- Header Section -->
+                    <div class="bg-white rounded-3 shadow-sm p-4 mb-4">
+                        <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+                            <!-- Left: Back Button + Title -->
+                            <div class="d-flex align-items-center gap-3">
+                                <a href="../element/index.php" 
+                                class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0" 
+                                style="width: 40px; height: 40px;"
+                                title="Back to Criteria">
+                                    <i class="bi bi-arrow-left"></i>
+                                </a>
 
-            <div>
-                <div class="text-muted small mb-1">
-                    <?php echo htmlspecialchars($criteria_name); ?>
-                </div>
-                <h1 class="h4 fw-bold mb-0">
-                    <?php echo htmlspecialchars($element['element_name']); ?>
-                </h1>
-            </div>
-        </div>
+                                <div>
+                                    <div class="text-muted small mb-1">
+                                        <?php echo htmlspecialchars($criteria_name); ?>
+                                    </div>
+                                    <h1 class="h4 fw-bold mb-0">
+                                        <?php echo htmlspecialchars($element['element_name']); ?>
+                                    </h1>
+                                </div>
+                            </div>
 
-        <!-- Right: Action Buttons -->
-        <div class="d-flex gap-2 flex-shrink-0">
-            <a href="../element/edit-element.php?id=<?php echo urlencode($element_id); ?>" 
-               class="btn btn-outline-secondary">
-                <i class="bi bi-pencil"></i>
-                <span class="d-none d-sm-inline ms-1">Edit</span>
-            </a>
+                            <!-- Right: Action Buttons -->
+                            <div class="d-flex gap-2 flex-shrink-0">
+                                <a href="../element/edit-element.php?id=<?php echo urlencode($element_id); ?>" 
+                                class="btn btn-outline-secondary">
+                                    <i class="bi bi-pencil"></i>
+                                    <span class="d-none d-sm-inline ms-1">Edit</span>
+                                </a>
 
-            <a href="form-score.php?element_id=<?php echo $element_id; ?>" 
-              class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
-                               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                <i class="bi bi-plus-lg"></i>
-                <span class="d-none d-sm-inline ms-1">Add Score</span>
-            </a>
-        </div>
-    </div>
+                                <a href="form-score.php?element_id=<?php echo $element_id; ?>" 
+                                class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
+                                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                                    <i class="bi bi-plus-lg"></i>
+                                    <span class="d-none d-sm-inline ms-1">Add Score</span>
+                                </a>
+                            </div>
+                        </div>
 
-    <!-- Stats Grid -->
-    <div class="row g-3">
-        <div class="col-sm-6">
-            <div class="p-3 bg-light rounded-2">
-                <div class="text-muted small mb-1">Total Definitions</div>
-                <div class="h5 fw-bold mb-0"><?php echo $total_scores_defined; ?></div>
-            </div>
-        </div>
+                        <!-- Stats Grid -->
+                        <div class="row g-3">
+                            <div class="col-sm-6">
+                                <div class="p-3 bg-light rounded-2">
+                                    <div class="text-muted small mb-1">Total Definitions</div>
+                                    <div class="h5 fw-bold mb-0"><?php echo $total_scores_defined; ?></div>
+                                </div>
+                            </div>
 
-        <div class="col-sm-6">
-            <div class="p-3 bg-light rounded-2">
-                <div class="text-muted small mb-1">Status</div>
-                <div class="fw-semibold">
-                    <?php if ($element_status === 'Active'): ?>
-                        <span class="badge bg-success-subtle text-success border-0">
-                            <i class="bi bi-check-circle me-1"></i>Active
-                        </span>
-                    <?php else: ?>
-                        <span class="badge bg-danger-subtle text-danger border-0">
-                            <i class="bi bi-x-circle me-1"></i>Inactive
-                        </span>
+                            <div class="col-sm-6">
+                                <div class="p-3 bg-light rounded-2">
+                                    <div class="text-muted small mb-1">Status</div>
+                                    <div class="fw-semibold">
+                                        <?php if ($element_status === 'Active'): ?>
+                                            <span class="badge bg-success-subtle text-success border-0">
+                                                <i class="bi bi-check-circle me-1"></i>Active
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="badge bg-danger-subtle text-danger border-0">
+                                                <i class="bi bi-x-circle me-1"></i>Inactive
+                                            </span>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Flash Message -->
+                    <?php if ($flash): ?>
+                        <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show mb-4">
+                            <?php echo $flash['message']; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
                     <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Flash Message -->
-<?php if ($flash): ?>
-    <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show mb-4">
-        <?php echo $flash['message']; ?>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-<?php endif; ?>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
                         <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
