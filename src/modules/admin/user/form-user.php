@@ -276,7 +276,7 @@ $flash = getFlashMessage();
                                                 <label class="form-label">Company Phone</label>
                                                 <input type="text" class="form-control" name="user_phone_company" 
                                                     placeholder="Optional"
-                                                    value="<?php echo htmlspecialchars($user_data['user_phone_company']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['user_phone_company'] ?? ''); ?>">
                                             </div>
                                         </div>
 
