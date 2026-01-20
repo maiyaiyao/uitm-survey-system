@@ -22,7 +22,10 @@ if ($edit_id) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $level = sanitize($_POST['score_level']);
     $desc = sanitize($_POST['desc_level']);
-    $post_id = $_POST['score_id'] ?? null; // ID from hidden input
+    $post_id = $_POST['score_id'] ?? null;
+    
+    // Capture status, default to 'Active' if not provided (e.g. during Insert)
+    $status = sanitize($_POST['status'] ?? 'Active'); 
 
     try {
         if ($level < 0) {
@@ -31,9 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!empty($post_id)) {
             // === UPDATE ===
+            // Added 'status = :status' to the SQL
             $sql = "UPDATE score SET 
                     score_level = :lvl, 
                     desc_level = :desc, 
+                    status = :status, 
                     updated_id = :uid, 
                     updated_at = NOW() 
                     WHERE score_ID = :id";
@@ -41,20 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->query($sql, [
                 ':lvl' => $level,
                 ':desc' => $desc,
+                ':status' => $status,
                 ':uid' => $current_user['user_ID'],
                 ':id' => $post_id
             ]);
             setFlashMessage('success', "Score Level updated successfully.");
         } else {
             // === INSERT ===
-            // Check if level already exists to prevent duplicates
-            $exists = $db->fetchOne("SELECT score_ID FROM score WHERE score_level = :lvl AND status = 'Active'", [':lvl' => $level]);
-            if ($exists) {
-                throw new Exception("Score Level $level already exists.");
-            }
-
+            // Status defaults to 'Active' in the query structure below
             $db->query("INSERT INTO score (score_level, desc_level, input_id, input_at, status) VALUES (?, ?, ?, NOW(), 'Active')", 
-                [$level, $desc, $current_user['user_ID']]);
+                [$level, $desc, $current_user['user_ID']]);    
             setFlashMessage('success', 'New Global Level added successfully.');
         }
         
@@ -147,19 +148,30 @@ $levels = $db->fetchAll("SELECT * FROM score ORDER BY score_level ASC");
 
                                         <div class="mb-3">
                                             <label class="form-label small fw-bold text-secondary text-uppercase">Score Level (Number)</label>
-                                            <input type="number" name="score_level" min ="0" class="form-control" required 
-                                                   placeholder="e.g., 6" 
-                                                   value="<?php echo $is_edit ? htmlspecialchars($edit_data['score_level']) : ''; ?>">
+                                            <input type="number" name="score_level" min="0" class="form-control" required 
+                                                placeholder="e.g., 6" 
+                                                value="<?php echo $is_edit ? htmlspecialchars($edit_data['score_level']) : ''; ?>">
                                             <div class="form-text">Enter the numeric value for sorting.</div>
                                         </div>
                                         
                                         <div class="mb-4">
                                             <label class="form-label small fw-bold text-secondary text-uppercase">Description</label>
                                             <input type="text" name="desc_level" class="form-control" required 
-                                                   placeholder="e.g., Advanced" 
-                                                   value="<?php echo $is_edit ? htmlspecialchars($edit_data['desc_level']) : ''; ?>">
+                                                placeholder="e.g., Advanced" 
+                                                value="<?php echo $is_edit ? htmlspecialchars($edit_data['desc_level']) : ''; ?>">
                                             <div class="form-text">The label displayed to users.</div>
                                         </div>
+
+                                        <?php if ($is_edit): ?>
+                                        <div class="mb-4">
+                                            <label class="form-label small fw-bold text-secondary text-uppercase">Status</label>
+                                            <select name="status" class="form-select">
+                                                <option value="Active" <?php echo ($edit_data['status'] === 'Active') ? 'selected' : ''; ?>>Active</option>
+                                                <option value="Inactive" <?php echo ($edit_data['status'] !== 'Active') ? 'selected' : ''; ?>>Inactive</option>
+                                            </select>
+                                            <div class="form-text">Deactivating hides this level from future selections.</div>
+                                        </div>
+                                        <?php endif; ?>
                                         
                                         <div class="d-grid gap-2">
                                             <button type="submit" class="btn btn-gradient-success shadow-sm py-2 rounded-3">
