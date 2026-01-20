@@ -9,13 +9,24 @@ $db = new Database();
 $search = $_GET['search'] ?? '';
 $params = [];
 
-// Base SQL query
+// --- 1. SQL Query Update ---
+// Added GROUP_CONCAT to fetch the list of criteria names separated by '|||'
+// --- 1. SQL Query Update ---
 $sql = "
     SELECT d.*, 
            uc.full_name AS created_by_name,
            uu.full_name AS updated_by_name,
+           GROUP_CONCAT(DISTINCT c.criteria_name ORDER BY c.criteria_name SEPARATOR '|||') as criteria_list,
            COUNT(DISTINCT c.criteria_ID) as criteria_count,
-           COUNT(DISTINCT e.element_ID) as element_count
+           COUNT(DISTINCT e.element_ID) as element_count,
+           
+           /* CHECK USAGE FOR DELETE BUTTON */
+           (SELECT COUNT(*) 
+            FROM response r 
+            JOIN element el ON r.element_id = el.element_id 
+            JOIN criteria cr ON el.criteria_id = cr.criteria_id 
+            WHERE cr.domain_ID = d.domain_ID) as usage_count
+
     FROM domain d
     LEFT JOIN user uc ON d.input_id = uc.user_ID
     LEFT JOIN user uu ON d.updated_id = uu.user_ID
@@ -48,12 +59,13 @@ function getStatusBadgeDomain($status) {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domain Management - <?php echo APP_NAME; ?></title>
+    <title>All Domain - <?php echo APP_NAME; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -61,10 +73,15 @@ function getStatusBadgeDomain($status) {
         html, body { 
             height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; 
         }
-        /* Table Styles */
+        .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
+        @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
+
+        /* Card & Table Styles */
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); }
+        
         .table th {
             font-weight: 700;
-            background-color: #9d83b7ff;
+            background-color: #9d83b7ff; /* Purple Header */
             border-bottom: 2px solid #f0f2f5;
             color: black;
             text-transform: uppercase;
@@ -74,40 +91,14 @@ function getStatusBadgeDomain($status) {
         .table td {
             padding: 1rem;
             vertical-align: middle;
-            color: #000000ff;
+            color: #67748e;
             font-size: 0.875rem;
         }
         .table-hover tbody tr:hover {
             background-color: #f8f9fa;
         }
-        
-        /* Stat Cards */
-        .stat-card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-            transition: transform 0.2s;
-            background: white;
-        }
-        .stat-card:hover {
-            transform: translateY(-3px);
-        }
-        
-        /* Icon Boxes */
-        .icon-shape {
-            width: 48px;
-            height: 48px;
-            background-position: center;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .icon-shape i {
-            font-size: 1.25rem;
-        }
-        
-        /* Avatar / User Text */
+
+        /* Avatar / User Text (Audit Info) */
         .user-meta {
             display: flex;
             flex-direction: column;
@@ -121,22 +112,6 @@ function getStatusBadgeDomain($status) {
             font-size: 0.75rem;
             color: #adb5bd;
         }
-
-        .alert-error {
-            color: #842029;
-            background-color: #f8d7da;
-            border-color: #f5c2c7;
-        }
-
-        /* Optional: Add a subtle slide-down animation */
-        .alert {
-            animation: slideDown 0.5s ease-out;
-        }
-        @keyframes slideDown {
-            from { transform: translateY(-20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
     </style>
 </head>
 <body>
@@ -158,7 +133,7 @@ function getStatusBadgeDomain($status) {
                         </ol>
                     </nav>
 
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                         <div>
                             <h3 class="fw-bold mb-1">All Domains</h3>
                             <p class="text-muted mb-0">All Domain in this system</p>
@@ -168,22 +143,17 @@ function getStatusBadgeDomain($status) {
                             <form method="GET" class="d-flex">
                                 <div class="input-group shadow-sm">
                                     <input type="text" name="search" class="form-control border-0" 
-                                        placeholder="Search domains..." 
-                                        value="<?php echo htmlspecialchars($search); ?>" 
-                                        aria-label="Search domains">
+                                           placeholder="Search domains..." 
+                                           value="<?php echo htmlspecialchars($search); ?>">
                                     <button class="btn btn-white border-0 bg-white" type="submit">
                                         <i class="bi bi-search text-primary"></i>
                                     </button>
-                                    <?php if(!empty($search)): ?>
-                                        <a href="index.php" class="btn btn-white border-0 bg-white" title="Clear Search">
-                                            <i class="bi bi-x-circle text-secondary"></i>
-                                        </a>
-                                    <?php endif; ?>
                                 </div>
                             </form>
 
                             <a href="add-domain.php" 
-                                class="btn btn-primary shadow-sm px-4 py-2 rounded-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                               class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
+                               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                 <i class="bi bi-plus-lg me-2"></i>Add Domain
                             </a>
                         </div>
@@ -205,7 +175,7 @@ function getStatusBadgeDomain($status) {
                             <table class="table table-hover align-middle mb-0">
                                 <thead>
                                     <tr>
-                                        <th class="ps-4" style="width: 45%;">Domain Name</th>
+                                        <th class="ps-4" style="width: 40%;">Domain Name</th>
                                         <th class="text-center">Structure</th>
                                         <th>Created</th>
                                         <th>Last Updated</th>
@@ -214,65 +184,183 @@ function getStatusBadgeDomain($status) {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($domains as $domain): 
-                                        // Row click logic from previous request
-                                        $viewLink = "../criteria/view-criteria.php?id=" . $domain['domain_ID'];
-                                        $isActive = $domain['status'] === 'Active';
+                                    <?php foreach ($domains as $row): 
+                                        $isActive = $row['status'] === 'Active';
                                         
-                                        $rowAction = $isActive 
-                                            ? "window.location.href='" . $viewLink . "';" 
-                                            : "alert('Action Denied: Please activate this domain before viewing details.');";
+                                        // Parse the criteria list (separated by |||)
+                                        $criteriaList = !empty($row['criteria_list']) ? explode('|||', $row['criteria_list']) : [];
                                     ?>
-                                        <tr onclick="<?php echo $rowAction; ?>" style="cursor: pointer; transition: background-color 0.2s;">
-                                            <td class="ps-4">
-                                                <div class="d-flex flex-column">
-                                                    <span class="fw-bold text-dark"><?php echo htmlspecialchars($domain['domain_name']); ?></span>
-                                                </div>
-                                            </td>
-                                            <td class="text-center">
-                                                <div class="d-flex gap-2 justify-content-center">
-                                                    <span class="badge bg-light text-dark border" title="Criteria Count">
-                                                        <i class="bi bi-list-check me-1"></i><?php echo $domain['criteria_count']; ?>
-                                                    </span>
-                                                    <span class="badge bg-light text-dark border" title="Element Count">
-                                                        <i class="bi bi-file-text me-1"></i><?php echo $domain['element_count']; ?>
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td>
+                                    
+                                    <tr data-bs-toggle="modal" 
+                                        data-bs-target="#viewModal-<?php echo $row['domain_ID']; ?>"
+                                        style="cursor: pointer; transition: background-color 0.2s;">
+                                        
+                                        <td class="ps-4">
+                                            <span class="fw-bold text-dark"><?php echo htmlspecialchars($row['domain_name']); ?></span>
+                                        </td>
+                                        
+                                        <td class="text-center">
+                                            <div class="d-flex gap-2 justify-content-center">
+                                                <span class="badge bg-light text-dark border" title="Criteria Count">
+                                                    <i class="bi bi-list-check me-1"></i><?php echo $row['criteria_count']; ?>
+                                                </span>
+                                                <span class="badge bg-light text-dark border" title="Element Count">
+                                                    <i class="bi bi-file-text me-1"></i><?php echo $row['element_count']; ?>
+                                                </span>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <div class="user-meta">
+                                                <span class="name"><?php echo htmlspecialchars($row['created_by_name'] ?? 'System'); ?></span>
+                                                <span class="date"><?php echo formatDate($row['input_at']); ?></span>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <?php if (!empty($row['updated_by_name'])): ?>
                                                 <div class="user-meta">
-                                                    <span class="name"><?php echo htmlspecialchars($domain['created_by_name'] ?? 'System'); ?></span>
-                                                    <span class="date"><?php echo formatDate($domain['input_at']); ?></span>
+                                                    <span class="name"><?php echo htmlspecialchars($row['updated_by_name']); ?></span>
+                                                    <span class="date"><?php echo formatDate($row['updated_at']); ?></span>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <?php if (!empty($domain['updated_by_name'])): ?>
-                                                    <div class="user-meta">
-                                                        <span class="name"><?php echo htmlspecialchars($domain['updated_by_name']); ?></span>
-                                                        <span class="date"><?php echo formatDate($domain['updated_at']); ?></span>
-                                                    </div>
-                                                <?php else: ?>
-                                                    <span class="text-muted text-xs">-</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="text-center">
-                                                <?php echo getStatusBadgeDomain($domain['status']); ?>
-                                            </td>
-                                            <td class="text-center pe-4" onclick="event.stopPropagation();">
-                                                
-                                               <a href="edit-domain.php?id=<?php echo $domain['domain_ID']; ?>" 
-                                                    class="btn btn-sm btn-link <?php echo $domain['status'] === 'Active' ? 'text-primary' : 'text-secondary'; ?> px-2" 
-                                                    title="Edit Domain"
-                                                    onclick="<?php echo ($domain['status'] !== 'Active') ? "alert('Action Denied: Please activate this domain before editing.'); return false;" : ""; ?>">
-                                                        <i class="bi bi-pencil-square fs-6"></i>
-                                                    </a>
-                                                <button class="btn btn-sm btn-link text-<?php echo $domain['status'] === 'Active' ? 'danger' : 'success'; ?> px-2" 
-                                                        onclick="toggleStatus('<?php echo $domain['domain_ID']; ?>', '<?php echo $domain['status']; ?>')"
-                                                        title="<?php echo $domain['status'] === 'Active' ? 'Deactivate' : 'Activate'; ?>">
-                                                    <i class="bi bi-<?php echo $domain['status'] === 'Active' ? 'power' : 'check-circle'; ?> fs-6"></i>
+                                            <?php else: ?>
+                                                <span class="text-muted text-xs">-</span>
+                                            <?php endif; ?>
+                                        </td>
+
+                                        <td class="text-center">
+                                            <?php echo getStatusBadgeDomain($row['status']); ?>
+                                        </td>
+                                        
+                                        <td class="text-center pe-4" onclick="event.stopPropagation();">
+                                            <a href="edit-domain.php?id=<?php echo $row['domain_ID']; ?>" 
+                                                class="btn btn-sm btn-link <?php echo $isActive ? 'text-primary' : 'text-secondary'; ?> px-2" 
+                                                title="Edit Domain"
+                                                onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before editing.'); return false;" : ""; ?>">
+                                                    <i class="bi bi-pencil-square fs-6"></i>
+                                            </a>
+
+                                            <button class="btn btn-sm btn-link text-<?php echo $isActive ? 'danger' : 'success'; ?> px-2" 
+                                                    onclick="toggleStatus('<?php echo $row['domain_ID']; ?>', '<?php echo $row['status']; ?>')"
+                                                    title="<?php echo $isActive ? 'Deactivate' : 'Activate'; ?>">
+                                                <i class="bi bi-<?php echo $isActive ? 'power' : 'check-circle'; ?> fs-6"></i>
+                                            </button>
+
+                                            <?php if ($row['usage_count'] == 0): ?>
+                                                <button class="btn btn-sm btn-link text-secondary px-2" 
+                                                        onclick="deleteDomain('<?php echo $row['domain_ID']; ?>')"
+                                                        title="Delete Domain (Safe)">
+                                                    <i class="bi bi-trash fs-6"></i>
                                                 </button>
-                                            </td>
-                                        </tr>
+                                            <?php else: ?>
+                                                <button class="btn btn-sm btn-link text-muted px-2 opacity-25" 
+                                                        title="Cannot Delete: Used in <?php echo $row['usage_count']; ?> surveys" disabled>
+                                                    <i class="bi bi-trash fs-6"></i>
+                                                </button>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+
+                                    <div class="modal fade" id="viewModal-<?php echo $row['domain_ID']; ?>" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content rounded-4 border-0 shadow">
+                                                <div class="modal-header border-bottom-0 pb-0">
+                                                    <h5 class="modal-title fw-bold">Domain Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body pt-3 pb-4 px-4">
+                                                    
+                                                    <div class="d-flex align-items-start gap-3 mb-4">
+                                                        <div class="bg-primary-subtle rounded-3 p-3 text-primary">
+                                                            <i class="bi bi-grid-1x2 fs-3"></i>
+                                                        </div>
+                                                        <div>
+                                                            <div class="text-uppercase text-muted fw-bold" style="font-size: 0.7rem;">Domain Name</div>
+                                                            <h4 class="fw-bold text-dark mb-2"><?php echo htmlspecialchars($row['domain_name']); ?></h4>
+                                                            <?php echo getStatusBadgeDomain($row['status']); ?>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="bg-light rounded-3 p-3 mb-3">
+                                                        <h6 class="fw-bold mb-2 text-secondary" style="font-size: 0.8rem; text-transform: uppercase;">
+                                                            Associated Criteria (<?php echo count($criteriaList); ?>)
+                                                        </h6>
+                                                        <?php if (!empty($criteriaList)): ?>
+                                                            <ul class="mb-0 ps-3">
+                                                                <?php foreach ($criteriaList as $criteriaName): ?>
+                                                                    <li class="mb-1 text-dark small"><?php echo htmlspecialchars($criteriaName); ?></li>
+                                                                <?php endforeach; ?>
+                                                            </ul>
+                                                        <?php else: ?>
+                                                            <p class="mb-0 text-muted small fst-italic">No criteria found under this domain.</p>
+                                                        <?php endif; ?>
+                                                    </div>
+
+                                                    
+
+                                                    <div class="row g-2 mt-3 pt-3 border-top">
+                                                        <div class="col-6">
+                                                            <small class="text-muted d-block" style="font-size: 0.7rem;">CREATED BY</small>
+                                                            <span class="fw-medium text-dark small">
+                                                                <?php echo htmlspecialchars($row['created_by_name'] ?? 'System'); ?>
+                                                            </span>
+                                                            <div class="text-muted" style="font-size: 0.7rem;">
+                                                                <?php echo formatDate($row['input_at']); ?>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <small class="text-muted d-block" style="font-size: 0.7rem;">LAST UPDATED</small>
+                                                            <?php if(!empty($row['updated_by_name'])): ?>
+                                                                <span class="fw-medium text-dark small">
+                                                                    <?php echo htmlspecialchars($row['updated_by_name']); ?>
+                                                                </span>
+                                                                <div class="text-muted" style="font-size: 0.7rem;">
+                                                                    <?php echo formatDate($row['updated_at']); ?>
+                                                                </div>
+                                                            <?php else: ?>
+                                                                <span class="text-muted small">-</span>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                               <div class="modal-footer border-top-0 pt-0 px-4 pb-4 d-flex justify-content-between align-items-center">
+    <div>
+        <?php if ($row['usage_count'] == 0): ?>
+            <button type="button" class="btn btn-outline-danger rounded-3 px-3" 
+                    onclick="deleteDomain('<?php echo $row['domain_ID']; ?>')">
+                <i class="bi bi-trash me-2"></i>Delete
+            </button>
+        <?php else: ?>
+            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Cannot delete: Associated with completed surveys">
+                <button class="btn btn-outline-danger rounded-3 px-3" disabled>
+                    <i class="bi bi-trash me-2"></i>Delete
+                </button>
+            </span>
+        <?php endif; ?>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Close</button>
+        
+        <a href="../criteria/add-criteria.php?domain_id=<?php echo $row['domain_ID']; ?>" 
+           class="btn btn-outline-primary shadow-sm px-3 py-2 rounded-3 d-flex align-items-center"
+           title="Add new criteria to this domain"
+           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before adding criteria.'); return false;" : ""; ?>">
+            <i class="bi bi-plus-lg me-2"></i>Add Criteria
+        </a>
+
+        <a href="edit-domain.php?id=<?php echo $row['domain_ID']; ?>" 
+           class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
+           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;" 
+           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this domain before editing.'); return false;" : ""; ?>">
+            Edit
+        </a>
+    </div>
+</div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <?php endforeach; ?>
                                     
                                     <?php if (empty($domains)): ?>
@@ -318,6 +406,22 @@ function getStatusBadgeDomain($status) {
                 
                 form.appendChild(input1);
                 form.appendChild(input2);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+        function deleteDomain(domainId) {
+            if (confirm('Are you sure you want to PERMANENTLY DELETE this domain? This will also delete all associated Criteria and Elements. This action cannot be undone.')) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'delete-domain.php';
+                
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'domain_id';
+                input.value = domainId;
+                
+                form.appendChild(input);
                 document.body.appendChild(form);
                 form.submit();
             }

@@ -1,47 +1,49 @@
 <?php
-// Path: ../../../config/config.php
+// Path: modules/admin/element/add-element.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
-// Get the parent Criteria ID from the URL
-$criteria_id = $_GET['criteria_id'] ?? null;
-if (!$criteria_id) {
-    // Redirect if no criteria_id is provided
-    setFlashMessage('danger', 'No criteria specified.');
-    redirect(BASE_URL . '/modules/admin/domain/index.php');
-}
-
 $db = new Database();
 
-// Get criteria details (and its domain) for context and breadcrumbs
-$sql_criteria = "
-    SELECT 
-        c.criteria_ID, 
-        c.criteria_name, 
-        d.domain_ID, 
-        d.domain_name
-    FROM criteria c
-    JOIN domain d ON c.domain_ID = d.domain_ID
-    WHERE c.criteria_ID = :id
-";
-$criteria = $db->fetchOne($sql_criteria, [':id' => $criteria_id]);
+// 1. Get Pre-selected Criteria (Optional)
+$preselected_id = $_GET['criteria_id'] ?? null;
+$preselected_criteria = null;
 
-if (!$criteria) {
-    setFlashMessage('danger', 'Criteria not found');
-    redirect(BASE_URL . '/modules/admin/domain/index.php');
+// If a criteria ID is passed, fetch its details for breadcrumbs/context
+if ($preselected_id) {
+    $preselected_criteria = $db->fetchOne("
+        SELECT c.criteria_ID, c.criteria_name, d.domain_ID, d.domain_name
+        FROM criteria c
+        JOIN domain d ON c.domain_ID = d.domain_ID
+        WHERE c.criteria_ID = :id
+    ", [':id' => $preselected_id]);
 }
 
-// Handle form submission
+// 2. Fetch All Active Criteria (Grouped by Domain for the Dropdown)
+// We fetch Domain Name too so we can create <optgroup> in the select box
+$all_criteria = $db->fetchAll("
+    SELECT c.criteria_ID, c.criteria_name, d.domain_name 
+    FROM criteria c
+    JOIN domain d ON c.domain_ID = d.domain_ID 
+    WHERE c.status = 'Active' 
+    ORDER BY d.domain_name ASC, c.criteria_name ASC
+");
+
+// 3. Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $element_name = sanitize($_POST['element_name']);
+        $selected_criteria_id = $_POST['criteria_id'] ?? null;
         
+        // Validation
+        if (empty($selected_criteria_id)) {
+            throw new Exception('Please select a Criteria.');
+        }
         if (empty($element_name)) {
-            throw new Exception('Element name is required');
+            throw new Exception('Element name is required.');
         }
         
-        // Insert element. The database trigger (if one exists) or logic
-        // should handle the element_ID generation.
+        // Insert Query
         $sql = "INSERT INTO element (criteria_ID, element_name, input_id, input_at, status) 
                 VALUES (:criteria_id, :element_name, :user_id, NOW(), 'Active')";
         
@@ -49,30 +51,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_id = $current_user ? $current_user['user_ID'] : 'SYSTEM';
 
         $db->query($sql, [
-            ':criteria_id' => $criteria_id,
+            ':criteria_id' => $selected_criteria_id,
             ':element_name' => $element_name,
             ':user_id' => $user_id
         ]);
         
-        setFlashMessage('success', "New element added successfully to Criteria {$criteria_id}.");
+        setFlashMessage('success', "New element added successfully.");
         
-        // Redirect back to the element list for that criteria
-        // (which is linked from view-criteria.php)
-        header("Location: view-element.php?id={$criteria_id}");
+        // Redirect: If came from a specific criteria view, return there. Else go to main list.
+        if ($preselected_id) {
+            header("Location: view-element.php?id={$selected_criteria_id}");
+        } else {
+            header("Location: index.php"); 
+        }
         exit();
 
     } catch (Exception $e) {
-        setFlashMessage('error', $e->getMessage());
-        header('Location: add-element.php?criteria_id=' . $criteria_id);
+        setFlashMessage('danger', $e->getMessage());
+        // Reload page
+        header('Location: add-element.php' . ($preselected_id ? '?criteria_id=' . $preselected_id : ''));
         exit();
     }
 }
 
 $flash = getFlashMessage(); 
-
-// Variables needed for the sidebar's active state logic
-$currentPage = basename(__FILE__); // 'add-element.php'
-$currentDir = basename(__DIR__); // 'element'
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -90,7 +92,7 @@ $currentDir = basename(__DIR__); // 'element'
         
         /* Sidebar Adjustment */
         .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; padding: 0; }
-        .main-content-wrapper { margin-left: 16.66667%; width: 83.33333%; }
+        .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
         
         @media (max-width: 991.98px) {
             .sidebar { position: relative; width: 100%; height: auto; }
@@ -111,12 +113,12 @@ $currentDir = basename(__DIR__); // 'element'
             font-size: 0.875rem;
             margin-bottom: 0.5rem;
         }
-        .form-control {
+        .form-control, .form-select {
             border: 1px solid #d2d6da;
             border-radius: 0.5rem;
             padding: 0.6rem 1rem;
         }
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: #e293d3;
             box-shadow: 0 0 0 2px #e9aede;
         }
@@ -126,11 +128,11 @@ $currentDir = basename(__DIR__); // 'element'
     <div class="container-fluid p-0 h-100">
         <div class="row g-0 h-100">
             
-            <div class="col-md-2 col-lg-2 sidebar">
+            <div class="col-auto">
                 <?php include_once __DIR__ . '/../../includes/admin_sidebar.php'; ?>
             </div>
             
-            <div class="col-md-10 col-lg-10 main-content-wrapper">
+            <div class="col main-content-wrapper">
                 <div class="main-content px-4 py-4">
 
                     <nav aria-label="breadcrumb" class="mb-4">
@@ -138,31 +140,32 @@ $currentDir = basename(__DIR__); // 'element'
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
                             
-                            <li class="breadcrumb-item">
-                                <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($criteria['domain_ID']); ?>"
-                                class="text-decoration-none text-secondary"
-                                title="Domain: <?php echo htmlspecialchars($criteria['domain_name']); ?>"> Domain <?php echo htmlspecialchars(truncate($criteria['domain_name'], 20)); ?>
-                                </a>
-                            </li>
+                            <?php if ($preselected_criteria): ?>
+                                <li class="breadcrumb-item">
+                                    <a href="../criteria/view-criteria.php?id=<?php echo $preselected_criteria['domain_ID']; ?>" class="text-decoration-none text-secondary">
+                                        Domain <?php echo htmlspecialchars(truncate($preselected_criteria['domain_name'], 15)); ?>
+                                    </a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                    <a href="view-element.php?id=<?php echo $preselected_criteria['criteria_ID']; ?>" class="text-decoration-none text-secondary">
+                                        Criteria <?php echo htmlspecialchars(truncate($preselected_criteria['criteria_name'], 15)); ?>
+                                    </a>
+                                </li>
+                            <?php else: ?>
+                                <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Element</a></li>
+                            <?php endif; ?>
 
-                            <li class="breadcrumb-item">
-                                <a href="view-element.php?id=<?php echo htmlspecialchars($criteria['criteria_ID']); ?>"
-                                class="text-decoration-none text-secondary"
-                                title="Criteria: <?php echo htmlspecialchars($criteria['criteria_name']); ?>"> Criteria <?php echo htmlspecialchars(truncate($criteria['criteria_name'], 20)); ?>
-                                </a>
-                            </li>
-
-                            <li class="breadcrumb-item active text-dark">Element - Add Element</li>
+                            <li class="breadcrumb-item active text-dark">Add Element</li>
                         </ol>
                     </nav>
 
                     <div class="d-flex justify-content-between align-items-center mb-5 gap-3">
                         <div>
                             <h3 class="fw-bold mb-1">Add New Element</h3>
-                            <p class="text-muted mb-0">Adding to Criteria: <strong><?php echo htmlspecialchars($criteria['criteria_name']); ?></strong></p>
+                            <p class="text-muted mb-0">Create a new assessment element linked to a criteria.</p>
                         </div>
                         <div>
-                            <a href="view-element.php?id=<?php echo htmlspecialchars($criteria['criteria_ID']); ?>" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
+                            <a href="<?php echo $preselected_id ? "view-element.php?id=$preselected_id" : "index.php"; ?>" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
                                 <i class="bi bi-arrow-left me-2"></i>Back
                             </a>
                         </div>
@@ -185,6 +188,37 @@ $currentDir = basename(__DIR__); // 'element'
                                     <form method="POST" id="addElementForm">
                                         
                                         <div class="mb-4">
+                                            <label for="criteria_id" class="form-label">Select Criteria <span class="text-danger">*</span></label>
+                                            
+                                            <select class="form-select" id="criteria_id" name="criteria_id" required>
+                                                <option value="" disabled <?php echo empty($preselected_id) ? 'selected' : ''; ?>>-- Choose Criteria --</option>
+                                                
+                                                <?php 
+                                                // Grouping Logic for Dropdown
+                                                $current_domain = '';
+                                                foreach ($all_criteria as $c): 
+                                                    // If domain changes, close previous optgroup and start new one
+                                                    if ($current_domain !== $c['domain_name']) {
+                                                        if ($current_domain !== '') echo '</optgroup>';
+                                                        $current_domain = $c['domain_name'];
+                                                        echo '<optgroup label="' . htmlspecialchars($current_domain) . '">';
+                                                    }
+                                                ?>
+                                                    <option value="<?php echo $c['criteria_ID']; ?>" 
+                                                        <?php echo ($preselected_id == $c['criteria_ID']) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($c['criteria_name']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                                <?php if ($current_domain !== '') echo '</optgroup>'; ?>
+                                            </select>
+                                            
+                                            <div class="form-text text-muted">Elements must belong to a specific Criteria (grouped by Domain above).</div>
+                                            
+                                            
+                                            
+                                        </div>
+
+                                        <div class="mb-4">
                                             <label for="element_name" class="form-label">Element Name <span class="text-danger">*</span></label>
                                             
                                             <textarea class="form-control" id="element_name" name="element_name" rows="4" 
@@ -198,7 +232,7 @@ $currentDir = basename(__DIR__); // 'element'
                                         </div>
 
                                         <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top">
-                                            <a href="view-element.php?id=<?php echo htmlspecialchars($criteria['criteria_ID']); ?>" class="btn btn-outline-secondary px-4 rounded-3">
+                                            <a href="<?php echo $preselected_id ? "view-element.php?id=$preselected_id" : "index.php"; ?>" class="btn btn-outline-secondary px-4 rounded-3">
                                                 Cancel
                                             </a>
                                             <button type="submit" class="btn btn-primary px-4 rounded-3" 
@@ -221,15 +255,14 @@ $currentDir = basename(__DIR__); // 'element'
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Character Counter Logic
             const counters = document.querySelectorAll('.char-count');
-
             counters.forEach(counter => {
                 const inputId = counter.getAttribute('data-for');
                 const inputElement = document.getElementById(inputId);
 
                 if (inputElement) {
                     const maxLength = inputElement.getAttribute('maxlength');
-
                     const updateCount = () => {
                         const currentLength = inputElement.value.length;
                         const remaining = maxLength - currentLength;
@@ -244,40 +277,31 @@ $currentDir = basename(__DIR__); // 'element'
                             counter.classList.remove('text-danger');
                         }
                     };
-
-                    // Run immediately and on input
                     updateCount();
                     inputElement.addEventListener('input', updateCount);
                 }
             });
-        });
-    
-        document.addEventListener('DOMContentLoaded', function() {
+
+            // Form Dirty Check Logic
             let isDirty = false;
-            
-            // 1. CHANGE THIS ID to match your HTML form ID
             const form = document.getElementById('addElementForm'); 
 
             if (form) {
-                // A. Detect changes on standard inputs (text, select, checkbox)
                 form.addEventListener('change', () => isDirty = true);
                 form.addEventListener('input', () => isDirty = true);
                 
-                // B. If user clicks "Save" or "Submit", disable the warning
                 form.addEventListener('submit', () => {
                     isDirty = false;
                 });
 
-                // C. The Warning Popup
                 window.addEventListener('beforeunload', function (e) {
                     if (isDirty) {
                         e.preventDefault();
-                        e.returnValue = ''; // Required for Chrome/Edge
+                        e.returnValue = ''; 
                     }
                 });
             }
         });
-
     </script>
 </body>
 </html>

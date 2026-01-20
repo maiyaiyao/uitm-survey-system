@@ -122,115 +122,88 @@ $criteria_name = $element['criteria_name'];
                                 <a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a>
                             </li>
                             <li class="breadcrumb-item">
-                                <a href="../criteria/view-criteria.php?id=<?php echo $element['domain_ID']; ?>" 
-                                class="text-decoration-none text-secondary"
-                                title="<?php echo htmlspecialchars($element['domain_name']); ?>"><?php echo htmlspecialchars(truncate($element['domain_name'], 20)); ?>
-                                </a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="../element/view-element.php?id=<?php echo $element['criteria_ID']; ?>" 
-                                class="text-decoration-none text-secondary"
-                                title="<?php echo htmlspecialchars($element['criteria_name']); ?>"><?php echo htmlspecialchars(truncate($element['criteria_name'], 20)); ?> 
-                                </a>
+                                <a href="../element/index.php" class="text-decoration-none text-secondary">Element</a>
                             </li>
                             <li class="breadcrumb-item active text-dark" aria-current="page"
-                                title="<?php echo htmlspecialchars($element['element_name']); ?>"><?php echo htmlspecialchars(truncate($element['element_name'], 25)); ?> 
+                                title="<?php echo htmlspecialchars($element['element_name']); ?>">Score Levels 
                             </li>
                         </ol>
                     </nav>
 
-                    <div class="bg-white rounded-4 shadow-sm p-4 mb-4 border">
-                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
-                            
-                            <div class="d-flex align-items-center gap-3">
-                                <a href="../element/view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>" 
-                                class="btn btn-outline-secondary rounded-circle d-flex align-items-center justify-content-center" 
-                                style="width: 40px; height: 40px;"
-                                title="Back">
-                                    <i class="bi bi-arrow-left"></i>
-                                </a>
+<!-- Header Section -->
+<div class="bg-white rounded-3 shadow-sm p-4 mb-4">
+    <div class="d-flex align-items-start justify-content-between gap-3 mb-4">
+        <!-- Left: Back Button + Title -->
+        <div class="d-flex align-items-center gap-3">
+            <a href="../element/index.php" 
+               class="btn btn-light rounded-circle p-0 d-flex align-items-center justify-content-center flex-shrink-0" 
+               style="width: 40px; height: 40px;"
+               title="Back to Criteria">
+                <i class="bi bi-arrow-left"></i>
+            </a>
 
-                                <div>
-                                    <div class="text-uppercase text-muted fw-bold lh-1 mb-1" style="font-size: 0.75rem;">
-                                        Criteria: <?php echo htmlspecialchars($criteria_name); ?>
-                                    </div>
-                                    <h2 class="fw-bold text-dark mb-0 fs-4">
-                                        <?php echo htmlspecialchars($element['element_name']); ?>
-                                    </h2>
-                                </div>
-                            </div>
+            <div>
+                <div class="text-muted small mb-1">
+                    <?php echo htmlspecialchars($criteria_name); ?>
+                </div>
+                <h1 class="h4 fw-bold mb-0">
+                    <?php echo htmlspecialchars($element['element_name']); ?>
+                </h1>
+            </div>
+        </div>
 
-                            <div class="d-flex gap-2">
-                                <a href="../element/edit-element.php?id=<?php echo urlencode($element_id); ?>" 
-                                class="btn btn-outline-primary shadow-sm px-3 rounded-3">
-                                    <i class="bi bi-pencil me-2"></i>Edit Element
-                                </a>
+        <!-- Right: Action Buttons -->
+        <div class="d-flex gap-2 flex-shrink-0">
+            <a href="../element/edit-element.php?id=<?php echo urlencode($element_id); ?>" 
+               class="btn btn-outline-secondary">
+                <i class="bi bi-pencil"></i>
+                <span class="d-none d-sm-inline ms-1">Edit</span>
+            </a>
 
-                                <a href="form-score.php?element_id=<?php echo $element_id; ?>" 
-                                class="btn btn-primary shadow-sm px-3 rounded-3"
-                                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
-                                    <i class="bi bi-plus-lg me-2"></i>Add Score
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <a href="form-score.php?element_id=<?php echo $element_id; ?>" 
+              class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
+                               style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                <i class="bi bi-plus-lg"></i>
+                <span class="d-none d-sm-inline ms-1">Add Score</span>
+            </a>
+        </div>
+    </div>
 
-                    <?php if ($flash): ?>
-                        <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show border-0 shadow-sm mb-4">
-                            <?php echo $flash['message']; ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
+    <!-- Stats Grid -->
+    <div class="row g-3">
+        <div class="col-sm-6">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Total Definitions</div>
+                <div class="h5 fw-bold mb-0"><?php echo $total_scores_defined; ?></div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="p-3 bg-light rounded-2">
+                <div class="text-muted small mb-1">Status</div>
+                <div class="fw-semibold">
+                    <?php if ($element_status === 'Active'): ?>
+                        <span class="badge bg-success-subtle text-success border-0">
+                            <i class="bi bi-check-circle me-1"></i>Active
+                        </span>
+                    <?php else: ?>
+                        <span class="badge bg-danger-subtle text-danger border-0">
+                            <i class="bi bi-x-circle me-1"></i>Inactive
+                        </span>
                     <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-                    <div class="row g-4 mb-4">
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Total Definitions</div>
-                                        <div class="stat-card-value"><?php echo $total_scores_defined; ?></div>
-                                    </div>
-                                    <div class="stat-icon bg-primary-subtle text-primary">
-                                        <i class="bi bi-list-ol"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Parent Criteria</div>
-                                        <div class="fw-bold-dark text-truncate" style="max-width: 150px;" title="<?php echo htmlspecialchars($criteria_name); ?>">
-                                            <?php echo htmlspecialchars($criteria_name); ?>
-                                        </div>
-                                    </div>
-                                    <div class="stat-icon bg-info-subtle text-info">
-                                        <i class="bi bi-diagram-3"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card h-100 p-3">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <div class="stat-card-title mb-1">Element Status</div>
-                                        <div class="fw-bold-dark">
-                                            <?php if ($element_status === 'Active'): ?>
-                                                <span class="text-success">Active</span>
-                                            <?php else: ?>
-                                                <span class="text-danger">Inactive</span>
-                                            <?php endif; ?>
-                                        </div>
-                                    </div>
-                                    <div class="stat-icon <?php echo $element_status === 'Active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'; ?>">
-                                        <i class="bi bi-activity"></i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!-- Flash Message -->
+<?php if ($flash): ?>
+    <div class="alert alert-<?php echo $flash['type']; ?> alert-dismissible fade show mb-4">
+        <?php echo $flash['message']; ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
 
                     <div class="card border-0 shadow-sm rounded-4 mb-5">
                         <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">

@@ -15,6 +15,7 @@ if (!$criteria_id) {
 }
 
 try {
+    // Fetch the specific criteria
     $criteria = $db->fetchOne("
         SELECT c.criteria_ID, c.criteria_name, c.status, c.domain_ID, d.domain_name
         FROM criteria c
@@ -27,8 +28,12 @@ try {
         header('Location: ../domain/index.php');
         exit();
     }
+
+    // [NEW] Fetch all active domains for the dropdown list
+    $all_domains = $db->fetchAll("SELECT domain_ID, domain_name FROM domain WHERE status = 'Active' ORDER BY domain_name ASC");
+
 } catch (Exception $e) {
-    setFlashMessage('error', 'Database Error: Could not retrieve criteria data.');
+    setFlashMessage('error', 'Database Error: Could not retrieve data.');
     header('Location: ../domain/index.php');
     exit();
 }
@@ -38,14 +43,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $new_criteria_name = sanitize($_POST['criteria_name']);
         $new_status = sanitize($_POST['status']);
+        $new_domain_id = $_POST['domain_id']; // [NEW] Capture the domain ID
 
         if (empty($new_criteria_name)) {
             throw new Exception('Criteria name cannot be empty.');
         }
+        if (empty($new_domain_id)) {
+            throw new Exception('Domain selection is required.');
+        }
 
-        // Update criteria record
+        // [UPDATED] Update criteria record including domain_ID
         $sql = "UPDATE criteria SET 
                     criteria_name = :criteria_name,
+                    domain_ID = :domain_id,
                     status = :status,
                     updated_id = :user_id,
                     updated_at = NOW()
@@ -56,14 +66,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $db->query($sql, [
             ':criteria_name' => $new_criteria_name,
+            ':domain_id' => $new_domain_id,
             ':status' => $new_status,
             ':user_id' => $user_id,
             ':criteria_id' => $criteria_id
         ]);
 
-        setFlashMessage('success', "Criteria {$criteria_id} updated successfully.");
+        setFlashMessage('success', "Criteria updated successfully.");
         // Redirect back to the Domain View to see the list of criteria
-        header("Location: view-criteria.php?id={$criteria['domain_ID']}");
+        header("Location: index.php");
         exit();
 
     } catch (Exception $e) {
@@ -76,8 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Variables for the view
 $current_user = getCurrentUser();
 $flash = getFlashMessage();
-$currentPage = basename(__FILE__);
-$currentDir = basename(__DIR__);
 ?>
 
 <!DOCTYPE html>
@@ -143,17 +152,8 @@ $currentDir = basename(__DIR__);
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
-                            
-                            <li class="breadcrumb-item">
-                                <a href="view-criteria.php?id=<?php echo htmlspecialchars($criteria['domain_ID']); ?>"
-                                class="text-decoration-none text-secondary"
-                                title="Domain: <?php echo htmlspecialchars($criteria['domain_name']); ?>"> Domain <?php echo htmlspecialchars(truncate($criteria['domain_name'], 20)); ?>
-                                </a>
-                            </li>
-                           <li class="breadcrumb-item active text-dark" 
-                                title="Criteria: <?php echo htmlspecialchars($criteria['criteria_name']); ?>">
-                                Criteria <?php echo htmlspecialchars(truncate($criteria['criteria_name'], 20)); ?>
-                            </li>
+                            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Criteria</a></li>
+                            <li class="breadcrumb-item active text-dark">Edit Criteria</li>
                             
                         </ol>
                     </nav>
@@ -163,8 +163,8 @@ $currentDir = basename(__DIR__);
                             <h3 class="fw-bold mb-1">Edit Criteria: <?php echo htmlspecialchars($criteria['criteria_name']); ?></h3>
                         </div>
                         <div>
-                            <a href="../element/view-element.php?id=<?php echo htmlspecialchars($criteria['criteria_ID']); ?>" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
-                                <i class="bi bi-arrow-left me-2"></i>Back=
+                            <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
+                                <i class="bi bi-arrow-left me-2"></i>Back
                             </a>
                         </div>
                     </div>
@@ -192,9 +192,16 @@ $currentDir = basename(__DIR__);
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="domain_name" class="form-label">Domain</label>
-                                            <input type="text" class="form-control bg-light" id="domain_name" value="<?php echo htmlspecialchars($criteria['domain_name'] . ''); ?>" readonly>
-                                            <div class="form-text text-muted ms-1">Domain cannot be change here.</div>
+                                            <label for="domain_id" class="form-label">Domain <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="domain_id" name="domain_id" required>
+                                                <?php foreach ($all_domains as $domain): ?>
+                                                    <option value="<?php echo $domain['domain_ID']; ?>" 
+                                                        <?php echo ($domain['domain_ID'] == $criteria['domain_ID']) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($domain['domain_name']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div class="form-text text-muted ms-1">You can reassign this criteria to a different domain.</div>
                                         </div>
 
                                         <div class="mb-3">
@@ -213,7 +220,7 @@ $currentDir = basename(__DIR__);
                                         </div>
 
                                         <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top">
-                                            <a href="../element/view-element.php?id=<?php echo htmlspecialchars($criteria['criteria_ID']); ?>" class="btn btn-outline-secondary px-4 rounded-3">
+                                            <a href="index.php" class="btn btn-outline-secondary px-4 rounded-3">
                                                 Cancel
                                             </a>
                                             <button type="submit" class="btn btn-primary px-4 rounded-3" 
@@ -238,7 +245,6 @@ $currentDir = basename(__DIR__);
     document.addEventListener('DOMContentLoaded', function() {
         let isDirty = false;
         
-        // 1. CHANGE THIS ID to match your HTML form ID
         const form = document.getElementById('editCriteriaForm'); 
 
         if (form) {

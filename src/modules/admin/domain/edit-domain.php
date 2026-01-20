@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         setFlashMessage('success', "Domain updated successfully.");
-        header('Location: ../criteria/view-criteria.php?id=' . $domain_id);
+        header('Location: index.php');
         exit();
 
     } catch (Exception $e) {
@@ -139,16 +139,10 @@ $currentDir = basename(__DIR__);
 
                     <nav aria-label="breadcrumb" class="mb-4">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item">
-                                <a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a>
-                            </li>
-                            
-                            <li class="breadcrumb-item active text-dark" aria-current="page" 
-                                title="Domain: <?php echo htmlspecialchars($domain['domain_name']); ?>"> Domain <?php echo htmlspecialchars(truncate($domain['domain_name'], 30)); ?>
-                            </li>
+                            <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
+                            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Domain</a></li>
+                            <li class="breadcrumb-item active text-dark">Edit Domain</li>
                         </ol>
                     </nav>
 
@@ -157,7 +151,7 @@ $currentDir = basename(__DIR__);
                             <h3 class="fw-bold mb-1">Edit Domain: <?php echo htmlspecialchars($domain['domain_name']); ?></h3>
                         </div>
                         <div>
-                            <a href="../criteria/view-criteria.php?id=<?php echo $domain['domain_ID'];?>" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
+                            <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
                                 <i class="bi bi-arrow-left me-2"></i>Back
                             </a>
                         </div>
@@ -204,7 +198,7 @@ $currentDir = basename(__DIR__);
 
                                         <!-- Actions -->
                                         <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top">
-                                            <a href="../criteria/view-criteria.php?id=<?php echo $domain['domain_ID'];?>"  class="btn btn-outline-secondary px-4 rounded-3">
+                                            <a href="index.php"  class="btn btn-outline-secondary px-4 rounded-3">
                                                 Cancel
                                             </a>
                                             <button type="submit" class="btn btn-primary px-4 rounded-3" 
