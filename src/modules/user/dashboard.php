@@ -324,13 +324,6 @@ function getStatusBadge($status) {
                                             </div>
                                         </a>
 
-                                        <div class="p-3 bg-light rounded-3 mt-2">
-                                            <h6 class="fw-bold mb-2">Need Help?</h6>
-                                            <p class="small text-muted mb-2">Contact the administrator for survey access or technical issues.</p>
-                                            <a href="mailto:admin@uitm.edu.my" class="small text-decoration-none fw-bold">
-                                                Contact Support <i class="bi bi-arrow-right"></i>
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

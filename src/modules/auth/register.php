@@ -273,13 +273,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     Passwords do not match
                                 </small>
                             </div>
-                            
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="terms" required>
-                                <label class="form-check-label" for="terms">
-                                    I agree to the <a href="#" class="text-decoration-none">Terms & Conditions</a>
-                                </label>
-                            </div>
+
                             
                             <div class="d-grid mb-3">
                                 <button type="submit" class="btn btn-primary">

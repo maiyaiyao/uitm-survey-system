@@ -4,8 +4,7 @@ require_once '../../../config/config.php';
 requireRole(['admin', 'auditor']);
 $db = new Database();
 
-// --- Data Fetching Logic (Preserved) ---
-// Fetch all active structure and calculate global averages
+// --- Data Fetching Logic ---
 $sql = "
     SELECT 
         d.domain_ID, d.domain_name,
@@ -76,6 +75,63 @@ function getProgClass($p) {
 
         /* Progress Bar Sizing */
         .progress { height: 8px; border-radius: 4px; background-color: #e9ecef; }
+
+        /* --- PRINT STYLES (UPDATED) --- */
+        @media print {
+            /* 1. CRITICAL FIX: Allow document to grow beyond one page */
+            html, body { 
+                height: auto !important; 
+                overflow: visible !important; 
+                background-color: white !important;
+            }
+            .main-content-wrapper { 
+                margin-left: 0 !important; 
+                width: 100% !important; 
+                padding: 0 !important; 
+                height: auto !important; 
+                overflow: visible !important;
+            }
+
+            /* 2. Hide Interface Elements */
+            .sidebar, .breadcrumb, .btn, .no-print { display: none !important; }
+
+            /* 3. Force Accordion Expansion */
+            .accordion-collapse { 
+                display: block !important; 
+                height: auto !important; 
+                visibility: visible !important;
+                transition: none !important;
+            }
+            .accordion-button::after { display: none !important; } 
+            .accordion-button { 
+                padding-left: 0 !important; 
+                background: none !important; 
+                color: black !important; 
+                border-bottom: 2px solid #000 !important; 
+                margin-bottom: 10px; 
+            }
+            
+            /* 4. Page Break Logic */
+            /* Allow domains to span pages, but keep criteria cards together */
+            .accordion-item { 
+                box-shadow: none !important; 
+                border: none !important; 
+                margin-bottom: 30px !important; 
+            }
+            
+            .card { 
+                box-shadow: none !important; 
+                border: 1px solid #eee !important; 
+                break-inside: avoid;       /* Prevent cutting a criteria block in half */
+                page-break-inside: avoid; 
+                margin-bottom: 15px !important; 
+            }
+
+            /* 5. Visual Adjustments */
+            .accordion-body { padding: 0 !important; background: white !important; }
+            .progress { border: 1px solid #ccc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .badge { border: 1px solid #000 !important; color: black !important; }
+        }
     </style>
 </head>
 <body>
@@ -103,6 +159,9 @@ function getProgClass($p) {
                             <p class="text-muted mb-0">Deep dive into Domains, Criteria, and Elements performance.</p>
                         </div>
                         <div class="d-flex gap-2">
+                            <button onclick="window.print()" class="btn btn-outline-primary shadow-sm px-4 py-2 rounded-3">
+                                <i class="bi bi-printer me-2"></i>Print Report
+                            </button>
                             <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
                                 <i class="bi bi-arrow-left me-2"></i>Back to Hub
                             </a>
@@ -127,7 +186,7 @@ function getProgClass($p) {
                                         </div>
                                     </button>
                                 </h2>
-                               <div id="collapse<?php echo $d_id; ?>" class="accordion-collapse collapse">
+                                <div id="collapse<?php echo $d_id; ?>" class="accordion-collapse collapse">
                                     <div class="accordion-body">
                                         <?php foreach ($domain['criteria'] as $criteria): ?>
                                             <div class="card mb-3 border-0 shadow-sm bg-white">

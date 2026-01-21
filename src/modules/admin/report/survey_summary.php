@@ -5,8 +5,15 @@ requireRole(['admin', 'auditor']);
 
 $db = new Database();
 
-// 1. Get List of Surveys for Dropdown
-$surveys = $db->fetchAll("SELECT * FROM survey ORDER BY created_at DESC");
+// --- 1. Get List of Surveys for Dropdown (UPDATED) ---
+// Logic: Show only surveys that are NOT Draft AND have already started (Live or Ended)
+$current_time = date('Y-m-d H:i:s');
+$surveys = $db->fetchAll("
+    SELECT * FROM survey 
+    WHERE status != 'Draft' 
+    AND start_date <= :now
+    ORDER BY created_at DESC
+", [':now' => $current_time]);
 
 // 2. Handle Selection
 $selected_survey_id = $_GET['survey_id'] ?? ($surveys[0]['survey_ID'] ?? null);
@@ -139,6 +146,62 @@ function getScoreClass($val) {
         
         /* Score Display */
         .score-display { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+
+        /* --- PRINT STYLES --- */
+        @media print {
+            /* Hide Sidebar, Navigation, Buttons, Forms */
+            .sidebar, 
+            .breadcrumb, 
+            .btn, 
+            .no-print, 
+            form, 
+            .input-group,
+            .alert {
+                display: none !important;
+            }
+
+            /* Adjust Main Content to Full Width */
+            .main-content-wrapper {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 0 !important;
+            }
+            .container-fluid, .row, .col-md-10, .col-lg-10 {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            /* Improve Card Appearance for Print */
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+                margin-bottom: 20px !important;
+                break-inside: avoid; /* Prevent breaking across pages */
+            }
+            .card-header {
+                border-bottom: 2px solid #000 !important;
+            }
+
+            /* Typography & Colors */
+            body {
+                background-color: white !important;
+                font-size: 12pt;
+                -webkit-print-color-adjust: exact; /* Print background colors */
+            }
+
+            /* Ensure Chart is Visible */
+            canvas {
+                max-width: 100% !important;
+                height: auto !important;
+            }
+
+            /* Scrollable lists should expand fully */
+            .list-group-flush {
+                max-height: none !important;
+                overflow: visible !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -166,6 +229,9 @@ function getScoreClass($val) {
                             <p class="text-muted mb-0">Overview of organizational maturity and domain scores.</p>
                         </div>
                         <div class="d-flex gap-2">
+                             <button onclick="window.print()" class="btn btn-outline-primary shadow-sm px-4 py-2 rounded-3">
+                                <i class="bi bi-printer me-2"></i>Print Report
+                             </button>
                              <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
                                 <i class="bi bi-arrow-left me-2"></i>Back to Hub
                             </a>
@@ -239,7 +305,9 @@ function getScoreClass($val) {
                         <div class="card border-0 shadow-sm mb-4">
                             <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 fw-bold">Performance Visualization</h5>
-                                <button class="btn btn-sm btn-light rounded-pill px-3"><i class="bi bi-download me-1"></i> Export</button>
+                                <button onclick="window.print()" class="btn btn-sm btn-light rounded-pill px-3 d-print-none">
+                                    <i class="bi bi-printer me-1"></i> Print
+                                </button>
                             </div>
                             <div class="card-body p-4">
                                 <canvas id="domainChart" style="max-height: 400px; width: 100%;"></canvas>

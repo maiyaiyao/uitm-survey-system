@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->Body    = "
                 <div style='font-family: Arial, sans-serif; padding: 20px; color: #333;'>
                     <h2 style='color: #667eea;'>Password Reset Request</h2>
-                    <p>We received a request to reset your password for the UiTM Survey System.</p>
+                    <p>We received a request to reset your password for the UiTM ISO Level Assessment System.</p>
                     <p>Click the button below to reset it:</p>
                     <p>
                         <a href='$reset_link' style='background-color: #667eea; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;'>Reset Password</a>
