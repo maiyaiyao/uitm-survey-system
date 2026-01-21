@@ -229,9 +229,7 @@ function getScoreClass($val) {
                             <p class="text-muted mb-0">Overview of organizational maturity and domain scores.</p>
                         </div>
                         <div class="d-flex gap-2">
-                             <button onclick="window.print()" class="btn btn-outline-primary shadow-sm px-4 py-2 rounded-3">
-                                <i class="bi bi-printer me-2"></i>Print Report
-                             </button>
+                             
                              <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
                                 <i class="bi bi-arrow-left me-2"></i>Back to Hub
                             </a>

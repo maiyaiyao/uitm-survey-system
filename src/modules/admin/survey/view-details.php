@@ -1,4 +1,5 @@
 <?php
+// Path: src/modules/admin/survey/view-details.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -36,8 +37,9 @@ $domains = $db->fetchAll("
 ", [':id' => $survey_id]);
 
 // 3. Fetch Linked Participants (Users)
+// UPDATED: Added u.user_ID to the SELECT list so we can create the link
 $participants = $db->fetchAll("
-    SELECT u.full_name, u.primary_email, u.department, us.status as completion_status
+    SELECT u.user_ID, u.full_name, u.primary_email, u.department, us.status as completion_status
     FROM user_survey us
     JOIN user u ON us.user_ID = u.user_ID
     WHERE us.survey_ID = :id
@@ -275,7 +277,15 @@ $flash = getFlashMessage();
                                                     <?php foreach($participants as $p): ?>
                                                         <tr>
                                                             <td class="ps-4">
-                                                                <div class="fw-bold text-dark"><?php echo htmlspecialchars($p['full_name']); ?></div>
+                                                                <?php if ($p['completion_status'] !== 'Pending'): ?>
+                                                                    <a href="../report/view-user-response.php?survey_id=<?php echo $survey_id; ?>&user_id=<?php echo $p['user_ID']; ?>" 
+                                                                       class="fw-bold text-primary text-decoration-none" title="View Detailed Response">
+                                                                        <?php echo htmlspecialchars($p['full_name']); ?>
+                                                                        <i class="bi bi-box-arrow-up-right small ms-1"></i>
+                                                                    </a>
+                                                                <?php else: ?>
+                                                                    <div class="fw-bold text-dark"><?php echo htmlspecialchars($p['full_name']); ?></div>
+                                                                <?php endif; ?>
                                                                 <div class="small text-muted"><?php echo htmlspecialchars($p['department'] ?? '-'); ?></div>
                                                             </td>
                                                             <td class="small text-muted"><?php echo htmlspecialchars($p['primary_email']); ?></td>
@@ -298,7 +308,8 @@ $flash = getFlashMessage();
                             </div>
                         </div>
 
-                    </div> </div>
+                    </div> 
+                </div>
             </div>
         </div>
     </div>
