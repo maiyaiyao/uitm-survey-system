@@ -10,7 +10,6 @@ $element = null;
 // --- 1. Fetch Existing Element Data ---
 if (!$element_id) {
     setFlashMessage('error', 'Error: Element ID is missing.');
-    // Redirect to a safe page (domain list)
     header('Location: ../domain/index.php');
     exit();
 }
@@ -31,13 +30,21 @@ try {
 
     if (!$element) {
         setFlashMessage('error', "Error: Element with ID '{$element_id}' not found.");
-        // Redirect to a safe page (domain list)
         header('Location: ../domain/index.php');
         exit();
     }
+
+    // [NEW] Fetch All Active Criteria (Grouped by Domain for the Dropdown)
+    $all_criteria = $db->fetchAll("
+        SELECT c.criteria_ID, c.criteria_name, d.domain_name 
+        FROM criteria c
+        JOIN domain d ON c.domain_ID = d.domain_ID 
+        WHERE c.status = 'Active' 
+        ORDER BY d.domain_name ASC, c.criteria_name ASC
+    ");
+
 } catch (Exception $e) {
-    setFlashMessage('error', 'Database Error: Could not retrieve element data.');
-    // Redirect to a safe page (domain list)
+    setFlashMessage('error', 'Database Error: Could not retrieve data.');
     header('Location: ../domain/index.php');
     exit();
 }
@@ -47,14 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $new_element_name = sanitize($_POST['element_name']);
         $new_status = sanitize($_POST['status']);
+        $new_criteria_id = $_POST['criteria_id']; // [NEW] Capture new criteria
 
         if (empty($new_element_name)) {
             throw new Exception('Element name cannot be empty.');
         }
+        if (empty($new_criteria_id)) {
+            throw new Exception('Criteria selection is required.');
+        }
 
-        // Update element record
+        // [UPDATED] Update element record including criteria_ID
         $sql = "UPDATE element SET 
                     element_name = :element_name,
+                    criteria_ID = :criteria_id,
                     status = :status,
                     updated_id = :user_id,
                     updated_at = NOW()
@@ -65,20 +77,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $db->query($sql, [
             ':element_name' => $new_element_name,
+            ':criteria_id' => $new_criteria_id,
             ':status' => $new_status,
             ':user_id' => $user_id,
             ':element_id' => $element_id
         ]);
 
-        setFlashMessage('success', "Element {$element_id} updated successfully.");
+        setFlashMessage('success', "Element updated successfully.");
         
-        // Redirect back to the element list for the parent criteria
-        header("Location: view-element.php?id={$element['criteria_ID']}");
+        // Redirect to the (potentially new) parent criteria's list
+        header("Location: view-element.php?id={$new_criteria_id}");
         exit();
 
     } catch (Exception $e) {
         setFlashMessage('error', $e->getMessage());
-        // On error, redirect back to this edit page
         header('Location: edit-element.php?id=' . $element_id);
         exit();
     }
@@ -87,8 +99,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // Variables for the view
 $current_user = getCurrentUser();
 $flash = getFlashMessage();
-$currentPage = basename(__FILE__);
-$currentDir = basename(__DIR__);
 ?>
 
 <!DOCTYPE html>
@@ -154,22 +164,8 @@ $currentDir = basename(__DIR__);
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
-                            
-                            <li class="breadcrumb-item">
-                                <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($element['domain_ID']); ?>"
-                                class="text-decoration-none text-secondary"
-                                title="Domain: <?php echo htmlspecialchars($element['domain_name']); ?>"> Domain <?php echo htmlspecialchars(truncate($element['domain_name'], 20)); ?>
-                                </a>
-                            </li>
-
-                            <li class="breadcrumb-item">
-                                <a href="view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>"
-                                class="text-decoration-none text-secondary"
-                                title="Criteria: <?php echo htmlspecialchars($element['criteria_name']); ?>"> Criteria <?php echo htmlspecialchars(truncate($element['criteria_name'], 20)); ?>
-                                </a>
-                            </li>
-
-                            <li class="breadcrumb-item active text-dark">Element - Edit Element</li>
+                            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Element</a></li>
+                            <li class="breadcrumb-item active text-dark">Edit Element</li>
                         </ol>
                     </nav>
 
@@ -177,12 +173,11 @@ $currentDir = basename(__DIR__);
                         <div>
                             <h3 class="fw-bold mb-1">Edit Element: <?php echo htmlspecialchars($element['element_name']); ?></h3>
                         </div>
-                       
-                    </div>
-                    <div>
-                        <a href="view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
-                        <i class="bi bi-arrow-left me-2"></i>Back
-                        </a>
+                        <div>
+                            <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
+                            <i class="bi bi-arrow-left me-2"></i>Back
+                            </a>
+                        </div>
                     </div>
 
                     <?php if ($flash): ?>
@@ -202,13 +197,32 @@ $currentDir = basename(__DIR__);
                                     <form method="POST" id="editElementForm">
                                         
                                         <div class="row">
-                                            <div class="col-md-6 mb-3">
+                                            <div class="col-md-4 mb-3">
                                                 <label for="element_id" class="form-label">Element ID</label>
                                                 <input type="text" class="form-control bg-light" id="element_id" value="<?php echo htmlspecialchars($element['element_ID']); ?>" readonly>
                                             </div>
-                                            <div class="col-md-6 mb-3">
-                                                <label for="criteria_name" class="form-label">Criteria</label>
-                                                <input type="text" class="form-control bg-light" id="criteria_name" value="<?php echo htmlspecialchars($element['criteria_name']); ?>" readonly>
+                                            
+                                            <div class="col-md-8 mb-3">
+                                                <label for="criteria_id" class="form-label">Criteria <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="criteria_id" name="criteria_id" required>
+                                                    <?php 
+                                                    $current_domain = '';
+                                                    foreach ($all_criteria as $c): 
+                                                        if ($current_domain !== $c['domain_name']) {
+                                                            if ($current_domain !== '') echo '</optgroup>';
+                                                            $current_domain = $c['domain_name'];
+                                                            echo '<optgroup label="' . htmlspecialchars($current_domain) . '">';
+                                                        }
+                                                    ?>
+                                                        <option value="<?php echo $c['criteria_ID']; ?>" 
+                                                            <?php echo ($c['criteria_ID'] == $element['criteria_ID']) ? 'selected' : ''; ?>>
+                                                            <?php echo htmlspecialchars($c['criteria_name']); ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                    <?php if ($current_domain !== '') echo '</optgroup>'; ?>
+                                                </select>
+                                                <div class="form-text text-muted">You can move this element to a different criteria.</div>
+                                                
                                             </div>
                                         </div>
 
@@ -233,7 +247,7 @@ $currentDir = basename(__DIR__);
                                         </div>
 
                                         <div class="d-flex justify-content-end gap-2 mt-5 pt-3 border-top">
-                                            <a href="view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>" class="btn btn-outline-secondary px-4 rounded-3">
+                                            <a href="index.php" class="btn btn-outline-secondary px-4 rounded-3">
                                                 Cancel
                                             </a>
                                             <button type="submit" class="btn btn-primary px-4 rounded-3" 
@@ -254,68 +268,50 @@ $currentDir = basename(__DIR__);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const counters = document.querySelectorAll('.char-count');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Character Counter Logic
+        const counters = document.querySelectorAll('.char-count');
+        counters.forEach(counter => {
+            const inputId = counter.getAttribute('data-for');
+            const inputElement = document.getElementById(inputId);
 
-            counters.forEach(counter => {
-                const inputId = counter.getAttribute('data-for');
-                const inputElement = document.getElementById(inputId);
-
-                if (inputElement) {
-                    const maxLength = inputElement.getAttribute('maxlength');
-
-                    const updateCount = () => {
-                        const currentLength = inputElement.value.length;
-                        const remaining = maxLength - currentLength;
-                        
-                        counter.textContent = `${remaining} characters remaining`;
-
-                        if (remaining === 0) {
-                            counter.classList.remove('text-muted');
-                            counter.classList.add('text-danger');
-                        } else {
-                            counter.classList.add('text-muted');
-                            counter.classList.remove('text-danger');
-                        }
-                    };
-
-                    // Run immediately to account for existing text
-                    updateCount();
-                    
-                    // Run on input
-                    inputElement.addEventListener('input', updateCount);
-                }
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            let isDirty = false;
-            
-            // 1. CHANGE THIS ID to match your HTML form ID
-            const form = document.getElementById('editElementForm'); 
-
-            if (form) {
-                // A. Detect changes on standard inputs (text, select, checkbox)
-                form.addEventListener('change', () => isDirty = true);
-                form.addEventListener('input', () => isDirty = true);
-                
-                // B. If user clicks "Save" or "Submit", disable the warning
-                form.addEventListener('submit', () => {
-                    isDirty = false;
-                });
-
-                // C. The Warning Popup
-                window.addEventListener('beforeunload', function (e) {
-                    if (isDirty) {
-                        e.preventDefault();
-                        e.returnValue = ''; // Required for Chrome/Edge
+            if (inputElement) {
+                const maxLength = inputElement.getAttribute('maxlength');
+                const updateCount = () => {
+                    const currentLength = inputElement.value.length;
+                    const remaining = maxLength - currentLength;
+                    counter.textContent = `${remaining} characters remaining`;
+                    if (remaining === 0) {
+                        counter.classList.remove('text-muted');
+                        counter.classList.add('text-danger');
+                    } else {
+                        counter.classList.add('text-muted');
+                        counter.classList.remove('text-danger');
                     }
-                });
+                };
+                updateCount();
+                inputElement.addEventListener('input', updateCount);
             }
         });
 
-    </script>
+        // Dirty Form Logic
+        let isDirty = false;
+        const form = document.getElementById('editElementForm'); 
+
+        if (form) {
+            form.addEventListener('change', () => isDirty = true);
+            form.addEventListener('input', () => isDirty = true);
+            form.addEventListener('submit', () => { isDirty = false; });
+
+            window.addEventListener('beforeunload', function (e) {
+                if (isDirty) {
+                    e.preventDefault();
+                    e.returnValue = ''; 
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

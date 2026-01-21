@@ -175,7 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
 
     } catch (Exception $e) {
-        if (isset($conn)) $conn->rollBack();
+        // Check if a transaction is actually active before trying to rollback
+        if (isset($conn) && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
         setFlashMessage('error', $e->getMessage());
         // Populate form with submitted data so user doesn't lose input
         $user_data = array_merge($user_data, $_POST);
@@ -270,13 +273,13 @@ $flash = getFlashMessage();
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Handphone No. <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" name="user_handphone_no" required
-                                                    value="<?php echo htmlspecialchars($user_data['user_handphone_no']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['user_handphone_no'] ?? ''); ?>">
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Company Phone</label>
                                                 <input type="text" class="form-control" name="user_phone_company" 
                                                     placeholder="Optional"
-                                                    value="<?php echo htmlspecialchars($user_data['user_phone_company']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['user_phone_company'] ?? ''); ?>">
                                             </div>
                                         </div>
 
@@ -284,7 +287,7 @@ $flash = getFlashMessage();
                                             <label class="form-label">Organization / Company</label>
                                             <input type="text" class="form-control" name="user_organization" 
                                                 placeholder="e.g. UiTM" 
-                                                value="<?php echo htmlspecialchars($user_data['user_organization']); ?>">
+                                                value="<?php echo htmlspecialchars($user_data['user_organization'] ?? ''); ?>">
                                         </div>
 
                                         <div class="row">
@@ -292,13 +295,13 @@ $flash = getFlashMessage();
                                                 <label class="form-label">Department</label>
                                                 <input type="text" class="form-control" name="department" 
                                                     placeholder="e.g. FSKM" 
-                                                    value="<?php echo htmlspecialchars($user_data['department']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['department'] ?? ''); ?>">
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Position</label>
                                                 <input type="text" class="form-control" name="user_position" 
                                                     placeholder="e.g. Lecturer" 
-                                                    value="<?php echo htmlspecialchars($user_data['user_position']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['user_position'] ?? ''); ?>">
                                             </div>
                                         </div>
                                     </div>

@@ -5,10 +5,10 @@
  */
 
 // Database credentials
-define('DB_HOST', 'mysql');
+define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'survey_system');
-define('DB_USER', 'audit_user');
-define('DB_PASS', 'audit_pass');
+define('DB_USER', 'root');
+define('DB_PASS', 'Salsa@240902005');
 define('DB_CHARSET', 'utf8mb4');
 
 class Database {
@@ -37,7 +37,7 @@ class Database {
                 $this->conn->exec("SET time_zone = '+08:00'");
                 
             } catch(PDOException $e) {
-                error_log("Connection Error: " . $e->getMessage());
+                die("REAL ERROR: " . $e->getMessage());
                 die("Database connection failed. Please contact administrator.");
             }
         }

@@ -3,29 +3,30 @@
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
-$domain_id = $_GET['domain_id'] ?? null;
-if (!$domain_id) {
-    redirect(BASE_URL . '/modules/admin/domain/index.php');
-}
-
 $db = new Database();
 
-// Get domain details
-$domain = $db->fetchOne("SELECT * FROM domain WHERE domain_ID = :id", [':id' => $domain_id]);
-if (!$domain) {
-    setFlashMessage('danger', 'Domain not found');
-    redirect(BASE_URL . '/modules/admin/domain/index.php');
-}
+// 1. Get Pre-selected Domain (Optional)
+// If the user came from a specific domain page, we pre-select it.
+$preselected_id = $_GET['domain_id'] ?? null;
 
+// 2. Fetch All Active Domains for the Dropdown
+$all_domains = $db->fetchAll("SELECT domain_ID, domain_name FROM domain WHERE status = 'Active' ORDER BY domain_name ASC");
+
+// 3. Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $criteria_name = sanitize($_POST['criteria_name']);
+        $selected_domain_id = $_POST['domain_id'] ?? null; // Get domain from dropdown
         
+        // Validation
+        if (empty($selected_domain_id)) {
+            throw new Exception('Please select a domain.');
+        }
         if (empty($criteria_name)) {
-            throw new Exception('Criteria name is required');
+            throw new Exception('Criteria name is required.');
         }
         
-        // Auto-generate criteria_ID using the database trigger trg_criteria_ID
+        // Insert Query
         $sql = "INSERT INTO criteria (domain_ID, criteria_name, input_id, input_at, status) 
                 VALUES (:domain_id, :criteria_name, :user_id, NOW(), 'Active')";
         
@@ -33,31 +34,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user_id = $current_user ? $current_user['user_ID'] : 'SYSTEM';
 
         $db->query($sql, [
-            ':domain_id' => $domain_id,
+            ':domain_id' => $selected_domain_id,
             ':criteria_name' => $criteria_name,
             ':user_id' => $user_id
         ]);
         
         setFlashMessage('success', "New criteria added successfully.");
-        header("Location: ../criteria/view-criteria.php?id={$domain_id}");
+        
+        // Redirect logic: If we have a pre-selected ID, go there, otherwise go to the criteria index
+        if ($preselected_id) {
+            header("Location: ../criteria/view-criteria.php?id={$selected_domain_id}");
+        } else {
+            // Or redirect to the main criteria list if no specific parent context
+            header("Location: ../criteria/index.php"); 
+        }
         exit();
 
     } catch (Exception $e) {
-        setFlashMessage('danger', $e->getMessage()); // Changed 'error' to 'danger' for Bootstrap compatibility
-        header('Location: add-criteria.php?domain_id=' . $domain_id);
+        setFlashMessage('danger', $e->getMessage());
+        // Reload page (keep query param if it existed)
+        header('Location: add-criteria.php' . ($preselected_id ? '?domain_id=' . $preselected_id : ''));
         exit();
     }
 }
 
 $flash = getFlashMessage(); 
-
-// Helper to truncate text
-if (!function_exists('truncate')) {
-    function truncate($string, $limit = 25, $end = '...') {
-        if (mb_strlen($string) <= $limit) return $string;
-        return mb_substr($string, 0, $limit) . $end;
-    }
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +76,7 @@ if (!function_exists('truncate')) {
         
         /* Sidebar Adjustment */
         .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; padding: 0; }
-        .main-content-wrapper { margin-left: 16.66667%; width: 83.33333%; }
+        .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
         
         @media (max-width: 991.98px) {
             .sidebar { position: relative; width: 100%; height: auto; }
@@ -107,26 +108,18 @@ if (!function_exists('truncate')) {
     <div class="container-fluid p-0 h-100">
         <div class="row g-0 h-100">
             
-            <div class="col-md-2 col-lg-2 sidebar">
+            <div class="col-auto">
                 <?php include_once __DIR__ . '/../../includes/admin_sidebar.php'; ?> 
             </div>
             
-            <div class="col-md-10 col-lg-10 main-content-wrapper">
+            <div class="col main-content-wrapper">
                 <div class="main-content px-4 py-4">
 
                     <nav aria-label="breadcrumb" class="mb-4">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
-                            
-                            <li class="breadcrumb-item">
-                                <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($domain['domain_ID']); ?>"
-                                   class="text-decoration-none text-secondary"
-                                   title="Domain: <?php echo htmlspecialchars($domain['domain_name']); ?>">
-                                   Domain <?php echo htmlspecialchars(truncate($domain['domain_name'], 20)); ?>
-                                </a>
-                            </li>
-                            
+                            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Criteria </a></li>
                             <li class="breadcrumb-item active text-dark">Add Criteria</li>
                         </ol>
                     </nav>
@@ -134,13 +127,13 @@ if (!function_exists('truncate')) {
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                         <div>
                             <div class="d-flex align-items-center gap-2">
-                                <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($domain['domain_ID']); ?>" class="btn btn-outline-secondary btn-sm rounded-circle" title="Back">
+                                <a href="index.php" class="btn btn-outline-secondary btn-sm rounded-circle" title="Back">
                                     <i class="bi bi-arrow-left"></i>
                                 </a>
-                                <h3 class="fw-bold mb-0">Add Criteria</h3>
+                                <h3 class="fw-bold mb-0">Add New Criteria</h3>
                             </div>
                             <p class="text-muted mb-0 mt-1 ms-5">
-                                Domain: <span class="fw-semibold"><?php echo htmlspecialchars($domain['domain_name']); ?></span>
+                                Define a new criteria and link it to a domain.
                             </p>
                         </div>
                     </div>
@@ -160,19 +153,34 @@ if (!function_exists('truncate')) {
                                 </div>
                                 <div class="card-body p-4">                                 
                                     <form method="POST" id="addCriteriaForm">
+                                        
                                         <div class="mb-4">
-                                        <label for="criteria_name" class="form-label fw-bold-dark text-sm text-uppercase">Criteria Name <span class="text-danger">*</span></label>                                        
-                                        <textarea class="form-control" id="criteria_name" name="criteria_name" rows="3" required maxlength="100"
-                                            style="border-radius: 0.5rem;"
-                                            placeholder="e.g., Audit Scope..."></textarea>                                     
-                                        <div class="d-flex justify-content-end mt-1">
-                                            <small class="text-muted char-count" data-for="criteria_name">100 characters remaining</small>
-                                        </div>                                       
-                                        <div class="form-text mt-2">Enter the full, descriptive name...</div>
-                                    </div>
+                                            <label for="domain_id" class="form-label fw-bold-dark text-sm text-uppercase">Select Domain <span class="text-danger">*</span></label>
+                                            <select class="form-select" id="domain_id" name="domain_id" required style="border-radius: 0.5rem; padding: 0.75rem;">
+                                                <option value="" disabled <?php echo empty($preselected_id) ? 'selected' : ''; ?>>-- Choose a Domain --</option>
+                                                <?php foreach ($all_domains as $d): ?>
+                                                    <option value="<?php echo $d['domain_ID']; ?>" 
+                                                        <?php echo ($preselected_id == $d['domain_ID']) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($d['domain_name']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                            <div class="form-text mt-2">Which domain does this criteria belong to?</div>
+                                        </div>
+
+                                        <div class="mb-4">
+                                            <label for="criteria_name" class="form-label fw-bold-dark text-sm text-uppercase">Criteria Name <span class="text-danger">*</span></label>                                           
+                                            <textarea class="form-control" id="criteria_name" name="criteria_name" rows="3" required maxlength="100"
+                                                style="border-radius: 0.5rem;"
+                                                placeholder="e.g., Audit Scope..."></textarea>                                                  
+                                            <div class="d-flex justify-content-end mt-1">
+                                                <small class="text-muted char-count" data-for="criteria_name">100 characters remaining</small>
+                                            </div>                                             
+                                            <div class="form-text mt-2">Enter the full, descriptive name...</div>
+                                        </div>
 
                                         <div class="d-flex justify-content-end gap-2 pt-2">
-                                            <a href="../criteria/view-criteria.php?id=<?php echo $domain_id; ?>" class="btn btn-outline-secondary px-4 rounded-3">
+                                            <a href="index.php" class="btn btn-outline-secondary px-4 rounded-3">
                                                 Cancel
                                             </a>
                                             <button type="submit" class="btn btn-gradient-primary px-4 rounded-3">
@@ -196,28 +204,28 @@ if (!function_exists('truncate')) {
     document.addEventListener('DOMContentLoaded', function() {
         let isDirty = false;
         
-        // 1. CHANGE THIS ID to match your HTML form ID
         const form = document.getElementById('addCriteriaForm'); 
 
         if (form) {
-            // A. Detect changes on standard inputs (text, select, checkbox)
+            // Detect changes
             form.addEventListener('change', () => isDirty = true);
             form.addEventListener('input', () => isDirty = true);
             
-            // B. If user clicks "Save" or "Submit", disable the warning
+            // Allow submit without warning
             form.addEventListener('submit', () => {
                 isDirty = false;
             });
 
-            // C. The Warning Popup
+            // Warning popup on leave
             window.addEventListener('beforeunload', function (e) {
                 if (isDirty) {
                     e.preventDefault();
-                    e.returnValue = ''; // Required for Chrome/Edge
+                    e.returnValue = ''; 
                 }
             });
         }
 
+        // Character counter logic
         const counters = document.querySelectorAll('.char-count');
         counters.forEach(counter => {
             const input = document.getElementById(counter.getAttribute('data-for'));
@@ -226,7 +234,7 @@ if (!function_exists('truncate')) {
                     const remaining = input.getAttribute('maxlength') - input.value.length;
                     counter.textContent = `${remaining} characters remaining`;
                 };
-                updateCount(); // Run on load
+                updateCount(); 
                 input.addEventListener('input', updateCount);
             }
         });

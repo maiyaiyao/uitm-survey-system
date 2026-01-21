@@ -120,7 +120,15 @@ $users = $db->fetchAll("SELECT user_ID, full_name, department FROM user WHERE st
                         </ol>
                     </nav>
 
-                    <?php echo getFlashMessage(); ?>
+                    <?php 
+                    $flash = getFlashMessage();
+                    if ($flash): 
+                    ?>
+                        <div class="alert alert-<?php echo ($flash['type'] == 'error') ? 'danger' : $flash['type']; ?> alert-dismissible fade show border-0 shadow-sm mb-4">
+                            <?php echo $flash['message']; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
                         <div>
@@ -129,7 +137,7 @@ $users = $db->fetchAll("SELECT user_ID, full_name, department FROM user WHERE st
                         </div>
                         <div class="d-flex gap-2">
                             <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
-                                <i class="bi bi-arrow-left me-2"></i>Back
+                                <i class="bi bi-arrow-left me-2"></i>Back To Hub
                             </a>
                             <button class="btn btn-primary shadow-sm px-4 py-2 rounded-3" 
                                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;"

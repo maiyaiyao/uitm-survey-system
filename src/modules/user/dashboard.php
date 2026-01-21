@@ -13,6 +13,7 @@ requireRole(['user']);
 
 $db = new Database();
 $user_ID = getCurrentUserId();
+$current_time = date('Y-m-d H:i:s'); // Get current server time for comparisons
 
 // --- 1. Check User Status ---
 $status_sql = "SELECT status, full_name, primary_email FROM user WHERE user_ID = :user_ID LIMIT 1";
@@ -28,24 +29,36 @@ if (!$user_data || $user_data['status'] !== 'Active') {
 $current_user = getCurrentUser();
 
 // --- 2. Fetch Statistics ---
+// We add conditions to ensure we only count surveys that are "Live" (Start date passed) and not Drafts.
 $stats_sql = "SELECT 
-    COUNT(DISTINCT CASE WHEN s.status = 'Active' THEN s.survey_ID END) AS active_surveys,
-    COUNT(DISTINCT CASE WHEN s.status = 'Completed' THEN s.survey_ID END) AS completed_surveys,
+    COUNT(DISTINCT CASE WHEN us.status IN ('Pending', 'In progress') AND s.status = 'Active' THEN s.survey_ID END) AS active_surveys,
+    COUNT(DISTINCT CASE WHEN us.status = 'Completed' THEN s.survey_ID END) AS completed_surveys,
     COUNT(DISTINCT s.survey_ID) AS total_surveys
 FROM survey s
 INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
-WHERE us.user_ID = :user_ID";
+WHERE us.user_ID = :user_ID
+AND s.start_date <= :current_time
+AND s.status != 'Draft'";
 
-$stats = $db->fetchOne($stats_sql, [':user_ID' => $user_ID]);
+$stats = $db->fetchOne($stats_sql, [
+    ':user_ID' => $user_ID,
+    ':current_time' => $current_time
+]);
 
 // --- 3. Fetch Recent Assigned Surveys (Limit 4 for Dashboard) ---
+// Filter to hide future scheduled surveys
 $recent_surveys_sql = "SELECT s.*, us.status as user_survey_status
         FROM survey s
         INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
         WHERE us.user_ID = :user_ID
+        AND s.start_date <= :current_time
+        AND s.status != 'Draft'
         ORDER BY s.start_date DESC LIMIT 4";
 
-$recent_surveys = $db->fetchAll($recent_surveys_sql, [':user_ID' => $user_ID]);
+$recent_surveys = $db->fetchAll($recent_surveys_sql, [
+    ':user_ID' => $user_ID,
+    ':current_time' => $current_time
+]);
 
 // Helper for Status Badges
 function getStatusBadge($status) {
@@ -70,46 +83,12 @@ function getStatusBadge($status) {
         }
         
         /* Sidebar Styles */
-        .sidebar {
-            position: fixed; top: 0; bottom: 0; left: 0;
-            width: 270px; /* Fixed width matching Admin */
-            z-index: 100; padding: 0;
-            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            display: flex; flex-direction: column;
-        }
         .main-content-wrapper { 
             margin-left: 270px; /* Matching fixed width */
             width: calc(100% - 270px); 
         }
         
-        /* Sidebar Links */
-        .sidebar .nav-link {
-            color: rgba(255,255,255,0.8);
-            padding: 1rem 1.5rem;
-            border-left: 3px solid transparent;
-            display: flex; align-items: center; gap: 12px;
-            transition: all 0.15s ease-in-out;
-        }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255,255,255,0.1);
-            border-left-color: white;
-        }
-        .nav-link-icon {
-            width: 28px; height: 28px;
-            display: flex; justify-content: center; align-items: center;
-            color: rgba(255,255,255,0.9);
-            background: rgba(255,255,255,0.15);
-            border-radius: 6px;
-        }
-        .sidebar .nav-link.active .nav-link-icon {
-            background: white; color: #764ba2;
-        }
-
-        /* Responsive Sidebar */
         @media (max-width: 991.98px) {
-            .sidebar { position: relative; width: 100%; height: auto; }
             .main-content-wrapper { margin-left: 0; width: 100%; }
         }
 
@@ -184,9 +163,6 @@ function getStatusBadge($status) {
                         </div>
                         <div class="d-flex align-items-center gap-3">
                             <span class="text-muted small"><?php echo date('l, d F Y'); ?></span>
-                            <div class="bg-white p-2 rounded-circle shadow-sm text-primary">
-                                <i class="bi bi-bell-fill"></i>
-                            </div>
                         </div>
                     </div>
 
@@ -296,17 +272,17 @@ function getStatusBadge($status) {
                                                             </div>
                                                         </td>
                                                         <td class="text-center">
-                                                            <?php echo getStatusBadge($row['status']); ?>
+                                                            <?php echo getStatusBadge($row['user_survey_status']); ?>
                                                         </td>
                                                         <td class="text-end pe-4">
-                                                            <?php if($row['status'] === 'Active'): ?>
+                                                            <?php if($row['status'] === 'Active' && $row['user_survey_status'] !== 'Completed'): ?>
                                                                 <a href="survey/assessment.php?survey_id=<?php echo $row['survey_ID']; ?>" 
                                                                    class="btn btn-sm btn-primary px-3 rounded-3"
                                                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                                                     Start
                                                                 </a>
                                                             <?php else: ?>
-                                                                <a href="view-results.php?survey_id=<?php echo $row['survey_ID']; ?>" 
+                                                                <a href="report/view.php?id=<?php echo $row['survey_ID']; ?>" 
                                                                    class="btn btn-sm btn-outline-secondary px-3 rounded-3">
                                                                     View
                                                                 </a>
@@ -347,14 +323,6 @@ function getStatusBadge($status) {
                                                 <small class="text-muted">Download past certificates</small>
                                             </div>
                                         </a>
-
-                                        <div class="p-3 bg-light rounded-3 mt-2">
-                                            <h6 class="fw-bold mb-2">Need Help?</h6>
-                                            <p class="small text-muted mb-2">Contact the administrator for survey access or technical issues.</p>
-                                            <a href="mailto:admin@uitm.edu.my" class="small text-decoration-none fw-bold">
-                                                Contact Support <i class="bi bi-arrow-right"></i>
-                                            </a>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

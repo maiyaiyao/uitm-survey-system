@@ -19,7 +19,7 @@ define('APP_VERSION', '1.0.0');
 define('APP_ENV', 'development'); // change to 'production' when live
 
 // URL Configuration
-define('BASE_URL', 'http://localhost:8080');
+define('BASE_URL', 'http://localhost:8000');
 define('ASSETS_URL', BASE_URL . '/assets');
 
 // Path Configuration
@@ -57,6 +57,11 @@ require_once CONFIG_PATH . '/database.php';
 
 // Timezone
 date_default_timezone_set('Asia/Kuala_Lumpur');
+
+//app pass
+define('SMTP_HOST', 'smtp.gmail.com');
+define('SMTP_USER', 'iyliamaisarah050205@gmail.com');
+define('SMTP_PASS', 'ayreadfbqhivwyzh');
 
 /**
  * Autoload helper functions

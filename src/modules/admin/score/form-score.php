@@ -131,32 +131,9 @@ if (!function_exists('truncate')) {
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
-                            
-                            <li class="breadcrumb-item">
-                                <a href="../criteria/view-criteria.php?id=<?php echo htmlspecialchars($element['domain_ID']); ?>"
-                                   class="text-decoration-none text-secondary"
-                                   title="Domain: <?php echo htmlspecialchars($element['domain_name']); ?>">
-                                   Domain <?php echo htmlspecialchars(truncate($element['domain_name'], 15)); ?>
-                                </a>
-                            </li>
-
-                            <li class="breadcrumb-item">
-                                <a href="../element/view-element.php?id=<?php echo htmlspecialchars($element['criteria_ID']); ?>"
-                                   class="text-decoration-none text-secondary"
-                                   title="Criteria: <?php echo htmlspecialchars($element['criteria_name']); ?>">
-                                   Criteria <?php echo htmlspecialchars(truncate($element['criteria_name'], 15)); ?>
-                                </a>
-                            </li>
-
-                            <li class="breadcrumb-item">
-                                <a href="index.php?element_id=<?php echo $element_id; ?>" 
-                                   class="text-decoration-none text-secondary"
-                                   title="Element: <?php echo htmlspecialchars($element['element_name']); ?>">
-                                   Element <?php echo htmlspecialchars(truncate($element['element_name'], 15)); ?>
-                                </a>
-                            </li>
-
-                            <li class="breadcrumb-item active text-dark"><?php echo $se_id ? 'Edit Description' : 'Add Score'; ?></li>
+                            <li class="breadcrumb-item"><a href="../element/index.php" class="text-decoration-none text-secondary"> Element</a></li>
+                            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary"> Score Levels</a></li>
+                            <li class="breadcrumb-item active text-dark"><?php echo $se_id ? 'Edit Score' : 'Add Score'; ?></li>
                         </ol>
                     </nav>
 

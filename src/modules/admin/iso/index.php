@@ -16,6 +16,9 @@ $data = [];
 $params = [];
 
 // --- Logic for Fetching Data based on Tab ---
+// Note: We still fetch 'mapped_count'/'is_mapped' to show the Badge, 
+// but we won't use it to lock the delete button anymore.
+
 if ($active_tab === 'sections') {
     $sql = "SELECT section.*, 
             (SELECT COUNT(*) FROM domain d WHERE d.sec_ID = section.sec_ID) as mapped_count 
@@ -218,6 +221,11 @@ if ($active_tab === 'sections') {
                                             </td>
                                         </tr>
                                     <?php else: ?>
+                                        <?php                                                 
+                                        $urlParams = "";
+                                        if (!empty($search)) $urlParams .= "&search=" . urlencode($search);
+                                        if (!empty($filter)) $urlParams .= "&filter=" . urlencode($filter);
+                                        ?>
                                         <?php foreach ($data as $row): ?>
                                             <?php
                                                 // Prepare Variables
@@ -261,25 +269,32 @@ if ($active_tab === 'sections') {
                                                                 <i class="bi bi-check-circle-fill me-1"></i> Mapped
                                                             </span>
                                                         </div>
-                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
-                                                        class="btn btn-sm btn-link text-decoration-none text-muted" style="font-size: 0.8rem;">
-                                                        Edit Link
+                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?><?php echo $urlParams; ?>" 
+                                                           class="btn btn-sm btn-link text-decoration-none text-muted" style="font-size: 0.8rem;">
+                                                            Edit Link
                                                         </a>
                                                     <?php else: ?>
-                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?>" 
-                                                        class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
+                                                        <a href="map_iso.php?type=<?php echo $mapType; ?>&id=<?php echo urlencode($mapID); ?><?php echo $urlParams; ?>" 
+                                                           class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
                                                             <i class="bi bi-link-45deg me-1"></i> Map Now
                                                         </a>
                                                     <?php endif; ?>
                                                 </td>
 
                                                 <td class="text-end pe-4 no-click" onclick="event.stopPropagation()">
-                                                    <a href="edit-<?php echo $mapType; ?>.php?id=<?php echo urlencode($mapID); ?>" 
-                                                        class="btn btn-sm btn-link text-primary" 
-                                                        title="Edit">
-                                                        <i class="bi bi-pencil-square"></i>
-                                                    </a>
-                                                    <a href="#" class="btn btn-sm btn-link text-danger" title="Delete"><i class="bi bi-trash"></i></a>
+                                                    <div class="d-flex justify-content-end gap-2">
+                                                        <a href="edit-<?php echo $mapType; ?>.php?id=<?php echo urlencode($mapID); ?>" 
+                                                           class="btn btn-sm btn-link text-primary" 
+                                                           title="Edit">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </a>
+                                                        
+                                                        <button class="btn btn-sm btn-link text-danger" 
+                                                                onclick="confirmDelete('<?php echo $mapType; ?>', '<?php echo $mapID; ?>')" 
+                                                                title="Delete">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -301,36 +316,25 @@ if ($active_tab === 'sections') {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-4">
-                    
                     <div id="modalLoader" class="text-center py-4">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+                        <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
                     </div>
-
                     <div id="modalContent" style="display:none;">
                         <h2 class="mb-3 fw-bold" id="modalItemId"></h2>
                         <p class="text-muted mb-4 lead" id="modalItemName" style="font-size: 1.1rem;"></p>
-                        
                         <div class="card bg-light border-0 rounded-3">
                             <div class="card-body">
                                 <h6 class="fw-bold text-uppercase small text-muted mb-3">
                                     <i class="bi bi-link-45deg me-1"></i> Mapped Internal Items
                                 </h6>
-                                <ul id="modalMappingsList" class="list-group list-group-flush rounded-3">
-                                    </ul>
-                                <div id="modalNoMappings" class="text-center text-muted small py-2" style="display:none;">
-                                    No mappings found.
-                                </div>
+                                <ul id="modalMappingsList" class="list-group list-group-flush rounded-3"></ul>
+                                <div id="modalNoMappings" class="text-center text-muted small py-2" style="display:none;">No mappings found.</div>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="modal-footer border-top-0">
-                    <a href="#" id="modalMapBtn" class="btn btn-sm btn-outline-primary">
-                        <i class="bi bi-pencil-square"></i> Manage Mappings
-                    </a>
+                    <a href="#" id="modalMapBtn" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil-square"></i> Manage Mappings</a>
                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -340,32 +344,30 @@ if ($active_tab === 'sections') {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Init Tooltips
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        const currentSearch = "<?php echo addslashes($search); ?>";
+        const currentFilter = "<?php echo addslashes($filter); ?>";
+
         function viewDetails(type, id, event) {
-            // Show Modal
             const modalEl = document.getElementById('isoDetailsModal');
             const modal = new bootstrap.Modal(modalEl);
             modal.show();
 
-            // Reset UI to Loading State
             document.getElementById('modalLoader').style.display = 'block';
             document.getElementById('modalContent').style.display = 'none';
             document.getElementById('modalMappingsList').innerHTML = '';
             
-            // Fetch Data from Backend
             fetch(`get_iso_details.php?type=${type}&id=${encodeURIComponent(id)}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.error) {
-                        alert(data.error);
-                        return;
-                    }
-
-                    // Populate Main Details
+                    if (data.error) { alert(data.error); return; }
                     document.getElementById('modalTypeTitle').textContent = data.type + ' Details';
                     document.getElementById('modalItemId').textContent = data.item.id;
                     document.getElementById('modalItemName').textContent = data.item.name;
 
-                    // Populate Mappings
                     const listContainer = document.getElementById('modalMappingsList');
                     const noMapMsg = document.getElementById('modalNoMappings');
                     
@@ -374,21 +376,19 @@ if ($active_tab === 'sections') {
                         data.mappings.forEach(map => {
                             const li = document.createElement('li');
                             li.className = 'list-group-item bg-white d-flex justify-content-between align-items-center';
-                            li.innerHTML = `
-                                <span>${map.name}</span>
-                                <span class="badge bg-light text-dark border">${map.id}</span>
-                            `;
+                            li.innerHTML = `<span>${map.name}</span><span class="badge bg-light text-dark border">${map.id}</span>`;
                             listContainer.appendChild(li);
                         });
                     } else {
                         noMapMsg.style.display = 'block';
                     }
 
-                    // Update "Manage Mapping" button link
                     const mapBtn = document.getElementById('modalMapBtn');
-                    mapBtn.href = `map_iso.php?type=${type}&id=${id}`;
+                    let targetUrl = `map_iso.php?type=${type}&id=${encodeURIComponent(id)}`;
+                    if (currentSearch) targetUrl += `&search=${encodeURIComponent(currentSearch)}`;
+                    if (currentFilter) targetUrl += `&filter=${encodeURIComponent(currentFilter)}`;
+                    mapBtn.href = targetUrl;
 
-                    // Show Content / Hide Loader
                     document.getElementById('modalLoader').style.display = 'none';
                     document.getElementById('modalContent').style.display = 'block';
                 })
@@ -396,6 +396,30 @@ if ($active_tab === 'sections') {
                     console.error('Error:', error);
                     document.getElementById('modalLoader').innerHTML = '<p class="text-danger">Failed to load details.</p>';
                 });
+        }
+
+        function confirmDelete(type, id) {
+            // UPDATED: Standard delete confirmation without blocking
+            if (confirm(`Are you sure you want to delete this ${type} (${id})? This action cannot be undone.`)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'delete-iso.php';
+                
+                const typeInput = document.createElement('input');
+                typeInput.type = 'hidden';
+                typeInput.name = 'type';
+                typeInput.value = type;
+                
+                const idInput = document.createElement('input');
+                idInput.type = 'hidden';
+                idInput.name = 'id';
+                idInput.value = id;
+                
+                form.appendChild(typeInput);
+                form.appendChild(idInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
         }
     </script>
 </body>

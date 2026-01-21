@@ -136,11 +136,6 @@ $completed_surveys = $db->fetchAll($sql, [':uid' => $user_ID]);
                                                            class="btn btn-sm btn-outline-secondary">
                                                             <i class="bi bi-eye"></i> Report
                                                         </a>
-                                                        <a href="certificate.php?id=<?php echo $row['survey_ID']; ?>" 
-                                                           target="_blank"
-                                                           class="btn btn-sm btn-outline-primary">
-                                                            <i class="bi bi-award"></i> Certificate
-                                                        </a>
                                                     </div>
                                                 </td>
                                             </tr>

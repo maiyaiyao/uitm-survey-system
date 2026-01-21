@@ -204,12 +204,12 @@ $flash = getFlashMessage();
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Handphone No.</label>
                                                 <input type="text" name="user_handphone_no" class="form-control" required
-                                                       value="<?php echo htmlspecialchars($user['user_handphone_no']); ?>">
+                                                       value="<?php echo htmlspecialchars($user['user_handphone_no'] ?? ''); ?>">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Office Phone</label>
                                                 <input type="text" name="user_phone_company" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['user_phone_company']); ?>">
+                                                       value="<?php echo htmlspecialchars($user['user_phone_company'] ?? ''); ?>">
                                             </div>
                                         </div>
 
@@ -218,19 +218,19 @@ $flash = getFlashMessage();
                                         <div class="mb-3">
                                             <label class="form-label small text-muted text-uppercase fw-bold">Organization</label>
                                             <input type="text" name="user_organization" class="form-control"
-                                                   value="<?php echo htmlspecialchars($user['user_organization']); ?>">
+                                                   value="<?php echo htmlspecialchars($user['user_organization'] ?? ''); ?>">
                                         </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Department</label>
                                                 <input type="text" name="department" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['department']); ?>">
+                                                       value="<?php echo htmlspecialchars($user['department'] ?? ''); ?>">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Position</label>
                                                 <input type="text" name="user_position" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['user_position']); ?>">
+                                                       value="<?php echo htmlspecialchars($user['user_position'] ?? ''); ?>">
                                             </div>
                                         </div>
 
