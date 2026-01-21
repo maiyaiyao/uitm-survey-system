@@ -209,7 +209,7 @@ $flash = getFlashMessage();
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Office Phone</label>
                                                 <input type="text" name="user_phone_company" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['user_phone_company']); ?>">
+                                                       value="<?php echo htmlspecialchars($user['user_phone_company']?? ''); ?>">
                                             </div>
                                         </div>
 
