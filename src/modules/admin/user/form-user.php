@@ -270,7 +270,7 @@ $flash = getFlashMessage();
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Handphone No. <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" name="user_handphone_no" required
-                                                    value="<?php echo htmlspecialchars($user_data['user_handphone_no']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['user_handphone_no'] ?? ''); ?>">
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Company Phone</label>
@@ -284,7 +284,7 @@ $flash = getFlashMessage();
                                             <label class="form-label">Organization / Company</label>
                                             <input type="text" class="form-control" name="user_organization" 
                                                 placeholder="e.g. UiTM" 
-                                                value="<?php echo htmlspecialchars($user_data['user_organization']); ?>">
+                                                value="<?php echo htmlspecialchars($user_data['user_organization'] ?? ''); ?>">
                                         </div>
 
                                         <div class="row">
@@ -292,13 +292,13 @@ $flash = getFlashMessage();
                                                 <label class="form-label">Department</label>
                                                 <input type="text" class="form-control" name="department" 
                                                     placeholder="e.g. FSKM" 
-                                                    value="<?php echo htmlspecialchars($user_data['department']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['department'] ?? ''); ?>">
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label class="form-label">Position</label>
                                                 <input type="text" class="form-control" name="user_position" 
                                                     placeholder="e.g. Lecturer" 
-                                                    value="<?php echo htmlspecialchars($user_data['user_position']); ?>">
+                                                    value="<?php echo htmlspecialchars($user_data['user_position'] ?? ''); ?>">
                                             </div>
                                         </div>
                                     </div>
