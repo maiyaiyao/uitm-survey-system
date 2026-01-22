@@ -19,11 +19,15 @@ try {
     $user = $db->fetchOne("SELECT * FROM user WHERE user_ID = :id", [':id' => $current_user_id]);
     
     if (!$user) {
-        // Should not happen for a logged-in user, but safety first
         session_unset();
         session_destroy();
         redirect(BASE_URL . '/modules/auth/login.php');
     }
+
+    // --- FETCH DROPDOWNS FOR EDITING ORG/DEPT ---
+    $organizations = $db->fetchAll("SELECT * FROM organization WHERE status = 'Active' ORDER BY org_name ASC");
+    $all_departments = $db->fetchAll("SELECT * FROM department WHERE status = 'Active' ORDER BY dept_name ASC");
+
 } catch (Exception $e) {
     die("Error fetching profile: " . $e->getMessage());
 }
@@ -35,13 +39,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // --- SCENARIO A: Update Profile Details ---
         if ($action === 'update_profile') {
+            
             $updateData = [
                 'full_name'          => sanitize($_POST['full_name']),
                 'user_handphone_no'  => sanitize($_POST['user_handphone_no']),
                 'user_phone_company' => sanitize($_POST['user_phone_company']),
-                'user_organization'  => sanitize($_POST['user_organization']),
-                'department'         => sanitize($_POST['department']),
-                'user_position'      => sanitize($_POST['user_position'])
+                'user_position'      => sanitize($_POST['user_position']),
+                // UPDATED: Save the Org/Dept IDs selected by the user
+                'org_ID'             => !empty($_POST['org_ID']) ? (int)$_POST['org_ID'] : null,
+                'dept_ID'            => !empty($_POST['dept_ID']) ? (int)$_POST['dept_ID'] : null
             ];
 
             // Validation
@@ -49,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("Full Name and Handphone Number are required.");
             }
 
-            // Perform Update using User Model
+            // Perform Update
             $userModel->update($current_user_id, $updateData);
             
             // Update Session Name if changed
@@ -64,14 +70,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $new_password     = $_POST['new_password'];
             $confirm_password = $_POST['confirm_password'];
 
-            // 1. If user has a password set (not Google-only), verify current
             if (!empty($user['password'])) {
                 if (!$userModel->verifyPassword($current_password, $user['password'])) {
                     throw new Exception("Current password is incorrect.");
                 }
             }
 
-            // 2. Validate New Password
             if (strlen($new_password) < 8) {
                 throw new Exception("New password must be at least 8 characters.");
             }
@@ -79,12 +83,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("New passwords do not match.");
             }
 
-            // 3. Update Password
             $userModel->updatePassword($current_user_id, $new_password);
             setFlashMessage('success', 'Password changed successfully.');
         }
 
-        // Refresh page to show changes
         redirect('profile.php');
 
     } catch (Exception $e) {
@@ -103,13 +105,11 @@ $flash = getFlashMessage();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        /* Shared Dashboard Styles */
         html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
         .sidebar { position: fixed; top: 0; bottom: 0; left: 0; width: 270px; z-index: 100; padding: 0; background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); color: white; display: flex; flex-direction: column; }
         .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
         @media (max-width: 991.98px) { .sidebar { position: relative; width: 100%; height: auto; } .main-content-wrapper { margin-left: 0; width: 100%; } }
         
-        /* Profile Specific Styles */
         .profile-header-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -129,11 +129,10 @@ $flash = getFlashMessage();
             color: white;
             border: 3px solid rgba(255,255,255,0.3);
         }
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: #764ba2;
             box-shadow: 0 0 0 0.25rem rgba(118, 75, 162, 0.25);
         }
-        /* Fix input group corners inside cards */
         .input-group .btn {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
@@ -197,6 +196,9 @@ $flash = getFlashMessage();
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Email (Read Only)</label>
                                                 <input type="email" class="form-control bg-light" readonly
                                                        value="<?php echo htmlspecialchars($user['primary_email']); ?>">
+                                                <div class="form-text text-muted small">
+                                                    Email address cannot be changed.
+                                                </div>
                                             </div>
                                         </div>
 
@@ -217,15 +219,23 @@ $flash = getFlashMessage();
 
                                         <div class="mb-3">
                                             <label class="form-label small text-muted text-uppercase fw-bold">Organization</label>
-                                            <input type="text" name="user_organization" class="form-control"
-                                                   value="<?php echo htmlspecialchars($user['user_organization'] ?? ''); ?>">
+                                            <select class="form-select" name="org_ID" id="orgSelect">
+                                                <option value="">-- Select Organization --</option>
+                                                <?php foreach ($organizations as $org): ?>
+                                                    <option value="<?php echo $org['org_ID']; ?>" 
+                                                        <?php echo ($user['org_ID'] == $org['org_ID']) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($org['org_name']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Department</label>
-                                                <input type="text" name="department" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['department'] ?? ''); ?>">
+                                                <select class="form-select" name="dept_ID" id="deptSelect">
+                                                    <option value="">-- Select Department --</option>
+                                                    </select>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Position</label>
@@ -307,13 +317,49 @@ $flash = getFlashMessage();
         </div>
     </div>
 
+    <script>
+        const allDepts = <?php echo json_encode($all_departments); ?>;
+        const savedDept = "<?php echo $user['dept_ID'] ?? ''; ?>";
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        /**
-         * Toggle Password Visibility
-         * @param {string} inputId The ID of the password input field
-         * @param {string} iconId The ID of the icon element (to switch classes)
-         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DROPDOWN LOGIC ---
+            const orgSelect = document.getElementById('orgSelect');
+            const deptSelect = document.getElementById('deptSelect');
+
+            function updateDepts() {
+                const orgId = orgSelect.value;
+                deptSelect.innerHTML = '<option value="">-- Select Department --</option>';
+                
+                if (!orgId) {
+                    deptSelect.disabled = true;
+                    return;
+                }
+                
+                deptSelect.disabled = false;
+
+                const filtered = allDepts.filter(d => d.org_ID == orgId);
+                
+                if (filtered.length === 0) {
+                    deptSelect.innerHTML = '<option value="">No departments found for this organization</option>';
+                    deptSelect.disabled = true;
+                } else {
+                    filtered.forEach(d => {
+                        const opt = new Option(d.dept_name + (d.dept_code ? ` (${d.dept_code})` : ''), d.dept_ID);
+                        if (d.dept_ID == savedDept) opt.selected = true;
+                        deptSelect.add(opt);
+                    });
+                }
+            }
+
+            if(orgSelect && deptSelect) {
+                orgSelect.addEventListener('change', updateDepts);
+                if (orgSelect.value) updateDepts();
+            }
+        });
+
         function togglePassword(inputId, iconId) {
             const passwordField = document.getElementById(inputId);
             const toggleIcon = document.getElementById(iconId);

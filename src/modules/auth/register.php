@@ -9,12 +9,23 @@ if (isLoggedIn()) {
 }
 
 $error = '';
+$db = new Database();
+
+// --- FETCH DROPDOWN DATA (For the form) ---
+try {
+    // Fetch Active Organizations
+    $organizations = $db->fetchAll("SELECT * FROM organization WHERE status = 'Active' ORDER BY org_name ASC");
+    // Fetch Active Departments
+    $all_departments = $db->fetchAll("SELECT * FROM department WHERE status = 'Active' ORDER BY dept_name ASC");
+} catch (Exception $e) {
+    $organizations = [];
+    $all_departments = [];
+}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $userModel = new User();
-        $db = new Database();
         $conn = $db->getConnection();
         
         // Get form data and sanitize
@@ -22,17 +33,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $primary_email = sanitize($_POST['primary_email']);
         $password = $_POST['password'];
         $confirm_password = $_POST['confirm_password'];
-        
-        // New fields for the 'user' table (collecting them, but not all are required for basic registration)
-        $department = sanitize($_POST['department'] ?? '');
-        $user_organization = sanitize($_POST['user_organization'] ?? '');
-        $user_position = sanitize($_POST['user_position'] ?? '');
-        $user_phone_company = sanitize($_POST['user_phone_company'] ?? '');
         $user_handphone_no = sanitize($_POST['user_handphone_no'] ?? '');
+        $user_phone_company = sanitize($_POST['user_phone_company'] ?? '');
+        $user_position = sanitize($_POST['user_position'] ?? '');
+        
+        // --- NEW: Capture IDs instead of Text ---
+        $org_ID = !empty($_POST['org_ID']) ? (int)$_POST['org_ID'] : null;
+        $dept_ID = !empty($_POST['dept_ID']) ? (int)$_POST['dept_ID'] : null;
         
         // --- Validation ---
         if (empty($full_name) || empty($primary_email) || empty($password) || empty($user_handphone_no)) {
             throw new Exception('Full Name, Email, Password, and Phone Number are required fields.');
+        }
+        
+        if (empty($org_ID) || empty($dept_ID)) {
+            throw new Exception('Please select your Organization and Department.');
         }
         
         if (!isValidEmail($primary_email)) {
@@ -56,23 +71,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $conn->beginTransaction();
         
         try {
-            // Create user - using 'primary_email' for the email field
+            // Create user
             $user_ID = $userModel->create([
                 'primary_email' => $primary_email,
                 'password' => $userModel->hashPassword($password),
                 'full_name' => $full_name,
-                // New fields for 'user' table
-                'department' => $department,
-                'status' => 'active', // Assuming a default status
+                'status' => 'Active', 
                 'email_verified' => 0, // Not verified initially
-                'user_organization' => $user_organization,
+                
+                // Save the IDs
+                'org_ID' => $org_ID,
+                'dept_ID' => $dept_ID,
+                
+                // Legacy text fields (set to NULL or empty since we use IDs now)
+                'department' => null,
+                'user_organization' => null,
+                
                 'user_position' => $user_position,
                 'user_phone_company' => $user_phone_company,
                 'user_handphone_no' => $user_handphone_no
             ]);
 
-            // --- SAFETY CHECK START ---
-            // If create() returned empty, force fetch the ID by email
+            // --- SAFETY CHECK ---
             if (empty($user_ID)) {
                 $checkUser = $userModel->findByEmail($primary_email);
                 if ($checkUser && !empty($checkUser['user_ID'])) {
@@ -81,18 +101,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     throw new Exception("User creation failed: Could not retrieve new User ID.");
                 }
             }
-            // --- SAFETY CHECK END ---
             
-            // Assign default 'user' role (ID 2 is specified)
-            $role_name = 'user'; 
-            $role_id = $userModel->getRoleIdByName($role_name);
-            
-            if (!$role_id) {
-                 // Fallback if role 'user' isn't found, try to use ID 2 directly for safety
-                 $role_id = 2; 
-            }
-            
-            // Assign role
+            // Assign default 'user' role
+            $role_id = 2; // Default User Role ID
             $userModel->assignRole($user_ID, $role_id, 'System');
             
             // Commit transaction
@@ -217,14 +228,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
 
                             <hr class="my-4">
-                            <p class="text-muted small">Optional Additional Information (can be added later)</p>
+                            <p class="text-muted small">Organization Details</p>
+                            
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label class="form-label">Organization <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="org_ID" id="orgSelect" required>
+                                        <option value="">-- Select Organization --</option>
+                                        <?php foreach ($organizations as $org): ?>
+                                            <option value="<?php echo $org['org_ID']; ?>"
+                                                <?php echo (isset($_POST['org_ID']) && $_POST['org_ID'] == $org['org_ID']) ? 'selected' : ''; ?>>
+                                                <?php echo htmlspecialchars($org['org_name']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Organization/Company</label>
-                                    <input type="text" class="form-control" name="user_organization" 
-                                           placeholder="e.g., UiTM, XYZ Corp" 
-                                           value="<?php echo htmlspecialchars($_POST['user_organization'] ?? ''); ?>">
+                                    <label class="form-label">Department/Faculty <span class="text-danger">*</span></label>
+                                    <select class="form-select" name="dept_ID" id="deptSelect" required disabled>
+                                        <option value="">-- Select Organization First --</option>
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Position/Title</label>
@@ -233,19 +259,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                            value="<?php echo htmlspecialchars($_POST['user_position'] ?? ''); ?>">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Department/Faculty</label>
-                                    <input type="text" class="form-control" name="department" 
-                                           placeholder="e.g., FSKM, Audit Dept" 
-                                           value="<?php echo htmlspecialchars($_POST['department'] ?? ''); ?>">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Company Phone No.</label>
-                                    <input type="text" class="form-control" name="user_phone_company" 
-                                           placeholder="e.g., +60312345678"
-                                           value="<?php echo htmlspecialchars($_POST['user_phone_company'] ?? ''); ?>">
-                                </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Company Phone No.</label>
+                                <input type="text" class="form-control" name="user_phone_company" 
+                                       placeholder="e.g., +60312345678"
+                                       value="<?php echo htmlspecialchars($_POST['user_phone_company'] ?? ''); ?>">
                             </div>
 
                             <hr class="my-4">
@@ -310,58 +329,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 
+    <script>
+        const allDepartments = <?php echo json_encode($all_departments); ?>;
+        // Keep selected dept if page reloads due to error
+        const oldDeptID = "<?php echo $_POST['dept_ID'] ?? ''; ?>";
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // No user type selection logic needed anymore.
-        
-        // Toggle password visibility
-        document.getElementById('togglePassword').addEventListener('click', function() {
-            const password = document.getElementById('password');
-            const icon = this.querySelector('i');
-            
-            if (password.type === 'password') {
-                password.type = 'text';
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            } else {
-                password.type = 'password';
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- 1. CASCADING DROPDOWN LOGIC ---
+            const orgSelect = document.getElementById('orgSelect');
+            const deptSelect = document.getElementById('deptSelect');
+
+            function updateDepartments() {
+                const orgId = orgSelect.value;
+                
+                // Reset Department Dropdown
+                deptSelect.innerHTML = '<option value="">-- Select Department --</option>';
+                
+                if (!orgId) {
+                    deptSelect.disabled = true;
+                    return;
+                }
+                
+                deptSelect.disabled = false;
+
+                // Filter departments matching the selected Org ID
+                const filteredDepts = allDepartments.filter(dept => dept.org_ID == orgId);
+
+                if (filteredDepts.length === 0) {
+                    const option = document.createElement('option');
+                    option.text = "-- No Departments Found for this Organization --";
+                    option.disabled = true;
+                    deptSelect.add(option);
+                } else {
+                    filteredDepts.forEach(dept => {
+                        const option = document.createElement('option');
+                        option.value = dept.dept_ID;
+                        option.text = dept.dept_name + (dept.dept_code ? ` (${dept.dept_code})` : '');
+                        
+                        // Reselect if error occurred and page reloaded
+                        if (dept.dept_ID == oldDeptID) {
+                            option.selected = true;
+                        }
+                        deptSelect.add(option);
+                    });
+                }
             }
-        });
-        
-        // Password strength indicator
-        document.getElementById('password').addEventListener('input', function() {
-            const password = this.value;
-            const strengthBar = document.getElementById('passwordStrength');
-            let strength = 0;
-            
-            if (password.length >= 8) strength++;
-            if (/[a-z]/.test(password)) strength++;
-            if (/[A-Z]/.test(password)) strength++;
-            if (/[0-9]/.test(password)) strength++;
-            if (/[^a-zA-Z0-9]/.test(password)) strength++;
-            
-            const colors = ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#28a745'];
-            const widths = ['20%', '40%', '60%', '80%', '100%'];
-            
-            strengthBar.style.width = widths[strength - 1] || '0%';
-            strengthBar.style.backgroundColor = colors[strength - 1] || '#e9ecef';
-        });
-        
-        // Password match validation
-        document.getElementById('confirm_password').addEventListener('input', function() {
-            const password = document.getElementById('password').value;
-            const confirmPassword = this.value;
-            const matchMessage = document.getElementById('passwordMatch');
-            
-            if (confirmPassword && password !== confirmPassword) {
-                matchMessage.style.display = 'block';
-                this.classList.add('is-invalid');
-            } else {
-                matchMessage.style.display = 'none';
-                this.classList.remove('is-invalid');
+
+            // Listen for changes
+            orgSelect.addEventListener('change', updateDepartments);
+
+            // Trigger on load (if org is already selected e.g., after validation error)
+            if (orgSelect.value) {
+                updateDepartments();
             }
+
+            // --- 2. PASSWORD TOGGLE ---
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                const password = document.getElementById('password');
+                const icon = this.querySelector('i');
+                
+                if (password.type === 'password') {
+                    password.type = 'text';
+                    icon.classList.remove('bi-eye');
+                    icon.classList.add('bi-eye-slash');
+                } else {
+                    password.type = 'password';
+                    icon.classList.remove('bi-eye-slash');
+                    icon.classList.add('bi-eye');
+                }
+            });
+            
+            // --- 3. PASSWORD STRENGTH ---
+            document.getElementById('password').addEventListener('input', function() {
+                const password = this.value;
+                const strengthBar = document.getElementById('passwordStrength');
+                let strength = 0;
+                
+                if (password.length >= 8) strength++;
+                if (/[a-z]/.test(password)) strength++;
+                if (/[A-Z]/.test(password)) strength++;
+                if (/[0-9]/.test(password)) strength++;
+                if (/[^a-zA-Z0-9]/.test(password)) strength++;
+                
+                const colors = ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#28a745'];
+                const widths = ['20%', '40%', '60%', '80%', '100%'];
+                
+                strengthBar.style.width = widths[strength - 1] || '0%';
+                strengthBar.style.backgroundColor = colors[strength - 1] || '#e9ecef';
+            });
+            
+            // --- 4. PASSWORD MATCH ---
+            document.getElementById('confirm_password').addEventListener('input', function() {
+                const password = document.getElementById('password').value;
+                const confirmPassword = this.value;
+                const matchMessage = document.getElementById('passwordMatch');
+                
+                if (confirmPassword && password !== confirmPassword) {
+                    matchMessage.style.display = 'block';
+                    this.classList.add('is-invalid');
+                } else {
+                    matchMessage.style.display = 'none';
+                    this.classList.remove('is-invalid');
+                }
+            });
         });
     </script>
 </body>

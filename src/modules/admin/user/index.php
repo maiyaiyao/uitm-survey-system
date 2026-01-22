@@ -14,17 +14,21 @@ try {
     $pdo = $db->getConnection();
     
     // --- Lifecycle Management: Periodic Review ---
-    // Fetch all users. JOIN with user_role and role tables to get the user's role name.
+    // Fetch all users. JOIN with user_role, role, organization, and department tables.
     $sql = "
         SELECT 
             u.user_ID, u.full_name, u.primary_email, u.status, u.created_at, u.last_login,
-            r.role_name
+            r.role_name, o.org_name, d.dept_name
         FROM 
             user u
         JOIN 
             user_role ur ON u.user_ID = ur.user_ID
         JOIN 
             role r ON ur.role_ID = r.role_ID
+        LEFT JOIN
+            organization o ON u.org_ID = o.org_ID
+        LEFT JOIN
+            department d ON u.dept_ID = d.dept_ID
         ORDER BY 
             u.created_at DESC
     ";
@@ -218,6 +222,8 @@ $flash = getFlashMessage();
                                 <thead>
                                     <tr>
                                         <th class="ps-4">User Info</th>
+                                        <th>Organization</th>
+                                        <th>Department</th>
                                         <th class="text-center">Role</th>
                                         <th class="text-center">Status</th>
                                         <th>Last Login</th>
@@ -247,6 +253,18 @@ $flash = getFlashMessage();
                                                             <span class="email"><?php echo htmlspecialchars($user['primary_email']); ?></span>
                                                         </div>
                                                     </div>
+                                                </td>
+
+                                                <td>
+                                                    <small class="text-secondary">
+                                                        <?php echo htmlspecialchars($user['org_name'] ?? '-'); ?>
+                                                    </small>
+                                                </td>
+
+                                                <td>
+                                                    <small class="text-secondary">
+                                                        <?php echo htmlspecialchars($user['dept_name'] ?? '-'); ?>
+                                                    </small>
                                                 </td>
 
                                                 <td class="text-center">

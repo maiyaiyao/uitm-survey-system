@@ -448,6 +448,14 @@
                     <span>Analytics</span>
                 </a>
             </div>
+            
+            <div class="nav-item">
+                <a class="nav-link <?php echo is_module_active($current_page, '/organization/'); ?>" 
+                   href="<?php echo BASE_URL; ?>/modules/admin/organization/index.php" title="Organizations">
+                    <div class="nav-link-icon"><i class="bi bi-building"></i></div>
+                    <span>Organizations</span>
+                </a>
+            </div>
 
             <div class="nav-item">
                 <a class="nav-link <?php echo is_module_active($current_page, '/user/'); ?>" 

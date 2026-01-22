@@ -21,43 +21,64 @@ class User {
      * @param array $data Must contain 'primary_email', 'full_name'. Can contain 'password', 'google_sub_id', 'email_verified', and other user fields.
      * @return string|false The last inserted user_ID or false on failure.
      */
+    /**
+     * Create new user
+     */
     public function create($data) {
-        // Update SQL to include all necessary fields from the registration logic
         $sql = "INSERT INTO user (
-                    primary_email, password, google_sub_id, full_name, 
-                    email_verified, department, status, user_organization, 
-                    user_position, user_phone_company, user_handphone_no, 
-                    created_at, updated_at
+                    primary_email, 
+                    password, 
+                    google_sub_id, 
+                    full_name, 
+                    email_verified, 
+                    department, 
+                    status, 
+                    user_position, 
+                    user_phone_company, 
+                    user_handphone_no, 
+                    org_ID, 
+                    dept_ID,
+                    created_at, 
+                    updated_at
                 ) 
                 VALUES (
-                    :primary_email, :password, :google_sub_id, :full_name, 
-                    :email_verified, :department, :status, :user_organization, 
-                    :user_position, :user_phone_company, :user_handphone_no,
-                    NOW(), NOW()
+                    :primary_email, 
+                    :password, 
+                    :google_sub_id, 
+                    :full_name, 
+                    :email_verified, 
+                    :department, 
+                    :status, 
+                    :user_position, 
+                    :user_phone_company, 
+                    :user_handphone_no,
+                    :org_ID, 
+                    :dept_ID,
+                    NOW(), 
+                    NOW()
                 )";
         
         $stmt = $this->conn->prepare($sql);
         
         try {
             $stmt->execute([
-                // The array key and binding parameter are now consistently 'primary_email'
-                ':primary_email' => $data['primary_email'], 
-                ':password' => $data['password'] ?? null,
-                ':google_sub_id' => $data['google_sub_id'] ?? null,
-                ':full_name' => $data['full_name'],
-                // Set defaults for other user fields if not provided
-                ':email_verified' => $data['email_verified'] ?? 0,
-                ':department' => $data['department'] ?? null,
-                ':status' => $data['status'] ?? 'active',
-                ':user_organization' => $data['user_organization'] ?? null,
-                ':user_position' => $data['user_position'] ?? null,
-                ':user_phone_company' => $data['user_phone_company'] ?? null,
+                ':primary_email'     => $data['primary_email'], 
+                ':password'          => $data['password'] ?? null,
+                ':google_sub_id'     => $data['google_sub_id'] ?? null,
+                ':full_name'         => $data['full_name'],
+                ':email_verified'    => $data['email_verified'] ?? 'Not Verified',
+                ':department'        => null, // Legacy column set to null
+                ':status'            => $data['status'] ?? 'Active',
+                ':user_position'     => $data['user_position'] ?? null,
+                ':user_phone_company'=> $data['user_phone_company'] ?? null,
                 ':user_handphone_no' => $data['user_handphone_no'] ?? null,
+                ':org_ID'            => isset($data['org_ID']) && $data['org_ID'] > 0 ? $data['org_ID'] : null,
+                ':dept_ID'           => isset($data['dept_ID']) && $data['dept_ID'] > 0 ? $data['dept_ID'] : null,
             ]);
+            
             return $this->conn->lastInsertId();
         } catch (PDOException $e) {
-            // Log error if necessary
-            // error_log("User creation failed: " . $e->getMessage()); 
+            // error_log("User Create Error: " . $e->getMessage());
             return false;
         }
     }
@@ -206,19 +227,17 @@ class User {
      * @param int $role_id The role's ID (e.g., 2 for 'user').
      * @param string|null $assigned_by Identifier of who/what assigned the role (default to null for self-registration/system).
      */
-    public function assignRole($user_ID, $role_id, $assigned_by = null) {
-        // Ensure all columns are included in the INSERT statement
-        $sql = "INSERT INTO user_role (user_ID, role_id, assigned_by, assigned_at) 
-                 VALUES (:user_ID, :role_id, :assigned_by, NOW())"; 
+    public function assignRole($user_ID, $role_id, $assigned_by = 'System') {
+        // Remove existing roles first to enforce single-role if needed, or just insert
+        $sql = "INSERT INTO user_role (user_ID, role_ID, assigned_by, assigned_at) 
+                VALUES (:user_ID, :role_ID, :assigned_by, NOW())
+                ON DUPLICATE KEY UPDATE role_ID = VALUES(role_ID), assigned_at = VALUES(assigned_at)"; 
 
         $stmt = $this->conn->prepare($sql);
-        
-        // Ensure the number of parameters passed in the array matches the placeholders in the SQL
         return $stmt->execute([
             ':user_ID' => $user_ID,
-            ':role_id' => $role_id,
-            // The third parameter passed from google-callback.php is bound here
-            ':assigned_by' => $assigned_by ?? 'System' // Use a default value if null
+            ':role_ID' => $role_id,
+            ':assigned_by' => $assigned_by
         ]);
     }
 
@@ -326,30 +345,26 @@ class User {
      * @return bool
      */
     public function update(int $user_id, array $fields_to_update): bool {
-        if (empty($fields_to_update)) {
-            return false;
-        }
+        if (empty($fields_to_update)) return false;
 
         $set_parts = [];
         $params = [':user_id' => $user_id];
 
         foreach ($fields_to_update as $column => $value) {
+            // Skip ID to prevent accidental overwrite
             if ($column === 'user_ID') continue; 
             
-            $param_key = ":update_{$column}"; // Use unique placeholder name
+            $param_key = ":update_{$column}";
             $set_parts[] = "`{$column}` = {$param_key}";
             $params[$param_key] = $value;
         }
 
         $set_clause = implode(', ', $set_parts);
-        
-        // Use the query method available in the Database class
         $sql = "UPDATE `user` SET {$set_clause}, `updated_at` = NOW() WHERE `user_ID` = :user_id";
         
-        $stmt = $this->db->query($sql, $params); 
-        return $stmt->rowCount() > 0;
+        // Use the db instance helper if available, or raw PDO
+        return $this->db->query($sql, $params)->rowCount() >= 0; 
     }
-
 
     /**
      * Updates the role assigned to a specific user (in the user_role bridge table).
@@ -368,6 +383,23 @@ class User {
 
         $stmt = $this->db->query($sql, $params);
         return $stmt->rowCount() > 0;
+    }
+
+    /**
+     * Get secondary departments - placeholder for future use if bridge table is added
+     * Returns empty array for now as we use single dept_ID in user table
+     */
+    public function getSecondaryDepartments($user_ID) {
+        return [];
+    }
+
+    /**
+     * Save secondary departments - placeholder for future use if bridge table is added
+     * Currently does nothing as we use single dept_ID in user table
+     */
+    public function saveSecondaryDepartments($user_ID, $dept_ids) {
+        // Future implementation when user_department bridge table is created
+        return true;
     }
 }
 ?>

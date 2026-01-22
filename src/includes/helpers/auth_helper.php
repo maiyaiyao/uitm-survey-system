@@ -17,7 +17,6 @@ function loginUser($user) {
     $userModel = new User();
     $_SESSION['roles'] = !empty($user['roles']) ? $user['roles'] : 'user';
     //$_SESSION['roles'] = $userModel->getUserRoles($user['user_ID']); 
-    
 
     // Update last login
     $userModel->updateLastLogin($user['user_ID']);
