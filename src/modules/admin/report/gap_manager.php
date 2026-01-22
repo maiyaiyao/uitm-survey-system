@@ -120,15 +120,7 @@ $users = $db->fetchAll("SELECT user_ID, full_name, department FROM user WHERE st
                         </ol>
                     </nav>
 
-                    <?php 
-                    $flash = getFlashMessage();
-                    if ($flash): 
-                    ?>
-                        <div class="alert alert-<?php echo ($flash['type'] == 'error') ? 'danger' : $flash['type']; ?> alert-dismissible fade show border-0 shadow-sm mb-4">
-                            <?php echo $flash['message']; ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
+                    <?php echo getFlashMessage(); ?>
 
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
                         <div>
