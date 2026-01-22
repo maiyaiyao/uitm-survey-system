@@ -120,7 +120,6 @@ function getStatusBadgeCriteria($status) {
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
                             <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
-                            <li class="breadcrumb-item"><a href="../domain/index.php" class="text-decoration-none text-secondary">Domain</a></li>
                             <li class="breadcrumb-item active text-dark" aria-current="page">Criteria</li>
                         </ol>
                     </nav>
@@ -222,13 +221,6 @@ function getStatusBadgeCriteria($status) {
                                         
                                         <td class="text-center pe-4" onclick="event.stopPropagation();">
                                             
-                                            <a href="../element/view-element.php?id=<?php echo $row['criteria_ID']; ?>" 
-                                               class="btn btn-sm btn-link <?php echo $isActive ? 'text-info' : 'text-secondary'; ?> px-2" 
-                                               title="View Elements"
-                                               onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this criteria before viewing details.'); return false;" : ""; ?>">
-                                                <i class="bi bi-eye fs-6"></i>
-                                            </a>
-
                                             <a href="edit-criteria.php?id=<?php echo $row['criteria_ID']; ?>" 
                                                class="btn btn-sm btn-link <?php echo $isActive ? 'text-primary' : 'text-secondary'; ?> px-2" 
                                                title="Edit Criteria"
@@ -295,6 +287,8 @@ function getStatusBadgeCriteria($status) {
                                                         <?php endif; ?>
                                                     </div>
 
+                                                    
+
                                                     <div class="row g-2 mt-3 pt-3 border-top">
                                                         <div class="col-6">
                                                             <small class="text-muted d-block" style="font-size: 0.7rem;">CREATED BY</small>
@@ -321,33 +315,41 @@ function getStatusBadgeCriteria($status) {
                                                     </div>
 
                                                 </div>
+                                                
                                                 <div class="modal-footer border-top-0 pt-0 px-4 pb-4 d-flex justify-content-between align-items-center">
-                                                    <div>
-                                                        <?php if ($row['usage_count'] == 0): ?>
-                                                            <button type="button" class="btn btn-outline-danger rounded-3 px-3" 
-                                                                    onclick="deleteCriteria('<?php echo $row['criteria_ID']; ?>')">
-                                                                <i class="bi bi-trash me-2"></i>Delete
-                                                            </button>
-                                                        <?php else: ?>
-                                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Cannot delete: This criteria has existing elements.">
-                                                                <button class="btn btn-outline-danger rounded-3 px-3" disabled>
-                                                                    <i class="bi bi-trash me-2"></i>Delete
-                                                                </button>
-                                                            </span>
-                                                        <?php endif; ?>
-                                                    </div>
+    <div>
+        <?php if ($row['usage_count'] == 0): ?>
+            <button type="button" class="btn btn-outline-danger rounded-3 px-3" 
+                    onclick="deleteCriteria('<?php echo $row['criteria_ID']; ?>')">
+                <i class="bi bi-trash me-2"></i>Delete
+            </button>
+        <?php else: ?>
+            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Cannot delete: This criteria has existing elements.">
+                <button class="btn btn-outline-danger rounded-3 px-3" disabled>
+                    <i class="bi bi-trash me-2"></i>Delete
+                </button>
+            </span>
+        <?php endif; ?>
+    </div>
 
-                                                    <div class="d-flex gap-2">
-                                                        <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Close</button>
+    <div class="d-flex gap-2">
+        <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Close</button>
         
-                                                        <a href="edit-criteria.php?id=<?php echo $row['criteria_ID']; ?>" 
-                                                           class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
-                                                           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;"
-                                                           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this criteria before editing.'); return false;" : ""; ?>">
-                                                            Edit
-                                                        </a>
-                                                    </div>
-                                                </div>
+        <a href="../element/add-element.php?criteria_id=<?php echo $row['criteria_ID']; ?>" 
+           class="btn btn-outline-primary shadow-sm px-3 py-2 rounded-3 d-flex align-items-center"
+           title="Add new element to this criteria"
+           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this criteria before adding elements.'); return false;" : ""; ?>">
+            <i class="bi bi-plus-lg me-2"></i>Add Element
+        </a>
+
+        <a href="edit-criteria.php?id=<?php echo $row['criteria_ID']; ?>" 
+           class="btn btn-primary shadow-sm px-4 py-2 rounded-3 d-flex align-items-center" 
+           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;"
+           onclick="<?php echo (!$isActive) ? "alert('Action Denied: Please activate this criteria before editing.'); return false;" : ""; ?>">
+            Edit
+        </a>
+    </div>
+</div>
                                             </div>
                                         </div>
                                     </div>
