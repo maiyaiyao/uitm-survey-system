@@ -22,8 +22,6 @@ try {
     $all_departments = [];
 }
 
-// --- FORM SUBMISSION LOGIC ---
-
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
