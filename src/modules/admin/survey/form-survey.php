@@ -49,7 +49,7 @@ try {
         $linked_links = $db->fetchAll("SELECT domain_id FROM survey_domain WHERE survey_id = :id", [':id' => $survey_id]);
         $linked_domain_ids = array_column($linked_links, 'domain_id');
 
-        // 3. Fetch Linked Users & Detect "All Users" State
+        // 3. Fetch Linked Users (Emails)
         $linked_users = $db->fetchAll("
             SELECT u.primary_email 
             FROM user u 
@@ -57,17 +57,7 @@ try {
             WHERE us.survey_ID = :id
         ", [':id' => $survey_id]);
         
-        // --- NEW LOGIC: Check if this survey is assigned to ALL users ---
-        // We compare the number of linked users to the total number of Active users.
-        $total_active_row = $db->fetchOne("SELECT COUNT(*) as cnt FROM user WHERE status = 'Active'");
-        $total_active_count = $total_active_row ? (int)$total_active_row['cnt'] : 0;
-
-        // If linked users count matches or exceeds total active users, treat as "All Users"
-        if ($total_active_count > 0 && count($linked_users) >= $total_active_count) {
-             $existing_emails_str = '*ALL*';
-        } else {
-             $existing_emails_str = implode(",", array_column($linked_users, 'primary_email'));
-        }
+        $existing_emails_str = implode(",", array_column($linked_users, 'primary_email'));
     }
 
 } catch (Exception $e) {
@@ -524,11 +514,9 @@ $flash = getFlashMessage();
                     // Logic to remove "All Users"
                     chip.querySelector('.btn-close').addEventListener('click', (e) => { 
                         e.stopPropagation(); 
-                        if (confirm('Are you sure you want to remove all users?')) {
-                            emails = []; // Clear the list
-                            renderChips(); 
-                            updateHiddenInput(); 
-                        }
+                        emails = []; // Clear the list
+                        renderChips(); 
+                        updateHiddenInput(); 
                     });
                     container.insertBefore(chip, input);
                     return; // Stop here, don't render other emails
