@@ -4,16 +4,8 @@ requireRole(['admin', 'auditor']);
 
 $db = new Database();
 
-// Get current timestamp for real-time comparison
-$current_time = date('Y-m-d H:i:s');
-
 // Fetch Quick Stats
-// UPDATED: Count active surveys where the start time has passed (Real-time Live)
-$total_surveys = $db->fetchOne(
-    "SELECT COUNT(*) as count FROM survey WHERE status = 'Active' AND start_date <= :now", 
-    [':now' => $current_time]
-)['count'];
-
+$total_surveys = $db->fetchOne("SELECT COUNT(*) as count FROM survey WHERE status = 'Active'")['count'];
 $total_gaps = $db->fetchOne("SELECT COUNT(*) as count FROM gap_analysis WHERE status = 'Open'")['count'];
 $latest_survey = $db->fetchOne("SELECT * FROM survey ORDER BY created_at DESC LIMIT 1");
 ?>
