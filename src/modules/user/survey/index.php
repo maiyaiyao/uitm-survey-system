@@ -31,12 +31,9 @@ if ($tab === 'history') {
     // History: User completed OR Survey is archived/completed by admin
     $sql .= " AND (us.status = 'Completed' OR s.status IN ('Completed', 'Archived'))";
 } else {
-    // Active: User NOT completed, Survey is Active, AND Start Date has passed (It is live)
-    // This ensures scheduled surveys remain hidden until their start time.
-    $sql .= " AND (us.status != 'Completed' AND s.status = 'Active' AND s.start_date <= :current_time)";
-    $params[':current_time'] = date('Y-m-d H:i:s');
+    // Active: User NOT completed AND Survey is Active
+    $sql .= " AND (us.status != 'Completed' AND s.status = 'Active')";
 }
-
 if (isset($_GET['status']) && $_GET['status'] === 'In_progress') {
     $sql .= " AND us.status = 'In progress'";
 }
