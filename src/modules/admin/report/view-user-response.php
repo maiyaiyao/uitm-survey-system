@@ -61,7 +61,7 @@ $sql_responses = "
     FROM response r
     LEFT JOIN score s ON r.score = s.score_level
     LEFT JOIN score_element se ON r.element_ID = se.element_ID 
-        AND se.score_ID = (
+        AND s.score_ID = se.score_ID = (
             SELECT score_ID FROM score WHERE score_level = r.score LIMIT 1
         )
         AND se.status = 'Active'

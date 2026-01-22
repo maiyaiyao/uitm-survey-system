@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: mysql:3306
--- Generation Time: Jan 20, 2026 at 01:33 AM
+-- Generation Time: Jan 07, 2026 at 08:42 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.3.26
 
@@ -51,9 +51,9 @@ INSERT INTO `criteria` (`criteria_ID`, `domain_ID`, `criteria_name`, `input_id`,
 ('AC006', 'AD003', 'Standard dan amalan terbaik keselamatan siber', NULL, NULL, NULL, NULL, 'Active'),
 ('AC007', 'AD003', 'Pengauditan keselamatan siber ', NULL, NULL, NULL, NULL, 'Active'),
 ('AC008', 'AD004', 'Pembangunan Kompetensi dan Kesedaran', NULL, NULL, NULL, NULL, 'Active'),
-('AC009', 'AD004', 'Pengurusan Peranan dan Tanggungjawab Keselamatan Siber', NULL, NULL, '4', '2026-01-19', 'Active'),
-('AC010', 'AD005', 'Inventori aset', NULL, NULL, '4', '2025-12-23', 'Inactive'),
-('AC011', 'AD004', 'Klasifikasi maklumat', NULL, NULL, '4', '2026-01-19', 'Active'),
+('AC009', 'AD004', 'Pengurusan Peranan dan Tanggungjawab Keselamatan Siber', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC010', 'AD005', 'Inventori aset', NULL, NULL, '4', '2025-12-23', 'Active'),
+('AC011', 'AD005', 'Klasifikasi maklumat ', NULL, NULL, NULL, NULL, 'Active'),
 ('AC012', 'AD006', 'Penguatkuasaan mekanisme pengesahan identiti', NULL, NULL, NULL, NULL, 'Active'),
 ('AC013', 'AD006', 'Pengurusan capaian', NULL, NULL, NULL, NULL, 'Active'),
 ('AC014', 'AD007', 'Kesedaran dan pematuhan', NULL, NULL, '4', '2025-12-23', 'Active'),
@@ -108,14 +108,14 @@ CREATE TABLE `domain` (
 INSERT INTO `domain` (`domain_ID`, `domain_name`, `input_id`, `input_at`, `updated_id`, `updated_at`, `status`, `sec_ID`) VALUES
 ('AD001', 'Tadbir Urus', NULL, NULL, '4', '2025-11-17', 'Active', '5'),
 ('AD002', 'Pengurusan Risiko', NULL, NULL, '4', '2025-11-07', 'Active', '6'),
-('AD003', 'Pematuhan dan Pengauditan', NULL, NULL, NULL, NULL, 'Active', '9'),
-('AD004', 'Keselamatan Sumber Manusia', NULL, NULL, '4', '2026-01-19', 'Active', 'A6'),
+('AD003', 'Pematuhan dan Pengauditan', NULL, NULL, NULL, NULL, 'Active', NULL),
+('AD004', 'Keselamatan Sumber Manusia', NULL, NULL, NULL, NULL, 'Active', NULL),
 ('AD005', 'Pengurusan Aset', NULL, NULL, NULL, NULL, 'Active', 'A5'),
 ('AD006', 'Pengurusan Identiti Dan Capaian', NULL, NULL, NULL, NULL, 'Active', 'A5'),
-('AD007', 'Pengurusan Pihak Ketiga', NULL, NULL, NULL, NULL, 'Inactive', 'A5'),
-('AD008', 'Pengurusan Keselamatan Sistem Dan Aplikasi', NULL, NULL, NULL, NULL, 'Active', 'A8'),
+('AD007', 'Pengurusan Pihak Ketiga', NULL, NULL, NULL, NULL, 'Active', 'A5'),
+('AD008', 'Pengurusan Keselamatan Sistem Dan Aplikasi', NULL, NULL, NULL, NULL, 'Active', NULL),
 ('AD009', 'Pengurusan Insiden', NULL, NULL, NULL, NULL, 'Active', 'A5'),
-('AD010', 'Pengurusan Ancaman Dan Kerentanan', NULL, NULL, NULL, NULL, 'Active', 'A8'),
+('AD010', 'Pengurusan Ancaman Dan Kerentanan', NULL, NULL, NULL, NULL, 'Active', NULL),
 ('AD011', 'Pengurusan Kesinambungan Perkhidmatan ICT', NULL, NULL, NULL, NULL, 'Active', 'A5');
 
 --
@@ -173,10 +173,10 @@ INSERT INTO `element` (`element_ID`, `criteria_ID`, `element_name`, `input_id`, 
 ('AE019', 'AC008', 'Kesedaran dan latihan keselamatan siber', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE020', 'AC008', 'Pengasingan tugas berdasarkan peranan dan tanggungjawab dalam keselamatan siber', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE021', 'AC008', 'Pengukuran keberkesanan inisiatif program kesedaran dan latihan keselamatan siber', NULL, NULL, '4', '2025-12-23', 'Active'),
-('AE022', 'AC009', 'Dokumentasi tanggungjawab keselamatan siber.', NULL, NULL, '4', '2026-01-19', 'Active'),
+('AE022', 'AC009', 'Dokumentasi tanggungjawab keselamatan siber.', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE023', 'AC009', 'Penentuan dan pengurusan peranan keselamatan siber untuk memastikan kecukupan dan redundansi kakitangan.', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE024', 'AC009', 'Pelaksanaan Program Pengganti (Succesor Program)', NULL, NULL, '4', '2025-12-23', 'Active'),
-('AE025', 'AC008', 'Pengurusan inventori aset.', NULL, NULL, '4', '2026-01-19', 'Active'),
+('AE025', 'AC010', 'Pengurusan inventori aset.', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE026', 'AC011', 'Klasifikasi maklumat mengikut maklumat terperingkat', NULL, NULL, NULL, NULL, 'Active'),
 ('AE027', 'AC011', 'Perlindungan, sanitasi dan pelupusan maklumat semasa kitar hayat.', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AE028', 'AC012', 'Pengwujudan dan pengurusan identiti pengesahan.', NULL, NULL, '4', '2025-12-23', 'Active'),
@@ -258,54 +258,7 @@ INSERT INTO `element_control` (`id`, `element_ID`, `sub_con_ID`) VALUES
 (1, 'AE001', 'A.5.1'),
 (2, 'AE003', 'A.5.1'),
 (3, 'AE001', 'A.5.2'),
-(4, 'AE002', 'A.5.2'),
-(5, 'AE020', 'A.5.3'),
-(6, 'AE023', 'A.5.3'),
-(7, 'AE002', 'A.5.3'),
-(8, 'AE022', 'A.5.1'),
-(9, 'AE004', 'A.5.1'),
-(10, 'AE007', 'A.5.1'),
-(11, 'AE009', 'A.5.1'),
-(12, 'AE010', 'A.5.1'),
-(13, 'AE011', 'A.5.1'),
-(14, 'AE012', 'A.5.1'),
-(15, 'AE021', 'A.5.1'),
-(16, 'AE007', 'A.5.2'),
-(17, 'AE022', 'A.5.2'),
-(18, 'AE023', 'A.5.2'),
-(19, 'AE024', 'A.5.2'),
-(20, 'AE062', 'A.5.2'),
-(21, 'AE045', 'A.5.2'),
-(22, 'AE061', 'A.5.2'),
-(23, 'AE004', 'A.5.4'),
-(24, 'AE005', 'A.5.4'),
-(25, 'AE006', 'A.5.4'),
-(26, 'AE007', 'A.5.4'),
-(27, 'AE011', 'A.5.4'),
-(28, 'AE012', 'A.5.4'),
-(29, 'AE014', 'A.5.4'),
-(30, 'AE013', 'A.5.4'),
-(31, 'AE015', 'A.5.4'),
-(32, 'AE058', 'A.5.4'),
-(33, 'AE019', 'A.5.4'),
-(34, 'AE022', 'A.5.4'),
-(35, 'AE023', 'A.5.4'),
-(36, 'AE024', 'A.5.4'),
-(37, 'AE025', 'A.5.4'),
-(38, 'AE062', 'A.5.4'),
-(39, 'AE026', 'A.5.4'),
-(40, 'AE034', 'A.5.4'),
-(41, 'AE065', 'A.5.4'),
-(42, 'AE035', 'A.5.4'),
-(43, 'AE066', 'A.5.4'),
-(44, 'AE067', 'A.5.4'),
-(45, 'AE001', 'A.5.4'),
-(46, 'AE039', 'A.5.7'),
-(47, 'AE042', 'A.5.7'),
-(48, 'AE049', 'A.5.7'),
-(49, 'AE050', 'A.5.7'),
-(50, 'AE071', 'A.5.7'),
-(51, 'AE003', 'A.5.7');
+(4, 'AE002', 'A.5.2');
 
 -- --------------------------------------------------------
 
@@ -318,12 +271,8 @@ CREATE TABLE `gap_analysis` (
   `domain_ID` varchar(10) DEFAULT NULL,
   `criteria_ID` varchar(10) DEFAULT NULL,
   `element_ID` varchar(10) DEFAULT NULL,
-  `survey_ID` varchar(50) DEFAULT NULL,
   `user_ID` int(11) DEFAULT NULL,
-  `auditor_id` int(11) DEFAULT NULL,
   `comment` text DEFAULT NULL,
-  `severity` enum('Low','Medium','High','Critical') DEFAULT 'Medium',
-  `status` enum('Open','In Progress','Resolved','Closed') DEFAULT 'Open',
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
@@ -342,19 +291,6 @@ CREATE TABLE `password_reset_tokens` (
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `password_reset_tokens`
---
-
-INSERT INTO `password_reset_tokens` (`id`, `user_id`, `token`, `expires_at`, `used`, `created_at`) VALUES
-(1, 18, '65d33c6b47920b048dde36ca53cd6ec5659b3594986df3b21692c438de175f72', '2026-01-15 10:56:01', 0, '2026-01-15 09:56:01'),
-(2, 18, 'f6a4669ed187c95003ddbc55490cc4d6df738bf14205b999ebe129bf0cfb3930', '2026-01-15 16:04:04', 0, '2026-01-15 15:04:04'),
-(3, 18, '8d721b168cb409a1ed619863551a4f0686211249526508e960e243bf1104bf2f', '2026-01-15 16:07:20', 0, '2026-01-15 15:07:20'),
-(4, 18, '3c8b92dafe22ffa7dae69b221fa46eecc7045bb7d560641294711bf7287cc6aa', '2026-01-15 16:08:59', 0, '2026-01-15 15:08:59'),
-(5, 18, '9e1d6304a7041acf6842e2efddac6abe7f1f360e7b08c0d250a1a95a827cf845', '2026-01-15 16:10:18', 0, '2026-01-15 15:10:18'),
-(6, 18, '911f3cb2fcba0da0696de706586af57e7c7a0168cbb391c43ec7f57b0e01e847', '2026-01-15 16:12:21', 0, '2026-01-15 15:12:21'),
-(7, 18, '4bb271e5cbe53a4bbd5891bd3dcdb87160c16f32b5215422643d6d6f8bb1f148', '2026-01-15 16:14:35', 1, '2026-01-15 15:14:35');
-
 -- --------------------------------------------------------
 
 --
@@ -371,57 +307,6 @@ CREATE TABLE `response` (
   `input_at` date DEFAULT NULL,
   `updated_at` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
-
---
--- Dumping data for table `response`
---
-
-INSERT INTO `response` (`response_ID`, `element_ID`, `survey_ID`, `se_ID`, `user_ID`, `score`, `input_at`, `updated_at`) VALUES
-('RS001', 'AE001', 'SV001', 'ASA002', 10, 2, '2026-01-09', '2026-01-09'),
-('RS002', 'AE002', 'SV001', 'ASA007', 10, 2, '2026-01-09', '2026-01-09'),
-('RS003', 'AE003', 'SV001', 'ASA012', 10, 2, '2026-01-09', '2026-01-09'),
-('RS004', 'AE056', 'SV001', 'ASA274', 10, 2, '2026-01-09', '2026-01-09'),
-('RS005', 'AE004', 'SV001', 'ASA017', 10, 2, '2026-01-09', '2026-01-09'),
-('RS006', 'AE005', 'SV001', 'ASA022', 10, 2, '2026-01-09', '2026-01-09'),
-('RS007', 'AE006', 'SV001', 'ASA027', 10, 2, '2026-01-09', '2026-01-09'),
-('RS008', 'AE007', 'SV001', 'ASA032', 10, 2, '2026-01-09', '2026-01-09'),
-('RS009', 'AE008', 'SV001', 'ASA037', 10, 2, '2026-01-09', '2026-01-09'),
-('RS010', 'AE009', 'SV001', 'ASA042', 10, 2, '2026-01-09', '2026-01-09'),
-('RS011', 'AE010', 'SV001', 'ASA047', 10, 2, '2026-01-09', '2026-01-09'),
-('RS012', 'AE011', 'SV001', 'ASA053', 10, 3, '2026-01-09', '2026-01-09'),
-('RS013', 'AE012', 'SV001', 'ASA058', 10, 3, '2026-01-09', '2026-01-09'),
-('RS014', 'AE013', 'SV001', 'ASA063', 10, 3, '2026-01-09', '2026-01-09'),
-('RS015', 'AE014', 'SV001', 'ASA068', 10, 3, '2026-01-09', '2026-01-09'),
-('RS016', 'AE001', 'SV001', 'ASA003', 12, 3, '2026-01-09', '2026-01-09'),
-('RS017', 'AE002', 'SV001', 'ASA007', 12, 2, '2026-01-09', '2026-01-09'),
-('RS018', 'AE003', 'SV001', 'ASA013', 12, 3, '2026-01-09', '2026-01-09'),
-('RS019', 'AE056', 'SV001', 'ASA276', 12, 4, '2026-01-09', '2026-01-09'),
-('RS020', 'AE004', 'SV001', 'ASA018', 12, 3, '2026-01-09', '2026-01-09'),
-('RS021', 'AE005', 'SV001', 'ASA024', 12, 4, '2026-01-09', '2026-01-09'),
-('RS022', 'AE006', 'SV001', 'ASA027', 12, 2, '2026-01-09', '2026-01-09'),
-('RS023', 'AE007', 'SV001', 'ASA033', 12, 3, '2026-01-09', '2026-01-09'),
-('RS024', 'AE008', 'SV001', 'ASA037', 12, 2, '2026-01-09', '2026-01-09'),
-('RS025', 'AE009', 'SV001', 'ASA043', 12, 3, '2026-01-09', '2026-01-09'),
-('RS026', 'AE010', 'SV001', 'ASA048', 12, 3, '2026-01-09', '2026-01-09'),
-('RS027', 'AE011', 'SV001', 'ASA052', 12, 2, '2026-01-09', '2026-01-09'),
-('RS028', 'AE012', 'SV001', 'ASA057', 12, 2, '2026-01-09', '2026-01-09'),
-('RS029', 'AE013', 'SV001', 'ASA063', 12, 3, '2026-01-09', '2026-01-09'),
-('RS030', 'AE014', 'SV001', 'ASA068', 12, 3, '2026-01-09', '2026-01-09'),
-('RS031', 'AE001', 'SV001', 'ASA001', 14, 1, '2026-01-09', '2026-01-09'),
-('RS032', 'AE002', 'SV001', 'ASA007', 14, 2, '2026-01-09', '2026-01-09'),
-('RS033', 'AE003', 'SV001', 'ASA012', 14, 2, '2026-01-09', '2026-01-09'),
-('RS034', 'AE056', 'SV001', 'ASA273', 14, 1, '2026-01-09', '2026-01-09'),
-('RS035', 'AE004', 'SV001', 'ASA018', 14, 3, '2026-01-09', '2026-01-09'),
-('RS036', 'AE005', 'SV001', 'ASA022', 14, 2, '2026-01-09', '2026-01-09'),
-('RS037', 'AE006', 'SV001', 'ASA027', 14, 2, '2026-01-09', '2026-01-09'),
-('RS038', 'AE007', 'SV001', 'ASA033', 14, 3, '2026-01-09', '2026-01-09'),
-('RS039', 'AE008', 'SV001', 'ASA037', 14, 2, '2026-01-09', '2026-01-09'),
-('RS040', 'AE009', 'SV001', 'ASA042', 14, 2, '2026-01-09', '2026-01-09'),
-('RS041', 'AE010', 'SV001', 'ASA048', 14, 3, '2026-01-09', '2026-01-09'),
-('RS042', 'AE011', 'SV001', 'ASA051', 14, 1, '2026-01-09', '2026-01-09'),
-('RS043', 'AE012', 'SV001', 'ASA057', 14, 2, '2026-01-09', '2026-01-09'),
-('RS044', 'AE013', 'SV001', 'ASA063', 14, 3, '2026-01-09', '2026-01-09'),
-('RS045', 'AE014', 'SV001', 'ASA067', 14, 2, '2026-01-09', '2026-01-09');
 
 --
 -- Triggers `response`
@@ -512,8 +397,7 @@ INSERT INTO `score` (`score_ID`, `score_level`, `desc_level`, `input_id`, `input
 ('AS002', 2, 'Terlaksana', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AS003', 3, 'Tertakrif', NULL, NULL, '4', '2025-12-23', 'Active'),
 ('AS004', 4, 'Terurus', NULL, NULL, '4', '2025-12-23', 'Active'),
-('AS005', 5, 'Teroptimum', NULL, NULL, '4', '2025-12-23', 'Active'),
-('AS006', 2, 'Done', '4', '2026-01-20', '4', '2026-01-20', 'Inactive');
+('AS005', 5, 'Teroptimum', NULL, NULL, '4', '2025-12-23', 'Active');
 
 --
 -- Triggers `score`
@@ -1095,119 +979,119 @@ CREATE TABLE `sub_req` (
 --
 
 INSERT INTO `sub_req` (`sec_ID`, `sub_req_ID`, `sub_req_name`, `criteria_ID`) VALUES
-('10', '10.1 (a)', 'Continual improvement - Improve the suitability, adequacy and effectiveness of ISMS', 'AC007'),
-('10', '10.2 (a)', 'Nonconformity and corrective action - React to nonconformity by correcting it and dealing with consequences', 'AC007'),
-('10', '10.2 (b)', 'Nonconformity and corrective action - Evaluate need for action by reviewing nonconformity, finding causes, and checking for similar cases', 'AC007'),
-('10', '10.2 (c)', 'Nonconformity and corrective action - Implement any action needed', 'AC007'),
-('10', '10.2 (d)', 'Nonconformity and corrective action - Review the effectiveness of any corrective action taken', 'AC007'),
-('10', '10.2 (e)', 'Nonconformity and corrective action - Make changes to the ISMS (if necessary)', 'AC007'),
-('10', '10.2 (f)', 'Nonconformity and corrective action - Document evidence of nonconformities and actions taken', 'AC007'),
-('10', '10.2 (g)', 'Nonconformity and corrective action - Document the result of corrective action', 'AC007'),
+('10', '10.1 (a)', 'Continual improvement - Improve the suitability, adequacy and effectiveness of ISMS', NULL),
+('10', '10.2 (a)', 'Nonconformity and corrective action - React to nonconformity by correcting it and dealing with consequences', NULL),
+('10', '10.2 (b)', 'Nonconformity and corrective action - Evaluate need for action by reviewing nonconformity, finding causes, and checking for similar cases', NULL),
+('10', '10.2 (c)', 'Nonconformity and corrective action - Implement any action needed', NULL),
+('10', '10.2 (d)', 'Nonconformity and corrective action - Review the effectiveness of any corrective action taken', NULL),
+('10', '10.2 (e)', 'Nonconformity and corrective action - Make changes to the ISMS (if necessary)', NULL),
+('10', '10.2 (f)', 'Nonconformity and corrective action - Document evidence of nonconformities and actions taken', NULL),
+('10', '10.2 (g)', 'Nonconformity and corrective action - Document the result of corrective action', NULL),
 ('4', '4.1', 'Organisational context - Determine the organization\'s ISMS objectives and any issues that might affect its effectiveness', 'AC001'),
-('4', '4.2 (a)', 'Interested parties - Identify interested parties', 'AC001'),
-('4', '4.2 (b)', 'Interested parties - Determine their information security-relevant requirements and obligations', 'AC001'),
-('4', '4.2 (c)', 'Interested parties - Determine the requirments that will be addressed through ISMS.', 'AC001'),
-('4', '4.3 (a)', 'ISMS scope - Determine the external and internal issues', 'AC001'),
-('4', '4.3 (b)', 'ISMS scope - Determine the requirments', 'AC001'),
-('4', '4.3 (c)', 'ISMS scope - Determine interfaces and dependencies between perfomed by the organization or by other organization', 'AC001'),
-('4', '4.4', ' ISMS - Establish, implement, maintain and continually improve an ISMS according to the standard', 'AC001'),
-('5', '5.1 (a)', 'Leadership & commitment- Ensure ISMS objectives are established', 'AC002'),
-('5', '5.1 (b)', 'Leadership & commitment- Ensure integrate ISMS requirements into organizational processes', 'AC002'),
-('5', '5.1 (c)', 'Leadership & commitment- Ensure resource for the ISMS are available', 'AC002'),
-('5', '5.1 (d)', 'Leadership & commitment- Communicate the importance of effective ISMS and compliance with its requirements', 'AC002'),
-('5', '5.1 (e)', 'Leadership & commitment- Ensure the ISMS achieves its outcome', 'AC002'),
-('5', '5.1 (f)', 'Leadership & commitment- Direct and support person to ensure ISMS effectiveness', 'AC002'),
-('5', '5.1 (g)', 'Leadership & commitment- Promote continual improvement', 'AC002'),
-('5', '5.1 (h)', 'Leadership & commitment- Support management roles in demonstrating leadership with their responsibilities', 'AC002'),
-('5', '5.2 (a)', 'Policy - Establish the information security policy', 'AC003'),
-('5', '5.2 (b)', 'Policy - Include IS objectives or a framework for setting', 'AC003'),
-('5', '5.2 (c)', 'Policy - Commits to satisfy applicable IS requirements', 'AC003'),
-('5', '5.2 (d)', 'Policy - Commits to continual improvement of the ISMS', 'AC003'),
-('5', '5.2 (e)', 'Policy - Be available as documented information', 'AC003'),
-('5', '5.2 (f)', 'Policy - Communicate within organization', 'AC003'),
-('5', '5.2 (g)', 'Policy - Be available to interested parties', 'AC003'),
-('5', '5.3 (a)', 'Organizational roles, responsibilities & authorities - Ensure the ISMS conforms to document requirements', 'AC009'),
-('5', '5.3 (b)', 'Organizational roles, responsibilities & authorities - Report on the performance ISMS to top management', 'AC009'),
-('6', '6.1', 'Actions to address risks & opportunities', 'AC019'),
+('4', '4.2 (a)', 'Interested parties - Identify interested parties', NULL),
+('4', '4.2 (b)', 'Interested parties - Determine their information security-relevant requirements and obligations', NULL),
+('4', '4.2 (c)', 'Interested parties - Determine the requirments that will be addressed through ISMS.', NULL),
+('4', '4.3 (a)', 'ISMS scope - Determine the external and internal issues', NULL),
+('4', '4.3 (b)', 'ISMS scope - Determine the requirments', NULL),
+('4', '4.3 (c)', 'ISMS scope - Determine interfaces and dependencies between perfomed by the organization or by other organization', NULL),
+('4', '4.4', ' ISMS - Establish, implement, maintain and continually improve an ISMS according to the standard', NULL),
+('5', '5.1 (a)', 'Leadership & commitment- Ensure ISMS objectives are established', NULL),
+('5', '5.1 (b)', 'Leadership & commitment- Ensure integrate ISMS requirements into organizational processes', NULL),
+('5', '5.1 (c)', 'Leadership & commitment- Ensure resource for the ISMS are available', NULL),
+('5', '5.1 (d)', 'Leadership & commitment- Communicate the importance of effective ISMS and compliance with its requirements', NULL),
+('5', '5.1 (e)', 'Leadership & commitment- Ensure the ISMS achieves its outcome', NULL),
+('5', '5.1 (f)', 'Leadership & commitment- Direct and support person to ensure ISMS effectiveness', NULL),
+('5', '5.1 (g)', 'Leadership & commitment- Promote continual improvement', NULL),
+('5', '5.1 (h)', 'Leadership & commitment- Support management roles in demonstrating leadership with their responsibilities', NULL),
+('5', '5.2 (a)', 'Policy - Establish the information security policy', NULL),
+('5', '5.2 (b)', 'Policy - Include IS objectives or a framework for setting', NULL),
+('5', '5.2 (c)', 'Policy - Commits to satisfy applicable IS requirements', NULL),
+('5', '5.2 (d)', 'Policy - Commits to continual improvement of the ISMS', NULL),
+('5', '5.2 (e)', 'Policy - Be available as documented information', NULL),
+('5', '5.2 (f)', 'Policy - Communicate within organization', NULL),
+('5', '5.2 (g)', 'Policy - Be available to interested parties', NULL),
+('5', '5.3 (a)', 'Organizational roles, responsibilities & authorities - Ensure the ISMS conforms to document requirements', NULL),
+('5', '5.3 (b)', 'Organizational roles, responsibilities & authorities - Report on the performance ISMS to top management', NULL),
+('6', '6.1', 'Actions to address risks & opportunities', NULL),
 ('6', '6.1.1 (a)', 'General - Ensure the ISMS achieve the outcome(s)', 'AC001'),
-('6', '6.1.1 (b)', 'General - Prevent or reduce undesired effects', 'AC018'),
-('6', '6.1.1 (c)', 'General - Achieve continual improvement', 'AC018'),
-('6', '6.1.1 (d)', 'General - Organizational shall plan actions to address the risks and opportunities', 'AC018'),
-('6', '6.1.1 (e)', 'General - How to integrate and implement the actions into ISMS processes and evaluate its effectiveness', 'AC018'),
-('6', '6.1.2 (a)', 'Information security risk assessment - Establish and maintains IS risk criteria', 'AC004'),
-('6', '6.1.2 (b)', 'Information security risk assessment - Ensure IS risk assessments give consistent, valid, and comparable result', 'AC004'),
-('6', '6.1.2 (c)', 'Information security risk assessment - Identify the IS risks', 'AC004'),
-('6', '6.1.2 (d)', 'Information security risk assessment - Analyses the IS risks', 'AC004'),
-('6', '6.1.2 (e)', 'Information security risk assessment - Evaluate the IS risks', 'AC004'),
-('6', '6.1.3 (a)', 'Information security risk treatment - Select appropriate IS risk treatment options', 'AC005'),
-('6', '6.1.3 (b)', 'Information security risk treatment - Determine all controls to be implemented', 'AC005'),
-('6', '6.1.3 (c)', 'Information security risk treatment - Compare determined control with Annex A ', 'AC005'),
-('6', '6.1.3 (d)', 'Information security risk treatment - Produce statement of applicability that contains necessary control, justification for inclusion, and the necessary controls are implemented or not', 'AC005'),
-('6', '6.1.3 (e)', 'Information security risk treatment - Formulate an IS risk treatment plan', 'AC005'),
-('6', '6.1.3 (f)', 'Information security risk treatment - Obtain risk owners\' approval of the treatment plan and acceptance of residual risks', 'AC005'),
-('6', '6.2 (a)', 'Information security objectives & plans - Consistency with IS policy', 'AC006'),
-('6', '6.2 (b)', 'Information security objectives & plans - Measurable', 'AC006'),
-('6', '6.2 (c)', 'Information security objectives & plans - Consider IS requirements and results from risk assessment and treatment', 'AC006'),
-('6', '6.2 (d)', 'Information security objectives & plans - Monitor', 'AC006'),
-('6', '6.2 (e)', 'Information security objectives & plans - Communicate', 'AC003'),
-('6', '6.2 (f)', 'Information security objectives & plans - Updated', 'AC006'),
-('6', '6.2 (g)', 'Information security objectives & plans - Available as document', 'AC006'),
-('6', '6.2 (h)', 'Information security objectives & plans - Define what will be done', 'AC006'),
-('6', '6.2 (i)', 'Information security objectives & plans - Define required resources', 'AC006'),
-('6', '6.2 (j)', 'Information security objectives & plans - Define the person who take responsibility', 'AC009'),
-('6', '6.2 (k)', 'Information security objectives & plans - Define when it will be completed', 'AC006'),
-('6', '6.2 (l)', 'Information security objectives & plans - Define how the result will be eavluated', 'AC006'),
-('6', '6.3', 'Planning of changes - Determine the need for changes to the ISMS', 'AC006'),
-('7', '7.1', 'Resources - Determine and provide the resources needed for the establishment, implementation, maintenance and continual improvement of the ISMS', 'AC002'),
-('7', '7.2 (a)', 'Competence - Determine competence of persons affecting IS performance', 'AC014'),
-('7', '7.2 (b)', 'Competence - Ensure persons are competent through education, training, or experience', 'AC014'),
-('7', '7.2 (c)', 'Competence - Take actions to gain needed competence and evaluate effectiveness', 'AC014'),
-('7', '7.2 (d)', 'Competence - Retain in document as evidence', 'AC014'),
-('7', '7.3 (a)', 'Awareness - Information security policy', 'AC014'),
-('7', '7.3 (b)', 'Awareness - Contribution to the effectiveness of the ISMS', 'AC008'),
-('7', '7.3 (c)', 'Awareness - Implications of not comforming with ISMS requirements', 'AC008'),
-('7', '7.4 (a)', 'Communication - What to communicate', 'AC003'),
-('7', '7.4 (b)', 'Communication - When to communicate', 'AC003'),
-('7', '7.4 (c)', 'Communication - with whom to communicate', 'AC003'),
-('7', '7.4 (d)', 'Communication - How to communicate', 'AC003'),
-('7', '7.5', 'Documented information', 'AC002'),
-('7', '7.5.1 (a)', 'General - Require documented information', 'AC002'),
-('7', '7.5.1 (b)', 'General - Determined by the organization for the effectiveness of ISMS', 'AC002'),
-('7', '7.5.2 (a)', 'Creating and updating - Identification and description', 'AC002'),
-('7', '7.5.2 (b)', 'Creating and updating - Format and media', 'AC002'),
-('7', '7.5.2 (c)', 'Creating and updating - Review and approval for suitability and adequacy', 'AC002'),
-('7', '7.5.3 (a)', 'Control of documented information - Document shall available and suitable of use when needed', 'AC002'),
-('7', '7.5.3 (b)', 'Control of documented information - Document shall be protected', 'AC002'),
-('7', '7.5.3 (c)', 'Control of documented information - The organization shall address distribution, access, retrieval and use', 'AC002'),
-('7', '7.5.3 (d)', 'Control of documented information - The organization shall address control of changes address storage and preservation including legibility', 'AC002'),
-('7', '7.5.3 (e)', 'Control of documented information - The organization shall address control of changes', 'AC002'),
-('7', '7.5.3 (f)', 'Control of documented information - The organization shall address retention and disposition', 'AC002'),
-('8', '8.1', 'Operational planning and control - Plan, implement, control & document ISMS processes to manage risks', 'AC018'),
-('8', '8.2', 'Information security risk assessment - Perform information security risk assessments regularly or when significant changes occur', 'AC018'),
-('8', '8.3', 'Information security risk treatment - Implement the IS risk treatment plan and retain documented of the result', 'AC018'),
-('9', '9.1 (a)', 'Monitoring, measurement, analysis and evaluation - Determine what needs to be monitored and measured', 'AC018'),
-('9', '9.1 (b)', 'Monitoring, measurement, analysis and evaluation - Determine the methods for monitoring, measurement, analysis, and evaluation', 'AC018'),
-('9', '9.1 (c)', 'Monitoring, measurement, analysis and evaluation - Determine when the monitoring and measuring shall be performed', 'AC018'),
-('9', '9.1 (d)', 'Monitoring, measurement, analysis and evaluation - Determine who shall monitor and measure', 'AC009'),
-('9', '9.1 (e)', 'Monitoring, measurement, analysis and evaluation - Determine when the result shall be analysed and evaluated', 'AC018'),
-('9', '9.1 (f)', 'Monitoring, measurement, analysis and evaluation - Determine who shall analyse and evalaute the result', 'AC009'),
-('9', '9.2', 'Internal audit', 'AC007'),
-('9', '9.2.1 (a)', 'General - Conforms to the organization\'s ISMS requirements and the document', 'AC007'),
-('9', '9.2.1 (b)', 'General - Identify the ISMS is effectively implemented and maintained', 'AC007'),
-('9', '9.2.2', 'Internal audit progamme - Plan, establish, implement and maintain ad auidt programme(s)', 'AC007'),
-('9', '9.2.2 (a)', 'Internal audit progamme - Define the audit criteria and scope for each audit', 'AC007'),
-('9', '9.2.2 (b)', 'Internal audit progamme - Select auditors and conduct audits', 'AC007'),
-('9', '9.2.2 (c)', 'Internal audit progamme - Report the result of audit to relevant management', 'AC007'),
-('9', '9.3', 'Management review', 'AC007'),
-('9', '9.3.1', 'General - Review the organization\'s ISMS at planned intervals', 'AC007'),
-('9', '9.3.2 (a)', 'Management review inputs - Considerate of the status of action from previous management reviews', 'AC007'),
-('9', '9.3.2 (b)', 'Management review inputs - Considerate changes in external and internal issue in ISMS', 'AC007'),
-('9', '9.3.2 (c)', 'Management review inputs - Considerate of change in needs and expectation of interested parties', 'AC007'),
-('9', '9.3.2 (d)', 'Management review inputs - Feedback on ISMS performance in nonconformities and corrective actions, monitoring and measurements results, audit result, and fulfilment of IS obejctives', 'AC007'),
-('9', '9.3.2 (e)', 'Management review inputs - Feedback from interested parties', 'AC007'),
-('9', '9.3.2 (f)', 'Management review inputs - Result of risk assessment and status of risk treatment plan', 'AC007'),
-('9', '9.3.2 (g)', 'Management review inputs - Considerate opportunities for continual improvement', 'AC007'),
-('9', '9.3.3', 'Management review result - Management review result must include improvement decisions, ISMS changes, and be documented as evidence', 'AC007');
+('6', '6.1.1 (b)', 'General - Prevent or reduce undesired effects', NULL),
+('6', '6.1.1 (c)', 'General - Achieve continual improvement', NULL),
+('6', '6.1.1 (d)', 'General - Organizational shall plan actions to address the risks and opportunities', NULL),
+('6', '6.1.1 (e)', 'General - How to integrate and implement the actions into ISMS processes and evaluate its effectiveness', NULL),
+('6', '6.1.2 (a)', 'Information security risk assessment - Establish and maintains IS risk criteria', NULL),
+('6', '6.1.2 (b)', 'Information security risk assessment - Ensure IS risk assessments give consistent, valid, and comparable result', NULL),
+('6', '6.1.2 (c)', 'Information security risk assessment - Identify the IS risks', NULL),
+('6', '6.1.2 (d)', 'Information security risk assessment - Analyses the IS risks', NULL),
+('6', '6.1.2 (e)', 'Information security risk assessment - Evaluate the IS risks', NULL),
+('6', '6.1.3 (a)', 'Information security risk treatment - Select appropriate IS risk treatment options', NULL),
+('6', '6.1.3 (b)', 'Information security risk treatment - Determine all controls to be implemented', NULL),
+('6', '6.1.3 (c)', 'Information security risk treatment - Compare determined control with Annex A ', NULL),
+('6', '6.1.3 (d)', 'Information security risk treatment - Produce statement of applicability that contains necessary control, justification for inclusion, and the necessary controls are implemented or not', NULL),
+('6', '6.1.3 (e)', 'Information security risk treatment - Formulate an IS risk treatment plan', NULL),
+('6', '6.1.3 (f)', 'Information security risk treatment - Obtain risk owners\' approval of the treatment plan and acceptance of residual risks', NULL),
+('6', '6.2 (a)', 'Information security objectives & plans - Consistency with IS policy', NULL),
+('6', '6.2 (b)', 'Information security objectives & plans - Measurable', NULL),
+('6', '6.2 (c)', 'Information security objectives & plans - Consider IS requirements and results from risk assessment and treatment', NULL),
+('6', '6.2 (d)', 'Information security objectives & plans - Monitor', NULL),
+('6', '6.2 (e)', 'Information security objectives & plans - Communicate', NULL),
+('6', '6.2 (f)', 'Information security objectives & plans - Updated', NULL),
+('6', '6.2 (g)', 'Information security objectives & plans - Available as document', NULL),
+('6', '6.2 (h)', 'Information security objectives & plans - Define what will be done', NULL),
+('6', '6.2 (i)', 'Information security objectives & plans - Define required resources', NULL),
+('6', '6.2 (j)', 'Information security objectives & plans - Define the person who take responsibility', NULL),
+('6', '6.2 (k)', 'Information security objectives & plans - Define when it will be completed', NULL),
+('6', '6.2 (l)', 'Information security objectives & plans - Define how the result will be eavluated', NULL),
+('6', '6.3', 'Planning of changes - Determine the need for changes to the ISMS', NULL),
+('7', '7.1', 'Resources - Determine and provide the resources needed for the establishment, implementation, maintenance and continual improvement of the ISMS', NULL),
+('7', '7.2 (a)', 'Competence - Determine competence of persons affecting IS performance', NULL),
+('7', '7.2 (b)', 'Competence - Ensure persons are competent through education, training, or experience', NULL),
+('7', '7.2 (c)', 'Competence - Take actions to gain needed competence and evaluate effectiveness', NULL),
+('7', '7.2 (d)', 'Competence - Retain in document as evidence', NULL),
+('7', '7.3 (a)', 'Awareness - Information security policy', NULL),
+('7', '7.3 (b)', 'Awareness - Contribution to the effectiveness of the ISMS', NULL),
+('7', '7.3 (c)', 'Awareness - Implications of not comforming with ISMS requirements', NULL),
+('7', '7.4 (a)', 'Communication - What to communicate', NULL),
+('7', '7.4 (b)', 'Communication - When to communicate', NULL),
+('7', '7.4 (c)', 'Communication - with whom to communicate', NULL),
+('7', '7.4 (d)', 'Communication - How to communicate', NULL),
+('7', '7.5', 'Documented information', NULL),
+('7', '7.5.1 (a)', 'General - Require documented information', NULL),
+('7', '7.5.1 (b)', 'General - Determined by the organization for the effectiveness of ISMS', NULL),
+('7', '7.5.2 (a)', 'Creating and updating - Identification and description', NULL),
+('7', '7.5.2 (b)', 'Creating and updating - Format and media', NULL),
+('7', '7.5.2 (c)', 'Creating and updating - Review and approval for suitability and adequacy', NULL),
+('7', '7.5.3 (a)', 'Control of documented information - Document shall available and suitable of use when needed', NULL),
+('7', '7.5.3 (b)', 'Control of documented information - Document shall be protected', NULL),
+('7', '7.5.3 (c)', 'Control of documented information - The organization shall address distribution, access, retrieval and use', NULL),
+('7', '7.5.3 (d)', 'Control of documented information - The organization shall address control of changes address storage and preservation including legibility', NULL),
+('7', '7.5.3 (e)', 'Control of documented information - The organization shall address control of changes', NULL),
+('7', '7.5.3 (f)', 'Control of documented information - The organization shall address retention and disposition', NULL),
+('8', '8.1', 'Operational planning and control - Plan, implement, control & document ISMS processes to manage risks', NULL),
+('8', '8.2', 'Information security risk assessment - Perform information security risk assessments regularly or when significant changes occur', NULL),
+('8', '8.3', 'Information security risk treatment - Implement the IS risk treatment plan and retain documented of the result', NULL),
+('9', '9.1 (a)', 'Monitoring, measurement, analysis and evaluation - Determine what needs to be monitored and measured', NULL),
+('9', '9.1 (b)', 'Monitoring, measurement, analysis and evaluation - Determine the methods for monitoring, measurement, analysis, and evaluation', NULL),
+('9', '9.1 (c)', 'Monitoring, measurement, analysis and evaluation - Determine when the monitoring and measuring shall be performed', NULL),
+('9', '9.1 (d)', 'Monitoring, measurement, analysis and evaluation - Determine who shall monitor and measure', NULL),
+('9', '9.1 (e)', 'Monitoring, measurement, analysis and evaluation - Determine when the result shall be analysed and evaluated', NULL),
+('9', '9.1 (f)', 'Monitoring, measurement, analysis and evaluation - Determine who shall analyse and evalaute the result', NULL),
+('9', '9.2', 'Internal audit', NULL),
+('9', '9.2.1 (a)', 'General - Conforms to the organization\'s ISMS requirements and the document', NULL),
+('9', '9.2.1 (b)', 'General - Identify the ISMS is effectively implemented and maintained', NULL),
+('9', '9.2.2', 'Internal audit progamme - Plan, establish, implement and maintain ad auidt programme(s)', NULL),
+('9', '9.2.2 (a)', 'Internal audit progamme - Define the audit criteria and scope for each audit', NULL),
+('9', '9.2.2 (b)', 'Internal audit progamme - Select auditors and conduct audits', NULL),
+('9', '9.2.2 (c)', 'Internal audit progamme - Report the result of audit to relevant management', NULL),
+('9', '9.3', 'Management review', NULL),
+('9', '9.3.1', 'General - Review the organization\'s ISMS at planned intervals', NULL),
+('9', '9.3.2 (a)', 'Management review inputs - Considerate of the status of action from previous management reviews', NULL),
+('9', '9.3.2 (b)', 'Management review inputs - Considerate changes in external and internal issue in ISMS', NULL),
+('9', '9.3.2 (c)', 'Management review inputs - Considerate of change in needs and expectation of interested parties', NULL),
+('9', '9.3.2 (d)', 'Management review inputs - Feedback on ISMS performance in nonconformities and corrective actions, monitoring and measurements results, audit result, and fulfilment of IS obejctives', NULL),
+('9', '9.3.2 (e)', 'Management review inputs - Feedback from interested parties', NULL),
+('9', '9.3.2 (f)', 'Management review inputs - Result of risk assessment and status of risk treatment plan', NULL),
+('9', '9.3.2 (g)', 'Management review inputs - Considerate opportunities for continual improvement', NULL),
+('9', '9.3.3', 'Management review result - Management review result must include improvement decisions, ISMS changes, and be documented as evidence', NULL);
 
 -- --------------------------------------------------------
 
@@ -1234,7 +1118,7 @@ CREATE TABLE `survey` (
 --
 
 INSERT INTO `survey` (`survey_ID`, `survey_name`, `department`, `start_date`, `end_date`, `status`, `survey_description`, `created_by`, `created_at`, `updated_id`, `updated_by`) VALUES
-('SV001', 'Survey 1', 'fskm', '2026-01-05 09:58:00', '2026-01-30 21:58:00', 'Active', 'descriptiondescriptiondescriptiondescriptiondescription', '4', '2026-01-05 09:59:25', '4', '2026-01-15');
+('SV001', 'Survey 1', 'fskm', '2026-01-05 09:58:00', '2026-01-07 09:58:00', 'Active', 'descriptiondescriptiondescriptiondescriptiondescription', '4', '2026-01-05 09:59:25', '4', '2026-01-05');
 
 -- --------------------------------------------------------
 
@@ -1253,9 +1137,8 @@ CREATE TABLE `survey_domain` (
 --
 
 INSERT INTO `survey_domain` (`survey_domain_id`, `survey_id`, `domain_id`) VALUES
-(225, 'SV001', 'AD005'),
-(226, 'SV001', 'AD002'),
-(227, 'SV001', 'AD001');
+(217, 'SV001', 'AD002'),
+(218, 'SV001', 'AD001');
 
 -- --------------------------------------------------------
 
@@ -1286,15 +1169,14 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`user_ID`, `primary_email`, `password`, `google_sub_id`, `full_name`, `department`, `status`, `email_verified`, `last_login`, `created_at`, `updated_at`, `user_organization`, `user_position`, `user_phone_company`, `user_handphone_no`) VALUES
-(4, 'admin@uitm.edu.my', '$2y$10$UTKIVYNidiMD1AFK7jT79.PSK5vnDObgjMRM/QXfOJK8AWwqC5zBa', NULL, 'System Administrator', NULL, 'Active', 'Verified', '2026-01-20 08:59:03', '2025-10-29 06:29:06', '2026-01-20 08:59:03', NULL, NULL, NULL, NULL),
-(10, 'ali@gmail.com', '$2y$10$F2iHe.T65eU3qFrACN8BwOpEnwvVlG/JfzM68mHSKXu03bR0rfR6u', NULL, 'ali bin abuu', 'FSKM', 'Active', '', '2026-01-15 15:52:54', '2025-11-12 01:36:41', '2026-01-15 15:52:54', 'UiTM 10', 'Manager', '', '+60182396060'),
-(12, '2023864212@student.uitm.edu.my', '$2y$10$DEMeUh70OgYal7oSzY5hdOOgHGej7c4vTzfDj3LE5NdobA2AUMIL2', '110380624589280730990', 'IYLIA MAISARAH MOHD KHAIROL', '', 'Active', 'Verified', '2026-01-16 09:34:46', '2025-11-21 08:46:20', '2026-01-16 09:34:46', '', '', '', '+60182396090'),
-(13, 'abu.bakar@student.uitm.edu.my', '$2y$10$7RXFWqkQbMZLo6AGAm03AO7Fke9oj2fhoeMZ8HyugWY20SfI/Hj5C', NULL, 'Abu Bakar', 'FSR', 'Active', 'Verified', '2026-01-15 15:53:55', '2025-12-10 08:18:52', '2026-01-15 15:53:55', 'UiTM', 'Student', NULL, '+60123456789'),
-(14, 'siti.aminah@uitm.edu.my', '$2y$10$zh/p1t6Fj234oORkAfVk6O7J/QbHo6P0RmmXgL0BQypHTU4m.zSjC', NULL, 'Siti Aminah', 'FSKM', 'Active', 'Verified', '2026-01-15 09:47:13', '2025-12-10 08:18:52', '2026-01-15 09:47:13', 'UiTM', 'Lecturer', '0355442000', '+60134567890'),
+(4, 'admin@uitm.edu.my', '$2y$10$UTKIVYNidiMD1AFK7jT79.PSK5vnDObgjMRM/QXfOJK8AWwqC5zBa', NULL, 'System Administrator', NULL, 'Active', 'Verified', '2026-01-07 08:34:29', '2025-10-29 06:29:06', '2026-01-07 08:34:29', NULL, NULL, NULL, NULL),
+(10, 'ali@gmail.com', '$2y$10$F2iHe.T65eU3qFrACN8BwOpEnwvVlG/JfzM68mHSKXu03bR0rfR6u', NULL, 'ali bin abuu', 'FSKM', 'Active', '', '2025-12-22 16:41:14', '2025-11-12 01:36:41', '2025-12-22 16:41:14', 'UiTM', 'Manager', '', '+60182396060'),
+(12, '2023864212@student.uitm.edu.my', '$2y$10$DEMeUh70OgYal7oSzY5hdOOgHGej7c4vTzfDj3LE5NdobA2AUMIL2', '110380624589280730990', 'IYLIA MAISARAH MOHD KHAIROL', '', 'Active', 'Verified', '2026-01-05 10:00:07', '2025-11-21 08:46:20', '2026-01-05 10:00:07', '', '', '', '+60182396090'),
+(13, 'abu.bakar@student.uitm.edu.my', '$2y$10$7RXFWqkQbMZLo6AGAm03AO7Fke9oj2fhoeMZ8HyugWY20SfI/Hj5C', NULL, 'Abu Bakar', 'FSR', 'Active', 'Verified', '2025-12-15 12:55:28', '2025-12-10 08:18:52', '2025-12-15 12:55:28', 'UiTM', 'Student', NULL, '+60123456789'),
+(14, 'siti.aminah@uitm.edu.my', '$2y$10$zh/p1t6Fj234oORkAfVk6O7J/QbHo6P0RmmXgL0BQypHTU4m.zSjC', NULL, 'Siti Aminah', 'FSKM', 'Active', 'Verified', '2025-12-10 16:26:14', '2025-12-10 08:18:52', '2025-12-10 16:26:14', 'UiTM', 'Lecturer', '0355442000', '+60134567890'),
 (15, 'chong.wei@uitm.edu.my', '$2y$10$YHuTyDyNfSpuc6fW4njiM.aoR7G0idYfagakcgVTfPSIHfTZOBKHm', NULL, 'Chong Wei', 'Business Management', 'Active', 'Verified', '2025-12-12 11:01:37', '2025-12-10 08:18:52', '2025-12-12 11:01:37', 'UiTM', 'Senior Lecturer', '0355443000', '+60145678901'),
 (16, 'devi.muthu@uitm.edu.my', '$2y$10$RHAXuIP9g8oslfXkvRbAfegIym351W3i/vNmkyhRZGgHmeIYx0MJe', NULL, 'Devi Muthu', 'Academy of Language Studies', 'Active', 'Verified', NULL, '2025-12-10 08:18:52', '2025-12-10 08:25:32', 'UiTM', 'Coordinator', NULL, '+60156789012'),
-(17, 'salsabilashamsul896@gmail.com', '$2y$10$kvv2rkjbzbDsCjMYud.on.m.uw7.RipWNFFA8Ca4FNDbI9J/NXv0y', NULL, 'Salsabila Shamsul', 'FSKM', 'Active', '', '2025-12-15 13:07:48', '2025-12-15 13:07:35', '2025-12-15 13:07:48', 'UiTM', 'Student', '', '+60182037159'),
-(18, 'iyliamaisarah050205@gmail.com', '$2y$10$XC0n4fLwHEMY9fqPI8PJ2eesbqbUPbt60nKF3uKX8e9sh/stkk4e2', NULL, 'iylia maisarah', '', 'Active', '', '2026-01-15 15:23:27', '2026-01-15 09:55:45', '2026-01-15 15:23:27', '', '', '', '+60182396090');
+(17, 'salsabilashamsul896@gmail.com', '$2y$10$kvv2rkjbzbDsCjMYud.on.m.uw7.RipWNFFA8Ca4FNDbI9J/NXv0y', NULL, 'Salsabila Shamsul', 'FSKM', 'Active', '', '2025-12-15 13:07:48', '2025-12-15 13:07:35', '2025-12-15 13:07:48', 'UiTM', 'Student', '', '+60182037159');
 
 -- --------------------------------------------------------
 
@@ -1329,13 +1211,12 @@ CREATE TABLE `user_role` (
 INSERT INTO `user_role` (`user_role_ID`, `user_ID`, `role_ID`, `assigned_at`, `assigned_by`) VALUES
 (2, 4, 1, '2025-10-29 07:56:49', NULL),
 (3, 10, 2, '2025-12-03 10:57:42', 'System'),
-(4, 12, 2, '2026-01-15 09:09:37', 'Google'),
+(4, 12, 2, '2025-12-09 10:42:25', 'Google'),
 (5, 13, 2, '2025-12-10 08:18:52', 'System'),
 (6, 15, 2, '2025-12-10 08:18:52', 'System'),
 (7, 16, 2, '2025-12-10 08:18:52', 'System'),
 (8, 14, 2, '2025-12-10 08:18:52', 'System'),
-(9, 17, 2, '2025-12-15 13:07:35', 'System'),
-(10, 18, 2, '2026-01-15 09:55:45', 'System');
+(9, 17, 2, '2025-12-15 13:07:35', 'System');
 
 -- --------------------------------------------------------
 
@@ -1355,13 +1236,13 @@ CREATE TABLE `user_survey` (
 --
 
 INSERT INTO `user_survey` (`user_survey_ID`, `survey_ID`, `user_ID`, `status`) VALUES
-('US00001', 'SV001', 13, 'In progress'),
-('US00002', 'SV001', 10, 'Completed'),
+('US00001', 'SV001', 13, 'Pending'),
+('US00002', 'SV001', 10, 'Pending'),
 ('US00003', 'SV001', 15, 'Pending'),
 ('US00004', 'SV001', 16, 'Pending'),
-('US00005', 'SV001', 12, 'Completed'),
+('US00005', 'SV001', 12, 'Pending'),
 ('US00006', 'SV001', 17, 'Pending'),
-('US00007', 'SV001', 14, 'Completed'),
+('US00007', 'SV001', 14, 'Pending'),
 ('US00008', 'SV001', 4, 'Pending');
 
 --
@@ -1429,9 +1310,7 @@ ALTER TABLE `gap_analysis`
   ADD KEY `domain_ID` (`domain_ID`),
   ADD KEY `criteria_ID` (`criteria_ID`),
   ADD KEY `element_ID` (`element_ID`),
-  ADD KEY `user_ID` (`user_ID`),
-  ADD KEY `fk_gap_auditor` (`auditor_id`),
-  ADD KEY `fk_gap_survey` (`survey_ID`);
+  ADD KEY `user_ID` (`user_ID`);
 
 --
 -- Indexes for table `password_reset_tokens`
@@ -1565,13 +1444,13 @@ ALTER TABLE `user_survey`
 -- AUTO_INCREMENT for table `element_control`
 --
 ALTER TABLE `element_control`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `password_reset_tokens`
 --
 ALTER TABLE `password_reset_tokens`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -1583,19 +1462,19 @@ ALTER TABLE `role`
 -- AUTO_INCREMENT for table `survey_domain`
 --
 ALTER TABLE `survey_domain`
-  MODIFY `survey_domain_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+  MODIFY `survey_domain_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=219;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `user_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `user_role`
 --
 ALTER TABLE `user_role`
-  MODIFY `user_role_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `user_role_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
@@ -1630,8 +1509,6 @@ ALTER TABLE `element_control`
 -- Constraints for table `gap_analysis`
 --
 ALTER TABLE `gap_analysis`
-  ADD CONSTRAINT `fk_gap_auditor` FOREIGN KEY (`auditor_id`) REFERENCES `user` (`user_ID`),
-  ADD CONSTRAINT `fk_gap_survey` FOREIGN KEY (`survey_ID`) REFERENCES `survey` (`survey_ID`) ON DELETE SET NULL,
   ADD CONSTRAINT `gap_analysis_ibfk_1` FOREIGN KEY (`domain_ID`) REFERENCES `domain` (`domain_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `gap_analysis_ibfk_2` FOREIGN KEY (`criteria_ID`) REFERENCES `criteria` (`criteria_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `gap_analysis_ibfk_3` FOREIGN KEY (`element_ID`) REFERENCES `element` (`element_ID`) ON DELETE CASCADE ON UPDATE CASCADE,
