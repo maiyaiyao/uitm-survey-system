@@ -13,6 +13,7 @@ requireRole(['user']);
 
 $db = new Database();
 $user_ID = getCurrentUserId();
+$current_time = date('Y-m-d H:i:s'); // Get current server time for comparisons
 
 // --- 1. Check User Status ---
 $status_sql = "SELECT status, full_name, primary_email FROM user WHERE user_ID = :user_ID LIMIT 1";
@@ -28,24 +29,36 @@ if (!$user_data || $user_data['status'] !== 'Active') {
 $current_user = getCurrentUser();
 
 // --- 2. Fetch Statistics ---
+// We add conditions to ensure we only count surveys that are "Live" (Start date passed) and not Drafts.
 $stats_sql = "SELECT 
     COUNT(DISTINCT CASE WHEN us.status IN ('Pending', 'In progress') AND s.status = 'Active' THEN s.survey_ID END) AS active_surveys,
     COUNT(DISTINCT CASE WHEN us.status = 'Completed' THEN s.survey_ID END) AS completed_surveys,
     COUNT(DISTINCT s.survey_ID) AS total_surveys
 FROM survey s
 INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
-WHERE us.user_ID = :user_ID";
+WHERE us.user_ID = :user_ID
+AND s.start_date <= :current_time
+AND s.status != 'Draft'";
 
-$stats = $db->fetchOne($stats_sql, [':user_ID' => $user_ID]);
+$stats = $db->fetchOne($stats_sql, [
+    ':user_ID' => $user_ID,
+    ':current_time' => $current_time
+]);
 
 // --- 3. Fetch Recent Assigned Surveys (Limit 4 for Dashboard) ---
+// Filter to hide future scheduled surveys
 $recent_surveys_sql = "SELECT s.*, us.status as user_survey_status
         FROM survey s
         INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
         WHERE us.user_ID = :user_ID
+        AND s.start_date <= :current_time
+        AND s.status != 'Draft'
         ORDER BY s.start_date DESC LIMIT 4";
 
-$recent_surveys = $db->fetchAll($recent_surveys_sql, [':user_ID' => $user_ID]);
+$recent_surveys = $db->fetchAll($recent_surveys_sql, [
+    ':user_ID' => $user_ID,
+    ':current_time' => $current_time
+]);
 
 // Helper for Status Badges
 function getStatusBadge($status) {
@@ -75,7 +88,9 @@ function getStatusBadge($status) {
             width: calc(100% - 270px); 
         }
         
-
+        @media (max-width: 991.98px) {
+            .main-content-wrapper { margin-left: 0; width: 100%; }
+        }
 
         /* --- Stat Cards (Matching Admin) --- */
         .stat-card {
@@ -308,6 +323,7 @@ function getStatusBadge($status) {
                                                 <small class="text-muted">Download past certificates</small>
                                             </div>
                                         </a>
+
                                     </div>
                                 </div>
                             </div>
