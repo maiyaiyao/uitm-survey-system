@@ -289,7 +289,7 @@ function getScoreClass($val) {
                                                         <span class="fw-semibold text-dark"><?php echo htmlspecialchars($d['name']); ?></span>
                                                     </div>
                                                     <span class="badge bg-<?php echo getScoreClass($d['avg']); ?> rounded-pill px-3 py-2">
-                                                        <?php echo round($d['avg'], 1); ?>%
+                                                        <?php echo round($d['avg'], 2); ?>%
                                                     </span>
                                                 </li>
                                             <?php endforeach; ?>
