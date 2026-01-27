@@ -7,17 +7,12 @@ $active_tab = $_GET['tab'] ?? 'sections';
 $search = $_GET['search'] ?? '';
 $filter = $_GET['filter'] ?? '';
 
-// --- Fetch Filter Options (All Sections) ---
 $all_sections = $db->fetchAll("SELECT * FROM section ORDER BY 
     CASE WHEN sec_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END,
     CAST(sec_ID AS UNSIGNED), sec_ID ASC");
 
 $data = [];
 $params = [];
-
-// --- Logic for Fetching Data based on Tab ---
-// Note: We still fetch 'mapped_count'/'is_mapped' to show the Badge, 
-// but we won't use it to lock the delete button anymore.
 
 if ($active_tab === 'sections') {
     $sql = "SELECT section.*, 

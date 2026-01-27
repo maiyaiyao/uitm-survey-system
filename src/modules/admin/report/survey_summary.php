@@ -1,12 +1,10 @@
 <?php
-// Adjust path to config (assuming this file is in src/modules/admin/report/)
 require_once '../../../config/config.php';
 requireRole(['admin', 'auditor']);
 
 $db = new Database();
 
-// --- 1. Get List of Surveys for Dropdown (UPDATED) ---
-// Logic: Show only surveys that are NOT Draft AND have already started (Live or Ended)
+// --- 1. Get List of Surveys for Dropdown  ---
 $current_time = date('Y-m-d H:i:s');
 $surveys = $db->fetchAll("
     SELECT * FROM survey 
