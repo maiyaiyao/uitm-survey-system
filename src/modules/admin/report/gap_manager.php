@@ -120,7 +120,15 @@ $users = $db->fetchAll("SELECT user_ID, full_name, department FROM user WHERE st
                         </ol>
                     </nav>
 
-                    <?php echo getFlashMessage(); ?>
+                    <?php 
+                    $flash = getFlashMessage();
+                    if ($flash): 
+                    ?>
+                        <div class="alert alert-<?php echo ($flash['type'] == 'error') ? 'danger' : $flash['type']; ?> alert-dismissible fade show border-0 shadow-sm mb-4">
+                            <?php echo $flash['message']; ?>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
                         <div>
@@ -129,7 +137,7 @@ $users = $db->fetchAll("SELECT user_ID, full_name, department FROM user WHERE st
                         </div>
                         <div class="d-flex gap-2">
                             <a href="index.php" class="btn btn-outline-secondary shadow-sm px-4 py-2 rounded-3">
-                                <i class="bi bi-arrow-left me-2"></i>Back
+                                <i class="bi bi-arrow-left me-2"></i>Back To Hub
                             </a>
                             <button class="btn btn-primary shadow-sm px-4 py-2 rounded-3" 
                                     style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;"
@@ -265,27 +273,14 @@ $users = $db->fetchAll("SELECT user_ID, full_name, department FROM user WHERE st
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label fw-bold small text-uppercase text-secondary">Target User / Auditee</label>
-                        <select name="target_user_id" class="form-select">
-                            <option value="">-- General Issue --</option>
-                            <?php foreach($users as $u): ?>
-                                <option value="<?php echo $u['user_ID']; ?>">
-                                    <?php echo htmlspecialchars($u['full_name']); ?> 
-                                    (<?php echo htmlspecialchars($u['department'] ?? '-'); ?>)
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold small text-uppercase text-secondary">Severity Level</label>
                         <select name="severity" class="form-select">
-                            <option value="Low">Low</option>
-                            <option value="Medium" selected>Medium</option>
-                            <option value="High">High</option>
-                            <option value="Critical">Critical</option>
+                            <option value="Low">Low: Ada kawalan; perlu penambahbaikan kecil</option>
+                            <option value="Medium" selected>Medium: Ada kawalan; pelaksanaan tidak konsisten.</option>
+                            <option value="High">High: Kawalan tidak memadai / tidak memenuhi keperluan.</option>
+                            <option value="Critical">Critical: Kawalan kritikal tiada / gagal; tindakan segera diperlukan.</option>
                         </select>
                     </div>
 
