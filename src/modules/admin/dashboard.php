@@ -1,48 +1,52 @@
 <?php
+// Path: src/modules/admin/dashboard.php
+
+// 1. FIX PATH: Go up 2 levels, not 3
 require_once '../../config/config.php';
-require_once '../../includes/models/User.php';
+
+// Removed User.php to prevent path errors (DB wrapper handles data)
+// require_once '../../includes/models/User.php';
 
 // Require admin role
 requireRole(['admin']);
 
 $current_user = getCurrentUser();
+$db = new Database(); // Use the standard wrapper
 
 // --- Fetch Dashboard Statistics ---
 try {
-    $pdo = (new Database())->getConnection();
-
     // 1. Total Users
-    $stmt_users = $pdo->query("SELECT COUNT(*) FROM user");
-    $total_users = $stmt_users->fetchColumn();
+    $r_users = $db->fetchOne("SELECT COUNT(*) as cnt FROM user");
+    $total_users = $r_users['cnt'] ?? 0;
 
     // 2. Active Surveys
-    $stmt_active = $pdo->query("SELECT COUNT(*) FROM survey WHERE status = 'Active'");
-    $total_active = $stmt_active->fetchColumn();
+    $r_active = $db->fetchOne("SELECT COUNT(*) as cnt FROM survey WHERE status = 'Active'");
+    $total_active = $r_active['cnt'] ?? 0;
 
     // 3. Draft Surveys
-    $stmt_draft = $pdo->query("SELECT COUNT(*) FROM survey WHERE status = 'Draft'");
-    $total_draft = $stmt_draft->fetchColumn();
+    $r_draft = $db->fetchOne("SELECT COUNT(*) as cnt FROM survey WHERE status = 'Draft'");
+    $total_draft = $r_draft['cnt'] ?? 0;
 
     // 4. Completed Surveys
-    $stmt_completed = $pdo->query("SELECT COUNT(*) FROM survey WHERE status = 'Completed'");
-    $total_completed = $stmt_completed->fetchColumn();
+    $r_completed = $db->fetchOne("SELECT COUNT(*) as cnt FROM survey WHERE status = 'Completed'");
+    $total_completed = $r_completed['cnt'] ?? 0;
 
-    // 5. Fetch Recent Surveys (Expanded query for the table)
-    $stmt_recent = $pdo->query("
-        SELECT s.*, u.full_name AS created_by_name, o.org_name AS organization
+    // 5. Fetch Recent Surveys
+    // FIX: Added JOIN to 'organization' so org_name appears in the table
+    $recent_surveys = $db->fetchAll("
+        SELECT s.*, u.full_name AS created_by_name, o.org_name
         FROM survey s
         LEFT JOIN user u ON s.created_by = u.user_ID
         LEFT JOIN organization o ON s.org_ID = o.org_ID
         ORDER BY s.created_at DESC 
         LIMIT 5
     ");
-    $recent_surveys = $stmt_recent->fetchAll(PDO::FETCH_ASSOC);
 
-} catch (PDOException $e) {
+} catch (Exception $e) {
     // Handle DB error gracefully
     $total_users = 0; $total_active = 0; $total_draft = 0; $total_completed = 0;
     $recent_surveys = [];
-    $db_error = "Database connection error: " . $e->getMessage();
+    $db_error = "Database Error: " . $e->getMessage();
 }
 
 // Helper for Status Badges
@@ -253,10 +257,10 @@ function getStatusBadge($status) {
 <body>
     <div class="page-container">
         
-        <!-- Sidebar -->
-        <?php include_once __DIR__ . '/../includes/admin_sidebar.php'; ?>
+        <div class="col-md-2 sidebar">
+            <?php include_once __DIR__ . '/../includes/admin_sidebar.php'; ?>
+        </div>
         
-        <!-- Main Content -->
         <div class="main-content-wrapper">
             <div class="main-content">
                 
@@ -287,10 +291,8 @@ function getStatusBadge($status) {
                     </div>
                 <?php endif; ?>
 
-                <!-- Stats Row -->
                 <div class="row g-3 g-md-4 mb-4 mb-md-5">
                     
-                    <!-- Total Users -->
                     <div class="col-12 col-sm-6 col-xl-3">
                         <div class="stat-card p-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -306,7 +308,6 @@ function getStatusBadge($status) {
                         </div>
                     </div>
 
-                    <!-- Active Surveys -->
                     <div class="col-12 col-sm-6 col-xl-3">
                         <div class="stat-card p-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -322,7 +323,6 @@ function getStatusBadge($status) {
                         </div>
                     </div>
 
-                    <!-- Draft Surveys -->
                     <div class="col-12 col-sm-6 col-xl-3">
                         <div class="stat-card p-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -338,7 +338,6 @@ function getStatusBadge($status) {
                         </div>
                     </div>
 
-                    <!-- Completed Surveys -->
                     <div class="col-12 col-sm-6 col-xl-3">
                         <div class="stat-card p-3">
                             <div class="d-flex justify-content-between align-items-center">
@@ -393,7 +392,9 @@ function getStatusBadge($status) {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <span class="text-secondary text-sm font-weight-bold"><?php echo htmlspecialchars($survey['organization']); ?></span>
+                                                        <span class="fw-bold text-dark small">
+                                                            <?php echo htmlspecialchars($survey['org_name'] ?? 'No Org'); ?>
+                                                        </span>
                                                     </td>
                                                     <td>
                                                         <div class="user-meta">
@@ -406,13 +407,13 @@ function getStatusBadge($status) {
                                                     </td>
                                                     <td class="text-end pe-4" onclick="event.stopPropagation();">
                                                         <a href="survey/preview.php?id=<?php echo $survey['survey_ID']; ?>" 
-                                                        class="btn btn-sm btn-link text-dark px-2" 
-                                                        title="View Details">
+                                                           class="btn btn-sm btn-link text-dark px-2" 
+                                                           title="View Details">
                                                             <i class="bi bi-eye fs-6"></i>
                                                         </a>
                                                         <a href="survey/form-survey.php?id=<?php echo $survey['survey_ID']; ?>" 
-                                                        class="btn btn-sm btn-link text-primary px-2" 
-                                                        title="Edit Survey">
+                                                           class="btn btn-sm btn-link text-primary px-2" 
+                                                           title="Edit Survey">
                                                             <i class="bi bi-pencil-square fs-6"></i>
                                                         </a>
                                                     </td>
@@ -424,7 +425,7 @@ function getStatusBadge($status) {
                             </div>
                         </div>
                     </div>
-
+                    
                     <div class="col-12 col-lg-4">
                         <div class="card border-0 shadow-sm rounded-4 h-100">
                             <div class="card-header bg-white border-bottom py-3 rounded-top-4">
