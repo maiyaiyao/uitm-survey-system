@@ -46,15 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             // Login successful
             loginUser($user);
-
-            /*
-            // DEBUG: Add this temporarily
-            error_log("SESSION roles: " . (isset($_SESSION['roles']) ? $_SESSION['roles'] : 'NOT SET'));
-            $role = getPrimaryRole();
-            error_log("Primary role: '$role'");
-            var_dump($role); // This will output to the page/browser for immediate feedback
-            die(); // Stop execution here to see the output  
-            */
         
             // Redirect based on role
             $role = getPrimaryRole();
