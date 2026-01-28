@@ -150,8 +150,8 @@ if ($flash) {
                 <div class="login-card">
                     <div class="login-header">
                         <i class="bi bi-shield-check" style="font-size: 3rem;"></i>
-                        <h3 class="mt-3 mb-0">UiTM Survey System</h3>
-                        <p class="mb-0 mt-2">ISO 27001 Assessment</p>
+                        <h3 class="mt-3 mb-0">UiTM Security Maturity System</h3>
+                        <p class="mb-0 mt-2">ISO/IEC 27001:2022 Assessment</p>
                     </div>
                     
                     <div class="p-4">
