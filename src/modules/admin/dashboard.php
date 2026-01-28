@@ -29,9 +29,10 @@ try {
 
     // 5. Fetch Recent Surveys (Expanded query for the table)
     $stmt_recent = $pdo->query("
-        SELECT s.*, u.full_name AS created_by_name
+        SELECT s.*, u.full_name AS created_by_name, o.org_name AS organization
         FROM survey s
         LEFT JOIN user u ON s.created_by = u.user_ID
+        LEFT JOIN organization o ON s.org_ID = o.org_ID
         ORDER BY s.created_at DESC 
         LIMIT 5
     ");
@@ -366,7 +367,7 @@ function getStatusBadge($status) {
                                     <thead>
                                         <tr>
                                             <th class="ps-4">Survey Name</th>
-                                            <th>Department</th>
+                                            <th>Organization</th>
                                             <th>Created By</th>
                                             <th class="text-center">Status</th>
                                             <th class="text-end pe-4">Actions</th>
@@ -392,7 +393,7 @@ function getStatusBadge($status) {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <span class="text-secondary text-sm font-weight-bold"><?php echo htmlspecialchars($survey['department']); ?></span>
+                                                        <span class="text-secondary text-sm font-weight-bold"><?php echo htmlspecialchars($survey['organization']); ?></span>
                                                     </td>
                                                     <td>
                                                         <div class="user-meta">
