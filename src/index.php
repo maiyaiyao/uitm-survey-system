@@ -93,14 +93,13 @@ if (isLoggedIn()) {
                     <div class="col-md-5 logo-section d-flex flex-column align-items-center justify-content-center text-center">
                         <i class="bi bi-shield-check" style="font-size: 5rem;"></i>
                         <h2 class="mt-3 fw-bold">UiTM</h2>
-                        <p class="mb-0">ISO 27001 Assessment System</p>
                     </div>
 
                     <!-- Right Section -->
                     <div class="col-md-7 p-5">
-                        <h1 class="mb-4 fw-bold">Welcome to UiTM ISO Level Assessment System</h1>
+                        <h1 class="mb-4 fw-bold">Welcome to UiTM Cybersecurity Maturity System</h1>
                         <p class="text-muted mb-4">
-                            A comprehensive ISO 27001 Level Assessment System designed for 
+                            The Cybersecurity Maturity System System designed for 
                             Universiti Teknologi MARA to manage cybersecurity survey and compliance.
                         </p>
                         
