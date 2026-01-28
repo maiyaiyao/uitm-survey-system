@@ -1,4 +1,5 @@
 <?php
+// Path: src/modules/admin/iso/index.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -7,6 +8,7 @@ $active_tab = $_GET['tab'] ?? 'sections';
 $search = $_GET['search'] ?? '';
 $filter = $_GET['filter'] ?? '';
 
+// --- Fetch Filter Options (All Sections) ---
 $all_sections = $db->fetchAll("SELECT * FROM section ORDER BY 
     CASE WHEN sec_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END,
     CAST(sec_ID AS UNSIGNED), sec_ID ASC");
@@ -14,20 +16,17 @@ $all_sections = $db->fetchAll("SELECT * FROM section ORDER BY
 $data = [];
 $params = [];
 
+// --- Logic for Fetching Data ---
 if ($active_tab === 'sections') {
     $sql = "SELECT section.*, 
             (SELECT COUNT(*) FROM domain d WHERE d.sec_ID = section.sec_ID) as mapped_count 
             FROM section WHERE 1=1";
-            
     if ($search) {
         $sql .= " AND (sec_name LIKE :s1 OR sec_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-    if ($filter) {
-        $sql .= " AND type = :filter";
-        $params[':filter'] = $filter;
-    }
+    if ($filter) { $sql .= " AND type = :filter"; $params[':filter'] = $filter; }
     $sql .= " ORDER BY CASE WHEN sec_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END, CAST(sec_ID AS UNSIGNED), sec_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
@@ -36,16 +35,12 @@ if ($active_tab === 'sections') {
             (CASE WHEN sr.criteria_ID IS NOT NULL THEN 1 ELSE 0 END) as is_mapped
             FROM sub_req sr 
             JOIN section s ON sr.sec_ID = s.sec_ID WHERE 1=1";
-
     if ($search) {
         $sql .= " AND (sr.sub_req_name LIKE :s1 OR sr.sub_req_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-    if ($filter) {
-        $sql .= " AND sr.sec_ID = :filter";
-        $params[':filter'] = $filter;
-    }
+    if ($filter) { $sql .= " AND sr.sec_ID = :filter"; $params[':filter'] = $filter; }
     $sql .= " ORDER BY CASE WHEN sr.sub_req_ID REGEXP '^[0-9]+$' THEN 0 ELSE 1 END, CAST(sr.sub_req_ID AS UNSIGNED), sr.sub_req_ID ASC";
     $data = $db->fetchAll($sql, $params);
 
@@ -54,16 +49,12 @@ if ($active_tab === 'sections') {
             (SELECT COUNT(*) FROM element_control ec WHERE ec.sub_con_ID = sc.sub_con_ID) as mapped_count 
             FROM sub_con sc 
             JOIN section s ON sc.sec_ID = s.sec_ID WHERE 1=1";
-
     if ($search) {
         $sql .= " AND (sc.sub_con_name LIKE :s1 OR sc.sub_con_ID LIKE :s2)";
         $params[':s1'] = "%$search%";
         $params[':s2'] = "%$search%";
     }
-    if ($filter) {
-        $sql .= " AND sc.sec_ID = :filter";
-        $params[':filter'] = $filter;
-    }
+    if ($filter) { $sql .= " AND sc.sec_ID = :filter"; $params[':filter'] = $filter; }
     $sql .= " ORDER BY 
               SUBSTRING_INDEX(sc.sub_con_ID, '.', 1),
               CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(sc.sub_con_ID, '.', 2), '.', -1) AS UNSIGNED),
@@ -112,10 +103,7 @@ if ($active_tab === 'sections') {
 <body>
     <div class="container-fluid p-0 h-100">
         <div class="row g-0 h-100">
-            <div class="col-auto">
-                <?php include_once __DIR__ . '/../../includes/admin_sidebar.php'; ?>
-            </div>
-
+            <div class="col-auto"><?php include_once __DIR__ . '/../../includes/admin_sidebar.php'; ?></div>
             <div class="col main-content-wrapper">
                 <div class="main-content px-4 py-4">
                     
@@ -127,7 +115,7 @@ if ($active_tab === 'sections') {
                         </ol>
                     </nav>
 
-                    <?php 
+                     <?php 
                     $msg = getFlashMessage();
                     if ($msg): 
                         $alertClass = ($msg['type'] === 'error') ? 'danger' : $msg['type'];
@@ -148,7 +136,6 @@ if ($active_tab === 'sections') {
                             <h3 class="fw-bold mb-1">ISO 27001 Standards</h3>
                             <p class="text-muted mb-0">Manage Sections, Requirements (Clauses), and Annex A Controls.</p>
                         </div>
-                        
                         <div class="d-flex gap-2 align-items-center">
                             <form method="GET" class="d-flex gap-2">
                                 <input type="hidden" name="tab" value="<?php echo htmlspecialchars($active_tab); ?>">
@@ -182,7 +169,7 @@ if ($active_tab === 'sections') {
                             </form>
                             <a href="add-<?php echo substr($active_tab, 0, -1); ?>.php" class="btn btn-gradient-primary shadow-sm px-4 py-2 rounded-3">
                                 <i class="bi bi-plus-lg me-2"></i>Add
-                            </a>
+                            </a>                        
                         </div>
                     </div>
 
@@ -197,32 +184,32 @@ if ($active_tab === 'sections') {
                             <h5 class="mb-0"><?php echo ucfirst($active_tab); ?> List</h5>
                             <small class="text-muted"><?php echo count($data); ?> records found</small>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="ps-4" style="width: 15%;">ID</th>
-                                        <th style="width: 45%;">Name</th>
-                                        <th class="text-center">Mapping</th>
-                                        <th class="text-end pe-4">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (empty($data)): ?>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0">
+                                    <thead>
                                         <tr>
-                                            <td colspan="4" class="text-center py-5 text-muted">
-                                                <i class="bi bi-inbox display-4 d-block mb-2"></i>
-                                                No records found.
-                                            </td>
+                                            <th class="ps-4" style="width: 15%;">ID</th>
+                                            <th style="width: 45%;">Name</th>
+                                            <th class="text-center">Mapping</th>
+                                            <th class="text-end pe-4">Actions</th>
                                         </tr>
-                                    <?php else: ?>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($data)): ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center py-5 text-muted">
+                                                    <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                                    No records found.
+                                                </td>
+                                            </tr>
+                                        <?php else: ?>
                                         <?php                                                 
                                         $urlParams = "";
                                         if (!empty($search)) $urlParams .= "&search=" . urlencode($search);
                                         if (!empty($filter)) $urlParams .= "&filter=" . urlencode($filter);
-                                        ?>
-                                        <?php foreach ($data as $row): ?>
-                                            <?php
+                                        ?>                                                 
+                                        <?php foreach ($data as $row):  ?>
+                                             <?php
                                                 // Prepare Variables
                                                 $mapType = '';
                                                 $mapID = '';
@@ -250,13 +237,11 @@ if ($active_tab === 'sections') {
                                                     $isMapped = ($row['mapped_count'] > 0);
                                                 }
                                             ?>
-                                            
                                             <tr class="iso-row" onclick="viewDetails('<?php echo $mapType; ?>', '<?php echo $mapID; ?>', event)">
                                                 <td class="ps-4 fw-bold text-dark"><?php echo htmlspecialchars($mapID); ?></td>
                                                 <td>
                                                     <span class="fw-semibold text-secondary"><?php echo htmlspecialchars($itemName); ?></span>
                                                 </td>
-                                                
                                                 <td class="text-center no-click" onclick="event.stopPropagation()">
                                                     <?php if ($isMapped): ?>
                                                         <div class="mb-1">
@@ -275,27 +260,31 @@ if ($active_tab === 'sections') {
                                                         </a>
                                                     <?php endif; ?>
                                                 </td>
-
                                                 <td class="text-end pe-4 no-click" onclick="event.stopPropagation()">
-                                                    <div class="d-flex justify-content-end gap-2">
-                                                        <a href="edit-<?php echo $mapType; ?>.php?id=<?php echo urlencode($mapID); ?>" 
-                                                           class="btn btn-sm btn-link text-primary" 
-                                                           title="Edit">
-                                                            <i class="bi bi-pencil-square"></i>
-                                                        </a>
-                                                        
-                                                        <button class="btn btn-sm btn-link text-danger" 
-                                                                onclick="confirmDelete('<?php echo $mapType; ?>', '<?php echo $mapID; ?>')" 
-                                                                title="Delete">
-                                                            <i class="bi bi-trash"></i>
-                                                        </button>
-                                                    </div>
+                                                    <?php if ($active_tab === 'sections'): 
+                                                        $viewUrl = (str_starts_with($mapID, 'A')) ? "view-control.php?id=" : "view-requirement.php?id=";
+                                                    ?>
+                                                        <a href="<?php echo $viewUrl . urlencode($mapID); ?>" class="btn btn-sm btn-link text-info"><i class="bi bi-eye"></i></a>
+                                                    <?php endif; ?>
+                                                    
+                                                    <a href="edit-<?php echo $mapType; ?>.php?id=<?php echo urlencode($mapID); ?>"
+                                                     class="btn btn-sm btn-link text-primary"
+                                                     title="Edit">
+                                                     <i class="bi bi-pencil-square"></i>
+                                                    </a>
+                                                    
+                                                    <button class="btn btn-sm btn-link text-danger" 
+                                                            onclick="confirmDelete('<?php echo $mapType; ?>', '<?php echo $mapID; ?>')" 
+                                                            title="Delete">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -336,19 +325,45 @@ if ($active_tab === 'sections') {
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script>
-        // Init Tooltips
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-danger">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted">Are you sure? This cannot be undone.</p>
+                    <form id="deleteForm" method="POST" action="delete_iso.php">
+                        <input type="hidden" name="type" id="delType">
+                        <input type="hidden" name="id" id="delId">
+                    </form>
+                </div>
+                <div class="modal-footer border-0">
+                    <button class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" onclick="document.getElementById('deleteForm').submit()">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
         const currentSearch = "<?php echo addslashes($search); ?>";
         const currentFilter = "<?php echo addslashes($filter); ?>";
 
+        // FIX: Renamed from openDeleteModal to confirmDelete to match HTML onclick event
+        function confirmDelete(type, id) {
+            document.getElementById('delType').value = type;
+            document.getElementById('delId').value = id;
+            var deleteModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteModal'));
+            deleteModal.show();
+        }
+
+        // FIX: Using getOrCreateInstance to prevent 'config undefined' error
         function viewDetails(type, id, event) {
             const modalEl = document.getElementById('isoDetailsModal');
-            const modal = new bootstrap.Modal(modalEl);
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
             modal.show();
 
             document.getElementById('modalLoader').style.display = 'block';
@@ -391,30 +406,6 @@ if ($active_tab === 'sections') {
                     console.error('Error:', error);
                     document.getElementById('modalLoader').innerHTML = '<p class="text-danger">Failed to load details.</p>';
                 });
-        }
-
-        function confirmDelete(type, id) {
-            // UPDATED: Standard delete confirmation without blocking
-            if (confirm(`Are you sure you want to delete this ${type} (${id})? This action cannot be undone.`)) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = 'delete-iso.php';
-                
-                const typeInput = document.createElement('input');
-                typeInput.type = 'hidden';
-                typeInput.name = 'type';
-                typeInput.value = type;
-                
-                const idInput = document.createElement('input');
-                idInput.type = 'hidden';
-                idInput.name = 'id';
-                idInput.value = id;
-                
-                form.appendChild(typeInput);
-                form.appendChild(idInput);
-                document.body.appendChild(form);
-                form.submit();
-            }
         }
     </script>
 </body>
