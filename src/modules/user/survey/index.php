@@ -1,110 +1,107 @@
 <?php
 /**
  * My Surveys (Survey List)
- * Displays all surveys assigned to the current user.
+ * UPDATED: Fixed Logic Error. Now correctly separates Active vs History tasks per Department.
  */
+
+// 1. ENABLE ERROR REPORTING
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
 require_once '../../../config/config.php';
 requireRole(['user']);
 
 $db = new Database();
 $user_ID = getCurrentUserId();
-$current_user = getCurrentUser();
+$current_time = date('Y-m-d H:i:s');
 
 // --- 1. Handling Tabs & Search ---
 $tab = $_GET['tab'] ?? 'active'; // 'active' or 'history'
 $search = $_GET['search'] ?? '';
 
-// --- 2. Build Query ---
-// We join 'survey' (Admin side details) with 'user_survey' (User specific status)
-$sql = "SELECT s.*, 
-               us.status AS user_status,
-               us.user_survey_ID
-        FROM survey s
-        INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
-        WHERE us.user_ID = :user_ID";
+// --- 2. Build Query (CORRECT DIRECT LOGIC) ---
+// We fetch 'user_survey_ID' to generate unique links.
+// We join 'department' directly on 'us.dept_ID' so we get the exact department for THIS assignment.
+$sql = "
+    SELECT 
+        s.survey_ID, 
+        s.survey_name, 
+        s.survey_description, 
+        s.start_date,
+        s.end_date, 
+        s.status AS survey_status,
+        us.status AS user_status, 
+        us.user_survey_ID,      -- Unique Assignment ID
+        us.dept_ID,
+        d.dept_name
+    FROM user_survey us
+    JOIN survey s ON us.survey_ID = s.survey_ID
+    LEFT JOIN department d ON us.dept_ID = d.dept_ID
+    WHERE us.user_ID = :uid 
+";
 
-$params = [':user_ID' => $user_ID];
+$params = [':uid' => $user_ID];
+
+// --- 3. Apply Filters ---
 
 // Tab Logic
 if ($tab === 'history') {
-    // History: User completed OR Survey is archived/completed by admin
+    // History: User completed this specific task OR Survey is archived by admin
     $sql .= " AND (us.status = 'Completed' OR s.status IN ('Completed', 'Archived'))";
 } else {
-    // Active: User NOT completed, Survey is Active, AND Start Date has passed (It is live)
-    // This ensures scheduled surveys remain hidden until their start time.
-    $sql .= " AND (us.status != 'Completed' AND s.status = 'Active' AND s.start_date <= :current_time)";
-    $params[':current_time'] = date('Y-m-d H:i:s');
-}
-
-if (isset($_GET['status']) && $_GET['status'] === 'In_progress') {
-    $sql .= " AND us.status = 'In progress'";
+    // Active: User has NOT completed this specific task AND Survey is Active
+    $sql .= " AND (us.status != 'Completed' AND s.status = 'Active' AND s.start_date <= :now)";
+    $params[':now'] = $current_time;
 }
 
 // Search Logic
 if (!empty($search)) {
-    $sql .= " AND (s.survey_name LIKE :search1 OR s.department LIKE :search2)";
-    
-    $searchTerm = "%$search%";
-    $params[':search1'] = $searchTerm;
-    $params[':search2'] = $searchTerm;
+    $sql .= " AND s.survey_name LIKE :search";
+    $params[':search'] = "%$search%";
 }
 
-// Ordering
-$sql .= " ORDER BY s.end_date ASC";
+// Order by End Date, then Department Name
+$sql .= " ORDER BY s.end_date ASC, d.dept_name ASC";
 
-// Execute Query
-$surveys = $db->fetchAll($sql, $params);
+try {
+    $assigned_surveys = $db->fetchAll($sql, $params);
+} catch (Exception $e) {
+    $assigned_surveys = [];
+}
 
-// --- 3. Helper Functions ---
-function getBadge($user_status, $survey_status, $end_date) {
-    $now = new DateTime();
-    $due = new DateTime($end_date);
+// Ensure variable exists for HTML count
+$surveys = $assigned_surveys;
+
+// Helper for Badges
+function getBadge($user_status, $survey_status = null, $end_date = null) {
+    $colors = [
+        'Active' => 'success', 
+        'Draft' => 'warning', 
+        'Completed' => 'info', 
+        'In progress' => 'primary', 
+        'Pending' => 'secondary'
+    ];
     
-    // 1. Check User Status
+    // Logic: If user is completed, show that. Else if overdue, show red.
     if ($user_status === 'Completed') {
-        return '<span class="badge bg-success-subtle text-success-emphasis border border-success-subtle">Completed</span>';
+        return "<span class='badge bg-info-subtle text-info-emphasis border border-info-subtle rounded-pill'>Completed</span>";
     }
     
-    // 2. Check Survey Status (Admin Level)
-    if ($survey_status !== 'Active') {
-        return '<span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle">Closed</span>';
+    if ($end_date && strtotime($end_date) < time()) {
+        return "<span class='badge bg-danger-subtle text-danger-emphasis border border-danger-subtle rounded-pill'>Overdue</span>";
     }
-    
-    // 3. Check Due Date
-    if ($now > $due) {
-        return '<span class="badge bg-danger-subtle text-danger-emphasis border border-danger-subtle">Overdue</span>';
-    }
-    
-    // 4. Default Progress Status
-    if ($user_status === 'In progress') {
-        return '<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle">In Progress</span>';
-    }
-    
-    return '<span class="badge bg-primary-subtle text-primary-emphasis border border-primary-subtle">Pending</span>';
-}
 
-function getActionBtn($user_status, $survey_status, $survey_id) {
-    // If completed or closed, show "View"
-    if ($user_status === 'Completed' || $survey_status !== 'Active') {
-        return '<a href="../report/view.php?id=' . $survey_id . '" class="btn btn-sm btn-outline-secondary px-3"><i class="bi bi-eye me-1"></i> View</a>';
-    }
-    
-    // Otherwise show "Start" or "Continue"
-    $label = ($user_status === 'In progress') ? 'Continue' : 'Start';
-    $icon = ($user_status === 'In progress') ? 'bi-play-fill' : 'bi-clipboard-check';
-    
-    return '<a href="assessment.php?survey_id=' . $survey_id . '" class="btn btn-sm btn-primary px-3 shadow-sm btn-action">
-                <i class="bi ' . $icon . ' me-1"></i> ' . $label . '
-            </a>';
+    $c = $colors[$user_status] ?? 'secondary';
+    return "<span class='badge bg-{$c}-subtle text-{$c}-emphasis border border-{$c}-subtle rounded-pill'>" . htmlspecialchars($user_status) . "</span>";
 }
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Surveys - <?php echo APP_NAME; ?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -127,14 +124,8 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
         .btn-action:hover { opacity: 0.9; transform: translateY(-1px); color: white; }
 
         /* Description Modal Trigger Styles */
-        .desc-text {
-            cursor: pointer;
-            color: #495057;
-            transition: color 0.2s;
-        }
-        .desc-text:hover {
-            color: #667eea;
-        }
+        .desc-text { cursor: pointer; color: #495057; transition: color 0.2s; }
+        .desc-text:hover { color: #667eea; }
     </style>
 </head>
 <body>
@@ -194,25 +185,24 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
                                     <tr>
                                         <th class="ps-4" style="width: 25%;">Survey Name</th>
                                         <th style="width: 30%;">Description</th>
-                                        <th style="width: 15%;">Department</th>
+                                        <th style="width: 30%;">Department</th>
                                         <th style="width: 15%;">Timeline</th>
                                         <th class="text-center" style="width: 10%;">Status</th>
                                         <th class="text-end pe-4" style="width: 5%;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (empty($surveys)): ?>
+                                    <?php if (empty($assigned_surveys)): ?>
                                         <tr>
                                             <td colspan="6" class="text-center py-5">
                                                 <div class="text-muted">
-                                                    <div class="mb-3"><i class="bi bi-clipboard-x display-4 opacity-25"></i></div>
-                                                    <h5>No surveys found</h5>
-                                                    <p class="small">There are no <?php echo htmlspecialchars($tab); ?> surveys assigned to you at the moment.</p>
+                                                    <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                                    No surveys assigned currently.
                                                 </div>
                                             </td>
                                         </tr>
                                     <?php else: ?>
-                                        <?php foreach ($surveys as $row): ?>
+                                        <?php foreach ($assigned_surveys as $row): ?>
                                             <tr>
                                                 <td class="ps-4">
                                                     <div class="fw-bold text-dark"><?php echo htmlspecialchars($row['survey_name']); ?></div>
@@ -237,24 +227,37 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
                                                 </td>
 
                                                 <td>
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="icon-shape bg-light text-primary rounded-circle me-2 d-flex align-items-center justify-content-center" style="width:32px; height:32px;">
-                                                            <i class="bi bi-building"></i>
-                                                        </div>
-                                                        <span class="fw-semibold text-secondary"><?php echo htmlspecialchars($row['department']); ?></span>
-                                                    </div>
+                                                    <span class="badge bg-light text-dark border">
+                                                        <i class="bi bi-building me-1"></i>
+                                                        <?php echo htmlspecialchars($row['dept_name']); ?>
+                                                    </span>
                                                 </td>
+
                                                 <td>
                                                     <div class="d-flex flex-column small">
                                                         <span class="text-muted">Due: <span class="text-dark fw-semibold"><?php echo date('d M Y', strtotime($row['end_date'])); ?></span></span>
-                                                        <span class="text-muted" style="font-size: 0.75rem;">Started: <?php echo date('d M Y', strtotime($row['start_date'])); ?></span>
+                                                        <?php if (!empty($row['start_date'])): ?>
+                                                            <span class="text-muted" style="font-size: 0.75rem;">Started: <?php echo date('d M Y', strtotime($row['start_date'])); ?></span>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </td>
                                                 <td class="text-center">
-                                                    <?php echo getBadge($row['user_status'], $row['status'], $row['end_date']); ?>
+                                                    <?php echo getBadge($row['user_status'], $row['survey_status'], $row['end_date']); ?>
                                                 </td>
+
                                                 <td class="text-end pe-4">
-                                                    <?php echo getActionBtn($row['user_status'], $row['status'], $row['survey_ID']); ?>
+                                                    <?php if ($tab === 'active'): ?>
+                                                        <a href="assessment.php?survey_id=<?php echo $row['survey_ID']; ?>&dept_id=<?php echo $row['dept_ID']; ?>" 
+                                                           class="btn btn-primary btn-sm rounded-pill px-4 shadow-sm"
+                                                           style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
+                                                            <?php echo ($row['user_status'] == 'In progress') ? 'Resume' : 'Start'; ?>
+                                                        </a>
+                                                    <?php else: ?>
+                                                        <a href="../report/view.php?id=<?php echo $row['survey_ID']; ?>&dept_id=<?php echo $row['dept_ID']; ?>" 
+                                                           class="btn btn-outline-secondary btn-sm rounded-pill px-4">
+                                                            View Report
+                                                        </a>
+                                                    <?php endif; ?>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -292,13 +295,10 @@ function getActionBtn($user_status, $survey_status, $survey_id) {
         const descModal = document.getElementById('descriptionModal');
         if (descModal) {
             descModal.addEventListener('show.bs.modal', event => {
-                // Button that triggered the modal
                 const trigger = event.relatedTarget;
-                // Extract info from data-* attributes
                 const title = trigger.getAttribute('data-survey-title');
                 const desc = trigger.getAttribute('data-survey-desc');
                 
-                // Update the modal's content.
                 document.getElementById('modalSurveyTitle').textContent = title;
                 document.getElementById('modalSurveyDesc').textContent = desc || 'No description provided.';
             });
