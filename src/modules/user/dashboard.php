@@ -1,7 +1,7 @@
 <?php
 /**
  * User/Survey Dashboard
- * Aligned with Admin Dashboard Styling
+ * UPDATED: Fixed 'Unknown column updated_at' error in History section.
  */
 
 if (session_status() === PHP_SESSION_NONE) {
@@ -13,7 +13,7 @@ requireRole(['user']);
 
 $db = new Database();
 $user_ID = getCurrentUserId();
-$current_time = date('Y-m-d H:i:s'); // Get current server time for comparisons
+$current_time = date('Y-m-d H:i:s'); 
 
 // --- 1. Check User Status ---
 $status_sql = "SELECT status, full_name, primary_email FROM user WHERE user_ID = :user_ID LIMIT 1";
@@ -29,43 +29,65 @@ if (!$user_data || $user_data['status'] !== 'Active') {
 $current_user = getCurrentUser();
 
 // --- 2. Fetch Statistics ---
-// We add conditions to ensure we only count surveys that are "Live" (Start date passed) and not Drafts.
-$stats_sql = "SELECT 
-    COUNT(DISTINCT CASE WHEN us.status IN ('Pending', 'In progress') AND s.status = 'Active' THEN s.survey_ID END) AS active_surveys,
-    COUNT(DISTINCT CASE WHEN us.status = 'Completed' THEN s.survey_ID END) AS completed_surveys,
-    COUNT(DISTINCT s.survey_ID) AS total_surveys
-FROM survey s
-INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
-WHERE us.user_ID = :user_ID
-AND s.start_date <= :current_time
-AND s.status != 'Draft'";
+$stats_sql = "
+    SELECT 
+        COUNT(CASE WHEN us.status != 'Completed' AND s.status = 'Active' AND s.start_date <= :now THEN 1 END) AS active_surveys,
+        COUNT(CASE WHEN us.status = 'Completed' THEN 1 END) AS completed_surveys,
+        COUNT(us.user_survey_ID) AS total_surveys
+    FROM user_survey us
+    JOIN survey s ON us.survey_ID = s.survey_ID
+    WHERE us.user_ID = :user_ID
+";
 
 $stats = $db->fetchOne($stats_sql, [
     ':user_ID' => $user_ID,
-    ':current_time' => $current_time
+    ':now' => $current_time
 ]);
 
-// --- 3. Fetch Recent Assigned Surveys (Limit 4 for Dashboard) ---
-// Filter to hide future scheduled surveys
-$recent_surveys_sql = "SELECT s.*, us.status as user_survey_status
-        FROM survey s
-        INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
-        WHERE us.user_ID = :user_ID
-        AND s.start_date <= :current_time
-        AND s.status != 'Draft'
-        ORDER BY s.start_date DESC LIMIT 4";
+// --- 3. Fetch Assigned Surveys (Active Tasks) ---
+$assigned_surveys = $db->fetchAll("
+    SELECT 
+        s.survey_ID, 
+        s.survey_name, 
+        s.end_date, 
+        s.status AS survey_status,
+        us.status AS response_status, 
+        us.user_survey_ID,      
+        us.dept_ID,
+        d.dept_name
+    FROM user_survey us
+    JOIN survey s ON us.survey_ID = s.survey_ID
+    LEFT JOIN department d ON us.dept_ID = d.dept_ID
+    WHERE us.user_ID = :uid 
+      AND s.status = 'Active'
+      AND s.start_date <= :now
+      AND us.status != 'Completed'
+    ORDER BY s.end_date ASC, d.dept_name ASC
+    LIMIT 5
+", [':uid' => $user_ID, ':now' => $current_time]);
 
-$recent_surveys = $db->fetchAll($recent_surveys_sql, [
-    ':user_ID' => $user_ID,
-    ':current_time' => $current_time
-]);
+// --- 4. Fetch History (FIXED ORDER BY) ---
+$recent_history = $db->fetchAll("
+    SELECT 
+        s.survey_name, 
+        us.status,
+        d.dept_name
+    FROM user_survey us
+    JOIN survey s ON us.survey_ID = s.survey_ID
+    LEFT JOIN department d ON us.dept_ID = d.dept_ID
+    WHERE us.user_ID = :uid AND us.status = 'Completed'
+    ORDER BY s.end_date DESC  -- Changed from us.updated_at to s.end_date
+    LIMIT 5
+", [':uid' => $user_ID]);
 
 // Helper for Status Badges
 function getStatusBadge($status) {
     if ($status === 'Active') return '<span class="badge rounded-pill bg-success-subtle text-success-emphasis">Active</span>';
     if ($status === 'Draft') return '<span class="badge rounded-pill bg-warning-subtle text-warning-emphasis">Draft</span>';
     if ($status === 'Completed') return '<span class="badge rounded-pill bg-info-subtle text-info-emphasis">Completed</span>';
-    return '<span class="badge rounded-pill bg-secondary-subtle text-secondary-emphasis">' . htmlspecialchars($status) . '</span>';
+    if ($status === 'In progress') return '<span class="badge rounded-pill bg-primary-subtle text-primary-emphasis">In Progress</span>';
+    if ($status === 'Pending') return '<span class="badge rounded-pill bg-secondary-subtle text-secondary-emphasis">Pending</span>';
+    return '<span class="badge rounded-pill bg-light text-dark border">' . htmlspecialchars($status) . '</span>';
 }
 ?>
 <!DOCTYPE html>
@@ -77,22 +99,19 @@ function getStatusBadge($status) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        /* --- Global Layout (Matching Admin) --- */
+        /* --- Global Layout --- */
         html, body { 
             height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; 
         }
-        
-        /* Sidebar Styles */
         .main-content-wrapper { 
-            margin-left: 270px; /* Matching fixed width */
+            margin-left: 270px; 
             width: calc(100% - 270px); 
         }
-        
         @media (max-width: 991.98px) {
             .main-content-wrapper { margin-left: 0; width: 100%; }
         }
 
-        /* --- Stat Cards (Matching Admin) --- */
+        /* --- Stat Cards --- */
         .stat-card {
             border: none;
             border-radius: 16px;
@@ -104,7 +123,6 @@ function getStatusBadge($status) {
             position: relative;
         }
         .stat-card:hover { transform: translateY(-3px); }
-        
         .icon-shape {
             width: 48px; height: 48px;
             background-position: center;
@@ -113,7 +131,7 @@ function getStatusBadge($status) {
         }
         .icon-shape i { font-size: 1.25rem; }
 
-        /* --- Table Styles (Matching Admin) --- */
+        /* --- Table Styles --- */
         .table th {
             font-weight: 700;
             background-color: #9d83b7ff; /* Purple Header */
@@ -167,7 +185,6 @@ function getStatusBadge($status) {
                     </div>
 
                     <div class="row g-4 mb-5">
-                        
                         <div class="col-xl-4 col-sm-6">
                             <div class="stat-card p-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -180,14 +197,11 @@ function getStatusBadge($status) {
                                     </div>
                                 </div>
                                 <div class="mt-3 mb-0 text-sm">
-                                    <span class="text-success font-weight-bold">
-                                        <i class="bi bi-arrow-right"></i>
-                                    </span>
+                                    <span class="text-success font-weight-bold"><i class="bi bi-arrow-right"></i></span>
                                     <a href="survey/index.php?tab=active" class="text-decoration-none text-muted stretched-link">View Tasks</a>
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-xl-4 col-sm-6">
                             <div class="stat-card p-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -204,7 +218,6 @@ function getStatusBadge($status) {
                                 </div>
                             </div>
                         </div>
-
                         <div class="col-xl-4 col-sm-6">
                             <div class="stat-card p-3">
                                 <div class="d-flex justify-content-between align-items-center">
@@ -235,14 +248,13 @@ function getStatusBadge($status) {
                                         <thead>
                                             <tr>
                                                 <th class="ps-4">Survey Name</th>
-                                                <th>Department</th>
-                                                <th>Due Date</th>
+                                                <th>Department</th> <th>Due Date</th>
                                                 <th class="text-center">Status</th>
                                                 <th class="text-end pe-4">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php if (empty($recent_surveys)): ?>
+                                            <?php if (empty($assigned_surveys)): ?>
                                                 <tr>
                                                     <td colspan="5" class="text-center py-5">
                                                         <div class="text-muted">
@@ -252,7 +264,7 @@ function getStatusBadge($status) {
                                                     </td>
                                                 </tr>
                                             <?php else: ?>
-                                                <?php foreach ($recent_surveys as $row): ?>
+                                                <?php foreach ($assigned_surveys as $row): ?>
                                                     <tr>
                                                         <td class="ps-4">
                                                             <div class="d-flex flex-column">
@@ -260,11 +272,14 @@ function getStatusBadge($status) {
                                                                 <small class="text-muted">ID: <?php echo htmlspecialchars($row['survey_ID']); ?></small>
                                                             </div>
                                                         </td>
+
                                                         <td>
-                                                            <span class="text-secondary text-sm font-weight-bold">
-                                                                <?php echo htmlspecialchars($row['department']); ?>
+                                                            <span class="badge bg-light text-dark border">
+                                                                <i class="bi bi-building me-1"></i>
+                                                                <?php echo htmlspecialchars($row['dept_name']); ?>
                                                             </span>
                                                         </td>
+                                                        
                                                         <td>
                                                             <div class="d-flex align-items-center">
                                                                 <i class="bi bi-calendar-event me-2 text-muted"></i>
@@ -272,11 +287,11 @@ function getStatusBadge($status) {
                                                             </div>
                                                         </td>
                                                         <td class="text-center">
-                                                            <?php echo getStatusBadge($row['user_survey_status']); ?>
+                                                            <?php echo getStatusBadge($row['response_status']); ?>
                                                         </td>
                                                         <td class="text-end pe-4">
-                                                            <?php if($row['status'] === 'Active' && $row['user_survey_status'] !== 'Completed'): ?>
-                                                                <a href="survey/assessment.php?survey_id=<?php echo $row['survey_ID']; ?>" 
+                                                            <?php if($row['survey_status'] === 'Active' && $row['response_status'] !== 'Completed'): ?>
+                                                                <a href="survey/assessment.php?survey_id=<?php echo $row['survey_ID']; ?>&dept_id=<?php echo $row['dept_ID']; ?>" 
                                                                    class="btn btn-sm btn-primary px-3 rounded-3"
                                                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none;">
                                                                     Start
@@ -323,7 +338,6 @@ function getStatusBadge($status) {
                                                 <small class="text-muted">Download past certificates</small>
                                             </div>
                                         </a>
-
                                     </div>
                                 </div>
                             </div>

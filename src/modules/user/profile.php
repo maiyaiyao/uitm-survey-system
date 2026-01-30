@@ -11,7 +11,8 @@ require_once '../../includes/models/User.php';
 requireRole(['user']);
 
 $db = new Database();
-$userModel = new User();
+// Pass existing DB connection to User model to prevent transaction deadlocks
+$userModel = new User($db); 
 $current_user_id = getCurrentUserId();
 
 // 2. Fetch User Data
@@ -19,11 +20,20 @@ try {
     $user = $db->fetchOne("SELECT * FROM user WHERE user_ID = :id", [':id' => $current_user_id]);
     
     if (!$user) {
-        // Should not happen for a logged-in user, but safety first
         session_unset();
         session_destroy();
         redirect(BASE_URL . '/modules/auth/login.php');
     }
+
+    // --- FETCH MULTIPLE DEPARTMENTS ---
+    // Order by is_primary DESC so the Primary department appears first
+    $user_depts = $db->fetchAll("SELECT dept_ID FROM user_department WHERE user_ID = :uid ORDER BY is_primary DESC", [':uid' => $current_user_id]);
+    $linked_dept_ids = array_column($user_depts, 'dept_ID');
+
+    // --- FETCH DROPDOWNS FOR EDITING ORG/DEPT ---
+    $organizations = $db->fetchAll("SELECT * FROM organization WHERE status = 'Active' ORDER BY org_name ASC");
+    $all_departments = $db->fetchAll("SELECT * FROM department WHERE status = 'Active' ORDER BY dept_name ASC");
+
 } catch (Exception $e) {
     die("Error fetching profile: " . $e->getMessage());
 }
@@ -35,27 +45,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // --- SCENARIO A: Update Profile Details ---
         if ($action === 'update_profile') {
+            $conn = $db->getConnection();
+            $conn->beginTransaction();
+
             $updateData = [
                 'full_name'          => sanitize($_POST['full_name']),
                 'user_handphone_no'  => sanitize($_POST['user_handphone_no']),
                 'user_phone_company' => sanitize($_POST['user_phone_company']),
-                'user_organization'  => sanitize($_POST['user_organization']),
-                'department'         => sanitize($_POST['department']),
-                'user_position'      => sanitize($_POST['user_position'])
+                'user_position'      => sanitize($_POST['user_position']),
+                'org_ID'             => !empty($_POST['org_ID']) ? (int)$_POST['org_ID'] : null,
+                // dept_ID is removed from main table update
             ];
+
+            // Capture Multiple Departments
+            $dept_ids = $_POST['dept_ids'] ?? [];
 
             // Validation
             if (empty($updateData['full_name']) || empty($updateData['user_handphone_no'])) {
                 throw new Exception("Full Name and Handphone Number are required.");
             }
+            if (empty($dept_ids) || empty($dept_ids[0])) {
+                throw new Exception("At least one Department is required.");
+            }
 
-            // Perform Update using User Model
+            // 1. Update User Table
             $userModel->update($current_user_id, $updateData);
             
+            // 2. Update Departments (Many-to-Many)
+            $db->query("DELETE FROM user_department WHERE user_ID = :uid", [':uid' => $current_user_id]);
+            
+            $stmtDept = $conn->prepare("INSERT INTO user_department (user_ID, dept_ID, is_primary) VALUES (:uid, :did, :prim)");
+            $unique_depts = array_unique($dept_ids);
+            
+            foreach ($unique_depts as $index => $did) {
+                if(empty($did)) continue;
+                $is_primary = ($index === 0) ? 1 : 0; 
+                $stmtDept->execute([':uid' => $current_user_id, ':did' => $did, ':prim' => $is_primary]);
+            }
+            
+            $conn->commit();
+
             // Update Session Name if changed
             $_SESSION['full_name'] = $updateData['full_name'];
             
             setFlashMessage('success', 'Profile details updated successfully.');
+            redirect('profile.php');
         }
 
         // --- SCENARIO B: Change Password ---
@@ -64,14 +98,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $new_password     = $_POST['new_password'];
             $confirm_password = $_POST['confirm_password'];
 
-            // 1. If user has a password set (not Google-only), verify current
             if (!empty($user['password'])) {
                 if (!$userModel->verifyPassword($current_password, $user['password'])) {
                     throw new Exception("Current password is incorrect.");
                 }
             }
 
-            // 2. Validate New Password
             if (strlen($new_password) < 8) {
                 throw new Exception("New password must be at least 8 characters.");
             }
@@ -79,15 +111,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 throw new Exception("New passwords do not match.");
             }
 
-            // 3. Update Password
-            $userModel->updatePassword($current_user_id, $new_password);
+            // Using direct update for password to ensure it's hashed if the model method varies
+            $db->query("UPDATE user SET password = :pwd WHERE user_ID = :uid", [
+                ':pwd' => password_hash($new_password, PASSWORD_DEFAULT),
+                ':uid' => $current_user_id
+            ]);
+            
             setFlashMessage('success', 'Password changed successfully.');
+            redirect('profile.php');
         }
 
-        // Refresh page to show changes
-        redirect('profile.php');
-
     } catch (Exception $e) {
+        if (isset($conn) && $conn->inTransaction()) $conn->rollBack();
         setFlashMessage('danger', $e->getMessage());
     }
 }
@@ -103,13 +138,11 @@ $flash = getFlashMessage();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        /* Shared Dashboard Styles */
         html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
         .sidebar { position: fixed; top: 0; bottom: 0; left: 0; width: 270px; z-index: 100; padding: 0; background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); color: white; display: flex; flex-direction: column; }
         .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); }
         @media (max-width: 991.98px) { .sidebar { position: relative; width: 100%; height: auto; } .main-content-wrapper { margin-left: 0; width: 100%; } }
         
-        /* Profile Specific Styles */
         .profile-header-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -129,15 +162,27 @@ $flash = getFlashMessage();
             color: white;
             border: 3px solid rgba(255,255,255,0.3);
         }
-        .form-control:focus {
+        .form-control:focus, .form-select:focus {
             border-color: #764ba2;
             box-shadow: 0 0 0 0.25rem rgba(118, 75, 162, 0.25);
         }
-        /* Fix input group corners inside cards */
         .input-group .btn {
             border-top-left-radius: 0;
             border-bottom-left-radius: 0;
         }
+        
+        /* New Style for Add Dept Link */
+        .btn-add-dept { 
+            color: #667eea; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            cursor: pointer; 
+            display: inline-flex; 
+            align-items: center; 
+            margin-top: 5px; 
+            text-decoration: none; 
+        }
+        .btn-add-dept:hover { color: #764ba2; text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -197,6 +242,9 @@ $flash = getFlashMessage();
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Email (Read Only)</label>
                                                 <input type="email" class="form-control bg-light" readonly
                                                        value="<?php echo htmlspecialchars($user['primary_email']); ?>">
+                                                <div class="form-text text-muted small">
+                                                    Email address cannot be changed.
+                                                </div>
                                             </div>
                                         </div>
 
@@ -204,12 +252,12 @@ $flash = getFlashMessage();
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Handphone No.</label>
                                                 <input type="text" name="user_handphone_no" class="form-control" required
-                                                       value="<?php echo htmlspecialchars($user['user_handphone_no']); ?>">
+                                                       value="<?php echo htmlspecialchars($user['user_handphone_no'] ?? ''); ?>">
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Office Phone</label>
                                                 <input type="text" name="user_phone_company" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['user_phone_company']?? ''); ?>">
+                                                       value="<?php echo htmlspecialchars($user['user_phone_company'] ?? ''); ?>">
                                             </div>
                                         </div>
 
@@ -217,20 +265,31 @@ $flash = getFlashMessage();
 
                                         <div class="mb-3">
                                             <label class="form-label small text-muted text-uppercase fw-bold">Organization</label>
-                                            <input type="text" name="user_organization" class="form-control"
-                                                   value="<?php echo htmlspecialchars($user['user_organization']); ?>">
+                                            <select class="form-select" name="org_ID" id="orgSelect">
+                                                <option value="">-- Select Organization --</option>
+                                                <?php foreach ($organizations as $org): ?>
+                                                    <option value="<?php echo $org['org_ID']; ?>" 
+                                                        <?php echo ($user['org_ID'] == $org['org_ID']) ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($org['org_name']); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
                                         </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
-                                                <label class="form-label small text-muted text-uppercase fw-bold">Department</label>
-                                                <input type="text" name="department" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['department']); ?>">
+                                                <label class="form-label small text-muted text-uppercase fw-bold">Department(s)</label>
+                                                <div id="deptContainer"></div>
+                                                
+                                                <div class="btn-add-dept" id="addDeptBtn">
+                                                    <i class="bi bi-plus-circle-fill me-1"></i> Add another department
+                                                </div>
                                             </div>
+                                            
                                             <div class="col-md-6">
                                                 <label class="form-label small text-muted text-uppercase fw-bold">Position</label>
                                                 <input type="text" name="user_position" class="form-control"
-                                                       value="<?php echo htmlspecialchars($user['user_position']); ?>">
+                                                       value="<?php echo htmlspecialchars($user['user_position'] ?? ''); ?>">
                                             </div>
                                         </div>
 
@@ -309,11 +368,100 @@ $flash = getFlashMessage();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        /**
-         * Toggle Password Visibility
-         * @param {string} inputId The ID of the password input field
-         * @param {string} iconId The ID of the icon element (to switch classes)
-         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- DATA ---
+            const allDepartments = <?php echo json_encode($all_departments); ?>;
+            const savedDeptIds = <?php echo json_encode($linked_dept_ids); ?>; 
+            
+            const orgSelect = document.getElementById('orgSelect');
+            const deptContainer = document.getElementById('deptContainer');
+            const addDeptBtn = document.getElementById('addDeptBtn');
+
+            // --- 1. Generate Options ---
+            function getDeptOptions(orgId, selectedId = null) {
+                if (!orgId) return '<option value="">-- Select Organization First --</option>';
+                const filtered = allDepartments.filter(d => d.org_ID == orgId);
+                
+                if (filtered.length === 0) return '<option value="" disabled>No Departments Found</option>';
+                
+                let html = '<option value="">-- Select Department --</option>';
+                filtered.forEach(d => {
+                    const isSelected = (selectedId && d.dept_ID == selectedId) ? 'selected' : '';
+                    const deptCode = d.dept_code ? ` (${d.dept_code})` : '';
+                    html += `<option value="${d.dept_ID}" ${isSelected}>${d.dept_name}${deptCode}</option>`;
+                });
+                return html;
+            }
+
+            // --- 2. Add Row Function ---
+            function addDeptRow(selectedId = null) {
+                const orgId = orgSelect.value;
+                const newRow = document.createElement('div');
+                newRow.className = 'input-group mb-2 department-row';
+                
+                const isDisabled = !orgId ? 'disabled' : '';
+                const optionsHtml = getDeptOptions(orgId, selectedId);
+
+                newRow.innerHTML = `
+                    <select class="form-select dept-select" name="dept_ids[]" required ${isDisabled}>
+                        ${optionsHtml}
+                    </select>
+                    <button class="btn btn-outline-danger" type="button" onclick="removeDeptRow(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                `;
+                deptContainer.appendChild(newRow);
+            }
+
+            // --- 3. Remove Row Function ---
+            window.removeDeptRow = function(btn) {
+                if (deptContainer.querySelectorAll('.department-row').length > 1) {
+                    btn.parentElement.remove();
+                } else {
+                    const select = btn.parentElement.querySelector('select');
+                    select.value = "";
+                }
+            };
+
+            // --- 4. Update All Function ---
+            function updateAllDropdowns() {
+                const orgId = orgSelect.value;
+                const selects = deptContainer.querySelectorAll('.dept-select');
+                if (selects.length === 0) { addDeptRow(); return; }
+                
+                selects.forEach(select => {
+                    const currentVal = select.value;
+                    select.innerHTML = getDeptOptions(orgId, currentVal);
+                    select.disabled = !orgId;
+                    if (!select.querySelector(`option[value="${currentVal}"]`)) select.value = "";
+                });
+            }
+
+            // --- EVENTS ---
+            if(orgSelect) {
+                orgSelect.addEventListener('change', () => { updateAllDropdowns(); });
+                
+                // Initialize Rows
+                if (savedDeptIds.length > 0) {
+                    savedDeptIds.forEach(did => addDeptRow(did));
+                } else {
+                    addDeptRow();
+                }
+                
+                // Handle edge case where Org is selected but no rows exist
+                if (orgSelect.value && deptContainer.children.length === 0) {
+                    addDeptRow();
+                }
+            }
+
+            if(addDeptBtn) {
+                addDeptBtn.addEventListener('click', () => {
+                    if (!orgSelect.value) { alert("Select Organization first."); return; }
+                    addDeptRow();
+                });
+            }
+        });
+
         function togglePassword(inputId, iconId) {
             const passwordField = document.getElementById(inputId);
             const toggleIcon = document.getElementById(iconId);
