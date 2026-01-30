@@ -1,5 +1,5 @@
 <?php
-// Path: user/index.php
+// Path: src/modules/admin/user/index.php
 require_once '../../../config/config.php';
 require_once '../../../includes/models/User.php';
 
@@ -14,11 +14,12 @@ try {
     $pdo = $db->getConnection();
     
     // --- Lifecycle Management: Periodic Review ---
-    // Fetch all users. JOIN with user_role, role, organization, and department tables.
+    // FIXED QUERY: Uses user_department table and GROUP_CONCAT for multiple departments
     $sql = "
         SELECT 
             u.user_ID, u.full_name, u.primary_email, u.status, u.created_at, u.last_login,
-            r.role_name, o.org_name, d.dept_name
+            r.role_name, o.org_name, 
+            GROUP_CONCAT(d.dept_name SEPARATOR ', ') as dept_name
         FROM 
             user u
         JOIN 
@@ -27,18 +28,35 @@ try {
             role r ON ur.role_ID = r.role_ID
         LEFT JOIN
             organization o ON u.org_ID = o.org_ID
-        LEFT JOIN
-            department d ON u.dept_ID = d.dept_ID
+        LEFT JOIN 
+            user_department ud ON u.user_ID = ud.user_ID
+        LEFT JOIN 
+            department d ON ud.dept_ID = d.dept_ID
+        GROUP BY 
+            u.user_ID, u.full_name, u.primary_email, u.status, u.created_at, u.last_login, r.role_name, o.org_name
         ORDER BY 
             u.created_at DESC
     ";
     $stmt = $pdo->query($sql);
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $all_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // --- Filter Users by Role ---
+    $admins = [];
+    $general_users = [];
+
+    foreach ($all_users as $u) {
+        if (strtolower($u['role_name']) === 'admin') {
+            $admins[] = $u;
+        } else {
+            $general_users[] = $u;
+        }
+    }
 
 } catch (PDOException $e) {
     $message = "Database Error: Could not load user list. " . $e->getMessage();
     setFlashMessage("danger", $message);
-    $users = [];
+    $admins = [];
+    $general_users = [];
 }
 
 // --- 2. Handle User Actions (Disable/Enable/Delete) ---
@@ -97,9 +115,9 @@ function getRoleBadge($role) {
     $classes = [
         'admin' => 'bg-danger-subtle text-danger-emphasis',
         'auditor' => 'bg-primary-subtle text-primary-emphasis',
-        'user' => 'bg-secondary-subtle text-secondary-emphasis',
+        'user' => 'bg-info-subtle text-info-emphasis',
     ];
-    $class = $classes[strtolower($role)] ?? 'bg-info-subtle text-info-emphasis';
+    $class = $classes[strtolower($role)] ?? 'bg-secondary-subtle text-secondary-emphasis';
     return '<span class="badge rounded-pill ' . $class . '">' . htmlspecialchars(ucfirst($role)) . '</span>';
 }
 
@@ -155,6 +173,40 @@ $flash = getFlashMessage();
             box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
+        /* Custom Tabs Style */
+        .nav-tabs {
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 1.5rem;
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            background: transparent;
+            color: #6c757d;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 1rem 1.5rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-tabs .nav-link:hover {
+            color: #667eea;
+        }
+        .nav-tabs .nav-link.active {
+            color: #667eea;
+            background: transparent;
+        }
+        /* The purple underline */
+        .nav-tabs .nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #667eea;
+            border-radius: 3px 3px 0 0;
+        }
+
         /* User Meta Data */
         .user-meta {
             display: flex;
@@ -189,7 +241,7 @@ $flash = getFlashMessage();
                         </ol>
                     </nav>
 
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                         <div>
                             <h3 class="fw-bold mb-1">User Management</h3>
                             <p class="text-muted mb-0">Manage system access, roles, and account lifecycles.</p>
@@ -211,126 +263,165 @@ $flash = getFlashMessage();
                         </div>
                     <?php endif; ?>
 
-                    <div class="card border-0 shadow-sm rounded-4 mb-5">
-                        <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Registered Users List</h5>
-                            <small class="text-muted"><?php echo count($users); ?> records found</small>
-                        </div>
+                    <ul class="nav nav-tabs" id="userTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="admins-tab" data-bs-toggle="tab" data-bs-target="#admins" type="button" role="tab" aria-controls="admins" aria-selected="true">
+                                Administrators
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="false">
+                                General Users
+                            </button>
+                        </li>
+                    </ul>
 
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="ps-4">User Info</th>
-                                        <th>Organization</th>
-                                        <th>Department</th>
-                                        <th class="text-center">Role</th>
-                                        <th class="text-center">Status</th>
-                                        <th>Last Login</th>
-                                        <th class="text-end pe-4">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if (empty($users)): ?>
-                                        <tr>
-                                            <td colspan="5" class="text-center py-5">
-                                                <div class="text-muted">
-                                                    <i class="bi bi-person-x display-4 d-block mb-2"></i>
-                                                    No users found in the system.
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php else: ?>
-                                        <?php foreach ($users as $user): ?>
+                    <div class="tab-content" id="userTabsContent">
+                        
+                        <div class="tab-pane fade show active" id="admins" role="tabpanel" aria-labelledby="admins-tab">
+                            <div class="card border-0 shadow-sm rounded-4 mb-5">
+                                <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="bg-danger-subtle text-danger rounded p-1"><i class="bi bi-shield-lock-fill"></i></span>
+                                        <h5 class="mb-0 text-danger-emphasis">Administrator Accounts</h5>
+                                    </div>
+                                    <small class="text-muted"><?php echo count($admins); ?> records found</small>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead>
                                             <tr>
-                                                <td class="ps-4">
-                                                    <div class="d-flex align-items-center">
-                                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3 text-primary fw-bold" style="width: 40px; height: 40px; border: 1px solid #e9ecef;">
-                                                            <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
-                                                        </div>
-                                                        <div class="user-meta">
-                                                            <span class="name"><?php echo htmlspecialchars($user['full_name']); ?></span>
-                                                            <span class="email"><?php echo htmlspecialchars($user['primary_email']); ?></span>
-                                                        </div>
-                                                    </div>
-                                                </td>
-
-                                                <td>
-                                                    <small class="text-secondary">
-                                                        <?php echo htmlspecialchars($user['org_name'] ?? '-'); ?>
-                                                    </small>
-                                                </td>
-
-                                                <td>
-                                                    <small class="text-secondary">
-                                                        <?php echo htmlspecialchars($user['dept_name'] ?? '-'); ?>
-                                                    </small>
-                                                </td>
-
-                                                <td class="text-center">
-                                                    <?php echo getRoleBadge($user['role_name']); ?>
-                                                </td>
-
-                                                <td class="text-center">
-                                                    <?php echo getStatusBadge($user['status']); ?>
-                                                </td>
-
-                                                <td>
-                                                    <small class="text-secondary fw-semibold">
-                                                        <?php echo $user['last_login'] ? date('d M Y H:i A', strtotime($user['last_login'])) : '-'; ?>
-                                                    </small>
-                                                </td>
-                                                
-                                                <td class="text-end pe-4">
-                                                    <div class="d-flex justify-content-end gap-1">
-                                                        <a href="form-user.php?user_id=<?php echo $user['user_ID']; ?>" 
-                                                           class="btn btn-sm btn-link text-primary px-2" 
-                                                           title="Edit User">
-                                                            <i class="bi bi-pencil-square fs-6"></i>
-                                                        </a>
-
-                                                        <?php if ($user['user_ID'] != $current_user['user_ID']): ?>
-                                                            <?php if ($user['status'] === 'Active'): ?>
-                                                                <a href="index.php?action=disable&user_id=<?php echo $user['user_ID']; ?>" 
-                                                                   class="btn btn-sm btn-link text-warning px-2"
-                                                                   onclick="return confirm('Disable this user? Access will be revoked.');"
-                                                                   title="Disable Account">
-                                                                    <i class="bi bi-slash-circle fs-6"></i>
-                                                                </a>
-                                                            <?php else: ?>
-                                                                <a href="index.php?action=enable&user_id=<?php echo $user['user_ID']; ?>" 
-                                                                   class="btn btn-sm btn-link text-success px-2" 
-                                                                   title="Enable Account">
-                                                                    <i class="bi bi-check-circle fs-6"></i>
-                                                                </a>
-                                                            <?php endif; ?>
-
-                                                            <button class="btn btn-sm btn-link text-danger px-2" 
-                                                                    data-bs-toggle="modal" 
-                                                                    data-bs-target="#deleteUserModal"
-                                                                    data-bs-user-id="<?php echo $user['user_ID']; ?>"
-                                                                    data-bs-username="<?php echo htmlspecialchars($user['full_name']); ?>"
-                                                                    title="Delete User">
-                                                                <i class="bi bi-trash fs-6"></i>
-                                                            </button>
-                                                        <?php else: ?>
-                                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="Cannot modify own account">
-                                                                <button class="btn btn-sm btn-link text-secondary px-2" disabled>
-                                                                    <i class="bi bi-lock fs-6"></i>
-                                                                </button>
-                                                            </span>
-                                                        <?php endif; ?>
-                                                    </div>
-                                                </td>
+                                                <th class="ps-4">User Info</th>
+                                                <th>Organization</th>
+                                                <th>Department(s)</th>
+                                                <th class="text-center">Role</th>
+                                                <th class="text-center">Status</th>
+                                                <th>Last Login</th>
+                                                <th class="text-end pe-4">Actions</th>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (empty($admins)): ?>
+                                                <tr>
+                                                    <td colspan="7" class="text-center py-5">
+                                                        <div class="text-muted">No administrators found.</div>
+                                                    </td>
+                                                </tr>
+                                            <?php else: ?>
+                                                <?php foreach ($admins as $user): ?>
+                                                    <tr>
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3 text-primary fw-bold" style="width: 40px; height: 40px; border: 1px solid #e9ecef;">
+                                                                    <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                                                                </div>
+                                                                <div class="user-meta">
+                                                                    <span class="name"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                                                                    <span class="email"><?php echo htmlspecialchars($user['primary_email']); ?></span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><small class="text-secondary"><?php echo htmlspecialchars($user['org_name'] ?? '-'); ?></small></td>
+                                                        <td><small class="text-secondary"><?php echo htmlspecialchars($user['dept_name'] ?? '-'); ?></small></td>
+                                                        <td class="text-center"><?php echo getRoleBadge($user['role_name']); ?></td>
+                                                        <td class="text-center"><?php echo getStatusBadge($user['status']); ?></td>
+                                                        <td><small class="text-secondary fw-semibold"><?php echo $user['last_login'] ? date('d M Y H:i A', strtotime($user['last_login'])) : '-'; ?></small></td>
+                                                        <td class="text-end pe-4">
+                                                            <div class="d-flex justify-content-end gap-1">
+                                                                <a href="form-user.php?user_id=<?php echo $user['user_ID']; ?>" class="btn btn-sm btn-link text-primary px-2" title="Edit"><i class="bi bi-pencil-square fs-6"></i></a>
+                                                                <?php if ($user['user_ID'] != $current_user['user_ID']): ?>
+                                                                    <?php if ($user['status'] === 'Active'): ?>
+                                                                        <a href="index.php?action=disable&user_id=<?php echo $user['user_ID']; ?>" class="btn btn-sm btn-link text-warning px-2" onclick="return confirm('Disable this user?');" title="Disable"><i class="bi bi-slash-circle fs-6"></i></a>
+                                                                    <?php else: ?>
+                                                                        <a href="index.php?action=enable&user_id=<?php echo $user['user_ID']; ?>" class="btn btn-sm btn-link text-success px-2" title="Enable"><i class="bi bi-check-circle fs-6"></i></a>
+                                                                    <?php endif; ?>
+                                                                    <button class="btn btn-sm btn-link text-danger px-2" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-bs-user-id="<?php echo $user['user_ID']; ?>" data-bs-username="<?php echo htmlspecialchars($user['full_name']); ?>" title="Delete"><i class="bi bi-trash fs-6"></i></button>
+                                                                <?php else: ?>
+                                                                    <button class="btn btn-sm btn-link text-secondary px-2" disabled><i class="bi bi-lock fs-6"></i></button>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
+                        <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+                            <div class="card border-0 shadow-sm rounded-4 mb-5">
+                                <div class="card-header bg-white border-bottom py-3 rounded-top-4 d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="bg-primary-subtle text-primary rounded p-1"><i class="bi bi-people-fill"></i></span>
+                                        <h5 class="mb-0 text-primary-emphasis">General User Accounts</h5>
+                                    </div>
+                                    <small class="text-muted"><?php echo count($general_users); ?> records found</small>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="ps-4">User Info</th>
+                                                <th>Organization</th>
+                                                <th>Department(s)</th>
+                                                <th class="text-center">Role</th>
+                                                <th class="text-center">Status</th>
+                                                <th>Last Login</th>
+                                                <th class="text-end pe-4">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (empty($general_users)): ?>
+                                                <tr>
+                                                    <td colspan="7" class="text-center py-5">
+                                                        <div class="text-muted">No general users found.</div>
+                                                    </td>
+                                                </tr>
+                                            <?php else: ?>
+                                                <?php foreach ($general_users as $user): ?>
+                                                    <tr>
+                                                        <td class="ps-4">
+                                                            <div class="d-flex align-items-center">
+                                                                <div class="bg-light rounded-circle d-flex align-items-center justify-content-center me-3 text-primary fw-bold" style="width: 40px; height: 40px; border: 1px solid #e9ecef;">
+                                                                    <?php echo strtoupper(substr($user['full_name'], 0, 1)); ?>
+                                                                </div>
+                                                                <div class="user-meta">
+                                                                    <span class="name"><?php echo htmlspecialchars($user['full_name']); ?></span>
+                                                                    <span class="email"><?php echo htmlspecialchars($user['primary_email']); ?></span>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                        <td><small class="text-secondary"><?php echo htmlspecialchars($user['org_name'] ?? '-'); ?></small></td>
+                                                        <td><small class="text-secondary"><?php echo htmlspecialchars($user['dept_name'] ?? '-'); ?></small></td>
+                                                        <td class="text-center"><?php echo getRoleBadge($user['role_name']); ?></td>
+                                                        <td class="text-center"><?php echo getStatusBadge($user['status']); ?></td>
+                                                        <td><small class="text-secondary fw-semibold"><?php echo $user['last_login'] ? date('d M Y H:i A', strtotime($user['last_login'])) : '-'; ?></small></td>
+                                                        <td class="text-end pe-4">
+                                                            <div class="d-flex justify-content-end gap-1">
+                                                                <a href="form-user.php?user_id=<?php echo $user['user_ID']; ?>" class="btn btn-sm btn-link text-primary px-2" title="Edit"><i class="bi bi-pencil-square fs-6"></i></a>
+                                                                <?php if ($user['status'] === 'Active'): ?>
+                                                                    <a href="index.php?action=disable&user_id=<?php echo $user['user_ID']; ?>" class="btn btn-sm btn-link text-warning px-2" onclick="return confirm('Disable this user?');" title="Disable"><i class="bi bi-slash-circle fs-6"></i></a>
+                                                                <?php else: ?>
+                                                                    <a href="index.php?action=enable&user_id=<?php echo $user['user_ID']; ?>" class="btn btn-sm btn-link text-success px-2" title="Enable"><i class="bi bi-check-circle fs-6"></i></a>
+                                                                <?php endif; ?>
+                                                                <button class="btn btn-sm btn-link text-danger px-2" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-bs-user-id="<?php echo $user['user_ID']; ?>" data-bs-username="<?php echo htmlspecialchars($user['full_name']); ?>" title="Delete"><i class="bi bi-trash fs-6"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    </div>
             </div>
         </div>
     </div>
@@ -366,20 +457,17 @@ $flash = getFlashMessage();
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Tooltip initialization
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
           return new bootstrap.Tooltip(tooltipTriggerEl)
         })
 
-        // Delete User Modal Logic
         const deleteUserModal = document.getElementById('deleteUserModal');
         if (deleteUserModal) {
             deleteUserModal.addEventListener('show.bs.modal', event => {
                 const button = event.relatedTarget;
                 const userId = button.getAttribute('data-bs-user-id');
                 const userName = button.getAttribute('data-bs-username');
-
                 document.getElementById('delete_user_ID').value = userId;
                 document.getElementById('deleteUserName').textContent = userName;
             });
