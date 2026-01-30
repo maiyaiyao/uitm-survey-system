@@ -6,11 +6,7 @@ $db = new Database();
 $search = $_GET['search'] ?? '';
 $params = [];
 
-// --- SQL Query ---
-// 1. Fetch Element details
-// 2. Join Criteria and Domain for context
-// 3. Subquery: Count Active scores
-// 4. NEW Subquery: Count Usage in Responses (Answered Surveys)
+
 $sql = "
     SELECT e.*, 
            c.criteria_name, c.criteria_ID, 
@@ -33,7 +29,6 @@ if (!empty($search)) {
     $params[':search2'] = $searchParam;
 }
 
-// Sort by Status (Active first), then hierarchy
 $sql .= " ORDER BY (CASE WHEN e.status = 'Active' THEN 0 ELSE 1 END) ASC, e.element_name ASC";
 
 $all_elements = $db->fetchAll($sql, $params);

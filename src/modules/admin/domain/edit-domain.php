@@ -1,5 +1,4 @@
 <?php
-// Path: ../../../config/config.php (up three levels from domains/edit-domain.php)
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -65,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Exception $e) {
         setFlashMessage('error', $e->getMessage());
-        header('Location: edit-domain.php?id=' . $domain_id); // Redirect back to form
+        header('Location: edit-domain.php?id=' . $domain_id); 
         exit();
     }
 }

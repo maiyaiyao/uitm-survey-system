@@ -1,11 +1,6 @@
 <?php
-// Path: src/modules/admin/dashboard.php
-
-// 1. FIX PATH: Go up 2 levels, not 3
 require_once '../../config/config.php';
 
-// Removed User.php to prevent path errors (DB wrapper handles data)
-// require_once '../../includes/models/User.php';
 
 // Require admin role
 requireRole(['admin']);
@@ -32,7 +27,6 @@ try {
     $total_completed = $r_completed['cnt'] ?? 0;
 
     // 5. Fetch Recent Surveys
-    // FIX: Added JOIN to 'organization' so org_name appears in the table
     $recent_surveys = $db->fetchAll("
         SELECT s.*, u.full_name AS created_by_name, o.org_name
         FROM survey s
@@ -43,7 +37,6 @@ try {
     ");
 
 } catch (Exception $e) {
-    // Handle DB error gracefully
     $total_users = 0; $total_active = 0; $total_draft = 0; $total_completed = 0;
     $recent_surveys = [];
     $db_error = "Database Error: " . $e->getMessage();
@@ -67,44 +60,14 @@ function getStatusBadge($status) {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
         /* Page Layout */
-        html, body { 
-            height: 100%; 
-            margin: 0; 
-            padding: 0; 
-            overflow-x: hidden; 
-            background-color: #f8f9fa; 
-        }
+        html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
         
         /* Main Container */
-        .page-container {
-            display: flex;
-            min-height: 100vh;
-            width: 100%;
-        }
-
-        /* Sidebar Adjustment for Fixed Layout */
-        .sidebar { 
-            position: fixed; 
-            top: 0; 
-            bottom: 0; 
-            left: 0; 
-            z-index: 100; 
-            padding: 0; 
-        }
+        .page-container {display: flex; min-height: 100vh; width: 100%;}
         
-        /* Main Content Wrapper - Desktop */
         @media (min-width: 992px) {
-            .main-content-wrapper { 
-                margin-left: 270px;
-                width: calc(100% - 270px);
-                min-height: 100vh;
-                transition: all 0.3s ease;
-            }
-            
-            body.sb-collapsed .main-content-wrapper {
-                margin-left: 80px;
-                width: calc(100% - 80px);
-            }
+            .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); min-height: 100vh;transition: all 0.3s ease;}
+            body.sb-collapsed .main-content-wrapper {margin-left: 80px;width: calc(100% - 80px);}
         }
         
         /* Mobile Layout */

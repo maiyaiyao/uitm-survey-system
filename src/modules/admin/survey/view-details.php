@@ -1,5 +1,4 @@
 <?php
-// Path: src/modules/admin/survey/view-details.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -41,9 +40,6 @@ $domains = $db->fetchAll("
 ", [':id' => $survey_id]);
 
 // 3. Fetch Linked Participants (Assignments)
-// UPDATED LOGIC: 
-// - Removed GROUP BY to separate multiple assignments for the same user.
-// - Joined 'department' on 'us.dept_ID' to get the specific target department.
 $participants = $db->fetchAll("
     SELECT 
         us.user_survey_ID,
@@ -59,7 +55,7 @@ $participants = $db->fetchAll("
     ORDER BY u.full_name ASC, d.dept_name ASC
 ", [':id' => $survey_id]);
 
-// Calculate Stats (Based on Assignments, not unique Users)
+// Calculate Stats
 $total_assignments = count($participants);
 $completed_count = count(array_filter($participants, fn($p) => $p['completion_status'] === 'Completed'));
 $completion_rate = ($total_assignments > 0) ? round(($completed_count / $total_assignments) * 100) : 0;

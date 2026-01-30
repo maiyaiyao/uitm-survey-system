@@ -3,7 +3,6 @@
 require_once '../../../config/config.php';
 require_once '../../../includes/models/User.php';
 
-// CRITICAL ISO CONTROL: Require admin role for IAM functions
 requireRole(['admin']);
 
 $current_user = getCurrentUser();
@@ -13,8 +12,7 @@ try {
     $db = new Database();
     $pdo = $db->getConnection();
     
-    // --- Lifecycle Management: Periodic Review ---
-    // FIXED QUERY: Uses user_department table and GROUP_CONCAT for multiple departments
+    // --- Lifecycle Management: Periodic Review
     $sql = "
         SELECT 
             u.user_ID, u.full_name, u.primary_email, u.status, u.created_at, u.last_login,
@@ -59,7 +57,7 @@ try {
     $general_users = [];
 }
 
-// --- 2. Handle User Actions (Disable/Enable/Delete) ---
+// --- 2. Handle User Actions (Disable/Enable/Delete) 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && isset($_GET['user_id'])) {
     $target_user_id = (int)$_GET['user_id'];
     $action = $_GET['action'];

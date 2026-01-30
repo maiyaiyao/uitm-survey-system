@@ -1,5 +1,5 @@
 <?php
-// Path: ../../../config/config.php (up three levels)
+
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -10,8 +10,6 @@ $results = [];
 if ($search_query) {
     $search_param = '%' . $search_query . '%';
 
-    // We construct a massive UNION query to search all tables at once
-    // CAST(item_id AS CHAR) is used to ensure all ID types match (User ID is int, others are varchar)
     $sql = "
         (
             -- 1. SEARCH DOMAINS
@@ -79,7 +77,6 @@ if ($search_query) {
     ";
 
     try {
-        // IMPORTANT: The order of params must match the '?' in the SQL above exactly
         $params = [
             $search_param, $search_param, // Domain (Name, ID)
             $search_param, $search_param, // Criteria (Name, ID)

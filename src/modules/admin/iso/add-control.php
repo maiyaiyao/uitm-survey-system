@@ -14,7 +14,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('All fields are required.');
         }
 
-        // Insert using dummy ID 'AUTO' because trigger handles it
         $sql = "INSERT INTO sub_con (sec_ID, sub_con_ID, sub_con_name) VALUES (:sec, 'AUTO', :name)";
         $db->query($sql, [':sec' => $sec_ID, ':name' => $sub_con_name]);
 

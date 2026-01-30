@@ -1,6 +1,5 @@
 <?php
-// get_iso_details.php
-require_once '../../../config/config.php'; // Adjust path as needed
+require_once '../../../config/config.php';
 requireRole(['admin']);
 
 $db = new Database();
@@ -27,7 +26,7 @@ try {
         // Fetch Requirement Details
         $data = $db->fetchOne("SELECT sub_req_ID as id, sub_req_name as name, criteria_ID FROM sub_req WHERE sub_req_ID = :id", [':id' => $id]);
         
-        // Fetch Mapped Criteria (Single)
+        // Fetch Mapped Criteria 
         if ($data['criteria_ID']) {
             $mappings = $db->fetchAll("SELECT criteria_ID as id, criteria_name as name FROM criteria WHERE criteria_ID = :mid", [':mid' => $data['criteria_ID']]);
         }
@@ -36,7 +35,7 @@ try {
         // Fetch Control Details
         $data = $db->fetchOne("SELECT sub_con_ID as id, sub_con_name as name FROM sub_con WHERE sub_con_ID = :id", [':id' => $id]);
         
-        // Fetch Mapped Elements (Many-to-Many)
+        // Fetch Mapped Elements 
         $mappings = $db->fetchAll("
             SELECT e.element_ID as id, e.element_name as name 
             FROM element_control ec 

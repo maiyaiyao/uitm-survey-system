@@ -1,5 +1,5 @@
 <?php
-// Path: ../../../config/config.php (up three levels from domains/add-domain.php)
+
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $current_user = getCurrentUser();
 $flash = getFlashMessage(); 
 
-$currentPage = basename(__FILE__); // 'add-domain.php'
-$currentDir = basename(__DIR__); // 'domains'
+$currentPage = basename(__FILE__); 
+$currentDir = basename(__DIR__); 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -181,7 +181,6 @@ $currentDir = basename(__DIR__); // 'domains'
     document.addEventListener('DOMContentLoaded', function() {
         let isDirty = false;
         
-        // 1. CHANGE THIS ID to match your HTML form ID
         const form = document.getElementById('addDomainForm'); 
 
         if (form) {

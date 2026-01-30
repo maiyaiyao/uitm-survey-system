@@ -1,10 +1,9 @@
 <?php
-// Path: src/modules/admin/report/domain_detail.php
 require_once '../../../config/config.php';
 requireRole(['admin', 'auditor']);
 $db = new Database();
 
-// --- Data Fetching Logic ---
+// Data Fetching Logic
 $sql = "
     SELECT 
         d.domain_ID, d.domain_name,
@@ -32,7 +31,7 @@ foreach ($rows as $r) {
         $report[$d_id]['criteria'][$c_id] = ['name' => $r['criteria_name'], 'elements' => []];
     }
     
-    $percent = ($r['avg_raw'] ?? 0) * 20; // Convert 1-5 to 0-100%
+    $percent = ($r['avg_raw'] ?? 0) * 20; 
     $report[$d_id]['criteria'][$c_id]['elements'][] = [
         'name' => $r['element_name'],
         'percent' => $percent
@@ -76,9 +75,7 @@ function getProgClass($p) {
         /* Progress Bar Sizing */
         .progress { height: 8px; border-radius: 4px; background-color: #e9ecef; }
 
-        /* --- PRINT STYLES (UPDATED) --- */
         @media print {
-            /* 1. CRITICAL FIX: Allow document to grow beyond one page */
             html, body { 
                 height: auto !important; 
                 overflow: visible !important; 
@@ -92,10 +89,8 @@ function getProgClass($p) {
                 overflow: visible !important;
             }
 
-            /* 2. Hide Interface Elements */
             .sidebar, .breadcrumb, .btn, .no-print { display: none !important; }
 
-            /* 3. Force Accordion Expansion */
             .accordion-collapse { 
                 display: block !important; 
                 height: auto !important; 
@@ -111,8 +106,6 @@ function getProgClass($p) {
                 margin-bottom: 10px; 
             }
             
-            /* 4. Page Break Logic */
-            /* Allow domains to span pages, but keep criteria cards together */
             .accordion-item { 
                 box-shadow: none !important; 
                 border: none !important; 
@@ -122,12 +115,11 @@ function getProgClass($p) {
             .card { 
                 box-shadow: none !important; 
                 border: 1px solid #eee !important; 
-                break-inside: avoid;       /* Prevent cutting a criteria block in half */
+                break-inside: avoid;      
                 page-break-inside: avoid; 
                 margin-bottom: 15px !important; 
             }
 
-            /* 5. Visual Adjustments */
             .accordion-body { padding: 0 !important; background: white !important; }
             .progress { border: 1px solid #ccc !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
             .badge { border: 1px solid #000 !important; color: black !important; }

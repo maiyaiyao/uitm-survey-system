@@ -1,5 +1,5 @@
 <?php
-// Path: modules/admin/criteria/view_elements.php
+
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -41,11 +41,11 @@ if ($criteria['domain_status'] !== 'Active') {
 if ($criteria['status'] !== 'Active') {
     setFlashMessage('danger', 'Access Denied: You cannot view elements of an Inactive criteria.');
     
-    // Redirect back to the Criteria List (view-criteria.php) for this Domain
+
     redirect(BASE_URL . '/modules/admin/criteria/view-criteria.php?id=' . $criteria['domain_ID']);
     exit();
 }
-// --- END SECURITY CHECK ---
+
 
 // Get all elements for this criteria (Updated Query)
 $elements = $db->fetchAll("

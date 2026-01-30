@@ -1,5 +1,5 @@
 <?php
-// Path: src/modules/admin/report/org_details.php
+
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -33,7 +33,6 @@ $overallScore = 0;
 
 if ($selected_survey_id) {
     // A. Domain Scores
-    // Logic: Average of raw scores (1-5) multiplied by 20 to get 0-100%
     $domainScores = $db->fetchAll("
         SELECT 
             dm.domain_name,
@@ -48,8 +47,6 @@ if ($selected_survey_id) {
     ", [':sid' => $selected_survey_id]);
 
     // B. Department Breakdown
-    // UPDATED LOGIC: Join Response directly to Department (r.dept_ID)
-    // This ensures that if a user has multiple assignments, the score goes to the correct department.
     $deptScores = $db->fetchAll("
         SELECT 
             d.dept_name,
@@ -136,7 +133,6 @@ function getColor($pct) {
                         <h5 class="fw-bold mb-3">Domain Performance</h5>
                         <div class="d-flex flex-column gap-3">
                             <?php foreach($domainScores as $ds): 
-                                // Logic Fix: Use the SQL calculated percentage directly
                                 $pct = $ds['domain_score_pct']; 
                             ?>
                                 <div>
@@ -167,7 +163,6 @@ function getColor($pct) {
                                 </thead>
                                 <tbody>
                                     <?php foreach($deptScores as $dt): 
-                                        // Logic Fix: Use the SQL calculated percentage directly
                                         $pct = $dt['dept_score_pct'];
                                     ?>
                                         <tr>
@@ -184,10 +179,9 @@ function getColor($pct) {
                     </div>
                 </div>
             </div>
-
-        <?php else: ?>
-            <div class="alert alert-info">No survey data available for this organization.</div>
-        <?php endif; ?>
+            <?php else: ?>
+                <div class="alert alert-info">No survey data available for this organization.</div>
+            <?php endif; ?>
     </div>
 </body>
 </html>

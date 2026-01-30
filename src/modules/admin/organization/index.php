@@ -1,16 +1,14 @@
 <?php
-// Path: modules/admin/organization/index.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
 $db = new Database();
-$flash = getFlashMessage(); // Note: Your config likely returns an array ['type', 'message']
+$flash = getFlashMessage(); 
 
-// --- 1. HANDLE DELETION (GET REQUEST) ---
+// 1. HANDLE DELETION 
 if (isset($_GET['delete_org'])) {
     try {
         $id = (int)$_GET['delete_org'];
-        // Note: SQL Foreign Keys are set to CASCADE, so this deletes linked Departments too.
         $db->query("DELETE FROM organization WHERE org_ID = ?", [$id]);
         setFlashMessage('success', 'Organization and all its departments deleted successfully.');
         redirect('index.php');
@@ -30,13 +28,12 @@ if (isset($_GET['delete_dept'])) {
     }
 }
 
-// --- 2. HANDLE FORM SUBMISSION (POST REQUEST) ---
+// 2. HANDLE FORM SUBMISSION
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $form_type = $_POST['form_type'];
     
     try {
         if ($form_type === 'org') {
-            // Organization Logic
             $name = sanitize($_POST['org_name']);
             $code = sanitize($_POST['org_code']);
             $status = $_POST['status'];
@@ -57,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
         } elseif ($form_type === 'dept') {
-            // Department Logic
             $name = sanitize($_POST['dept_name']);
             $code = sanitize($_POST['dept_code']);
             $org_id = (int)$_POST['org_id'];
@@ -85,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// --- 3. FETCH DATA ---
+// 3. FETCH DATA 
 $orgs = $db->fetchAll("SELECT * FROM organization ORDER BY org_name ASC");
 $depts = $db->fetchAll("SELECT * FROM department ORDER BY dept_name ASC");
 
@@ -94,7 +90,7 @@ foreach ($depts as $d) {
     $grouped_depts[$d['org_ID']][] = $d;
 }
 
-// --- 4. DETERMINE EDIT MODE ---
+// 4. DETERMINE EDIT MODE
 $active_tab = 'org';
 $edit_org = null;
 $edit_dept = null;
@@ -175,7 +171,6 @@ if (isset($_GET['edit_org'])) {
                     <?php 
                     $msg = getFlashMessage();
                     if ($msg): 
-                        // Map 'danger' to bootstrap 'danger' but handle system 'error' type
                         $alertClass = ($msg['type'] === 'error' || $msg['type'] === 'danger') ? 'danger' : $msg['type'];
                     ?>
                         <div class="alert alert-<?php echo $alertClass; ?> alert-dismissible fade show shadow-sm" role="alert">

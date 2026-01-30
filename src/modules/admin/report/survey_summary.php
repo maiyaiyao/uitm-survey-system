@@ -1,12 +1,11 @@
 <?php
-// Path: src/modules/admin/report/index.php
 require_once '../../../config/config.php';
-requireRole(['admin', 'auditor']);
+requireRole(['admin']);
 
 $db = new Database();
 $pageTitle = "Organization Reports";
 
-// --- Logic: Fetch Organizations with Survey Metadata ---
+// Logic: Fetch Organizations with Survey Metadata 
 $sql = "SELECT 
             o.org_ID, 
             o.org_name, 

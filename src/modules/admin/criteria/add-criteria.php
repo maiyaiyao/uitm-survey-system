@@ -1,12 +1,10 @@
 <?php
-// Path: modules/admin/criteria/add-criteria.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
 $db = new Database();
 
 // 1. Get Pre-selected Domain (Optional)
-// If the user came from a specific domain page, we pre-select it.
 $preselected_id = $_GET['domain_id'] ?? null;
 
 // 2. Fetch All Active Domains for the Dropdown
@@ -41,11 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         setFlashMessage('success', "New criteria added successfully.");
         
-        // Redirect logic: If we have a pre-selected ID, go there, otherwise go to the criteria index
         if ($preselected_id) {
             header("Location: ../criteria/view-criteria.php?id={$selected_domain_id}");
         } else {
-            // Or redirect to the main criteria list if no specific parent context
             header("Location: ../criteria/index.php"); 
         }
         exit();

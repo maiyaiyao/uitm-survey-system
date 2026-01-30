@@ -1,5 +1,4 @@
 <?php
-// Path: modules/admin/domain/view.php (Adjust based on your actual structure)
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -21,8 +20,7 @@ if ($domain && $domain['status'] !== 'Active') {
     // 1. Set an error message
     setFlashMessage('error', 'Access Denied: You cannot view details of an Inactive domain.');
     
-    // 2. Redirect them away (e.g., back to the Domain List or Dashboard)
-    // Adjust this path to point to your main Domain list
+    // 2. Redirect 
     header('Location: ../domain/index.php'); 
     exit();
 }

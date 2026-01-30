@@ -1,5 +1,4 @@
 <?php
-// Path: src/modules/admin/user/form-user.php
 require_once '../../../config/config.php';
 require_once '../../../includes/models/User.php';
 
@@ -8,7 +7,7 @@ requireRole(['admin']);
 $db = new Database();
 $current_user = getCurrentUser();
 
-// --- 1. Determine Mode (Create vs Edit) ---
+// 1. Determine Mode 
 $user_id = isset($_GET['user_id']) ? (int)$_GET['user_id'] : 0;
 $is_edit = ($user_id > 0);
 
@@ -49,7 +48,7 @@ try {
     redirect('index.php');
 }
 
-// --- 2. Handle Form Submission ---
+// --- 2. Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conn = $db->getConnection();
@@ -145,7 +144,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // B. Handle Roles (Using user_role table)
-        // Remove existing role
         $db->query("DELETE FROM user_role WHERE user_ID = :uid", [':uid' => $target_uid]);
         
         // Assign new role

@@ -1,12 +1,11 @@
 <?php
-// Path: src/modules/admin/iso/delete_iso.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $type = $_POST['type'] ?? '';
     $id = $_POST['id'] ?? '';
-    $redirect_to = $_POST['redirect_to'] ?? ''; // New Parameter
+    $redirect_to = $_POST['redirect_to'] ?? ''; 
 
     if (empty($type) || empty($id)) {
         setFlashMessage('error', 'Invalid request parameters.');
@@ -31,10 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Exception $e) {
         error_log("Delete ISO Error: " . $e->getMessage());
-        
-        // Check for Foreign Key Constraint violation (Code 23000)
-        // Note: PDO code behavior might vary slightly depending on driver, 
-        // checking the message for common constraint keywords is a safe fallback.
+
         if (strpos($e->getMessage(), 'Constraint violation') !== false || $e->getCode() == 23000) {
              setFlashMessage('error', 'Cannot delete this item because it is linked to other records. Please delete dependent items first.');
         } else {

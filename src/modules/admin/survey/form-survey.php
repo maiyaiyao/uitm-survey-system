@@ -1,5 +1,5 @@
 <?php
-// Path: modules/admin/survey/form-survey.php
+
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -86,17 +86,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($post_data['domain_ids'])) throw new Exception('At least one Domain is required.');
         if (empty($post_data['start_date']) || empty($post_data['end_date'])) throw new Exception('Start and End dates are required.');
 
-        // Get Org Name for legacy/display purposes
+        // Fetch Organization Name 
         $orgInfo = $db->fetchOne("SELECT org_name FROM organization WHERE org_ID = ?", [$post_data['org_ID']]);
         $legacy_dept_name = $orgInfo ? $orgInfo['org_name'] : '';
 
         $user_id_system = $current_user ? $current_user['user_ID'] : 'SYSTEM';
 
-        // --- Start Transaction ---
+        // Start Transaction
         $db->beginTransaction();
 
         if ($is_edit) {
-            // === UPDATE ===
+
             $sql_update = "UPDATE survey SET 
                             survey_name = :name, org_ID = :org, department = :dept_name,
                             start_date = :start, end_date = :end, status = :status, 
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $success_msg = "Survey updated successfully.";
 
         } else {
-            // === CREATE ===
+            // CREATE
             $last_id_row = $db->fetchOne("SELECT survey_ID FROM survey ORDER BY survey_ID DESC LIMIT 1");
             $new_id_num = 1;
             if ($last_id_row) {
@@ -152,13 +152,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->query($sql_domain, [':sid' => $target_survey_id, ':did' => sanitize($did)]);
         }
 
-        // --- 2. Link Departments ---
+        //  2. Link Departments
         $sql_dept = "INSERT INTO survey_department (survey_ID, dept_ID) VALUES (:sid, :did)";
         foreach ($post_data['dept_ids'] as $did) {
             $db->query($sql_dept, [':sid' => $target_survey_id, ':did' => sanitize($did)]);
         }
 
-        // --- 3. AUTO-ASSIGN USERS (FIXED) ---
+        // 3. AUTO-ASSIGN USERS 
         // Find all Active users with their specific Department IDs
         $dept_placeholders = implode(',', array_fill(0, count($post_data['dept_ids']), '?'));
         
@@ -170,9 +170,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            AND ud.dept_ID IN ($dept_placeholders)";
         
         $params = array_merge([$post_data['org_ID']], $post_data['dept_ids']);
-        $target_users = $db->fetchAll($sql_find_users, $params); // Returns rows like [user_ID=>1, dept_ID=>5]
+        $target_users = $db->fetchAll($sql_find_users, $params); 
 
-        // Fetch existing participants to sync (We check user+dept pair to be precise)
+        // Fetch existing participants to sync 
         $current_rows = $db->fetchAll("SELECT user_ID, dept_ID FROM user_survey WHERE survey_ID = :sid", [':sid' => $target_survey_id]);
         
         // Create unique keys "USER_ID-DEPT_ID" for comparison
@@ -202,7 +202,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Perform Removals (Only remove if they haven't started yet to be safe, or strict sync)
         if (!empty($keys_to_remove)) {
-            // Strict sync: Remove users who are no longer in the selected departments
             $sql_remove = "DELETE FROM user_survey WHERE survey_ID = :sid AND user_ID = :uid AND dept_ID = :did";
             
             foreach ($keys_to_remove as $key) {
@@ -427,10 +426,10 @@ $flash = getFlashMessage();
             const toggleDeptsBtn = document.getElementById('toggleDeptsBtn');
             const toggleDomBtn = document.getElementById('toggleDomainsBtn');
 
-            // --- 1. Dynamic Department Logic ---
+            // 1. Dynamic Department Logic 
             function updateDepts() {
                 const orgId = orgSelect.value;
-                deptContainer.innerHTML = ''; // Clear current
+                deptContainer.innerHTML = ''; 
 
                 if (!orgId) {
                     deptContainer.innerHTML = '<div class="text-muted small p-2">Select an Organization first.</div>';
@@ -460,8 +459,6 @@ $flash = getFlashMessage();
                     });
                 }
             }
-
-            // Listener
             orgSelect.addEventListener('change', updateDepts);
 
             // Initialize (if Edit mode or error reload)

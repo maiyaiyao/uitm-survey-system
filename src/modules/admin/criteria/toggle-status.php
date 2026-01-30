@@ -1,8 +1,4 @@
 <?php
-/**
- * Handles the POST request to toggle the status of a criteria.
- * This file must be saved in the same directory as criteria/index.php
- */
 
 require_once '../../../config/config.php';
 requireRole(['admin']);
@@ -39,7 +35,6 @@ $db = new Database();
 
 try {
     // 4. Logic Validation: Check Parent Domain Status
-    // Even if we want to cascade Activate, we MUST ensuring the Parent Domain is Active first.
     if ($new_status === 'Active') {
         $parent = $db->fetchOne(
             "SELECT d.status FROM domain d 
@@ -66,7 +61,6 @@ try {
             $db->query("UPDATE element SET status = 'Inactive' WHERE criteria_ID = ?", [$criteria_id]);
             
         } elseif ($new_status === 'Active') {
-            // === NEW: ACTIVATION CASCADE ===
             // Activate all its Elements
             $db->query("UPDATE element SET status = 'Active' WHERE criteria_ID = ?", [$criteria_id]);
         }

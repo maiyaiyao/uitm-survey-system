@@ -1,5 +1,4 @@
 <?php
-// Path: ../../../config/config.php (up three levels from element/edit-element.php)
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -34,7 +33,6 @@ try {
         exit();
     }
 
-    // [NEW] Fetch All Active Criteria (Grouped by Domain for the Dropdown)
     $all_criteria = $db->fetchAll("
         SELECT c.criteria_ID, c.criteria_name, d.domain_name 
         FROM criteria c
@@ -62,8 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($new_criteria_id)) {
             throw new Exception('Criteria selection is required.');
         }
-
-        // [UPDATED] Update element record including criteria_ID
+        // Update element details
         $sql = "UPDATE element SET 
                     element_name = :element_name,
                     criteria_ID = :criteria_id,
@@ -84,8 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
 
         setFlashMessage('success', "Element updated successfully.");
-        
-        // Redirect to the (potentially new) parent criteria's list
+    
         header("Location: view-element.php?id={$new_criteria_id}");
         exit();
 
@@ -96,7 +92,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Variables for the view
 $current_user = getCurrentUser();
 $flash = getFlashMessage();
 ?>

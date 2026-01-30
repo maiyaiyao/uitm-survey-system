@@ -1,15 +1,14 @@
 <?php
-// Path: modules/admin/element/add-element.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
 $db = new Database();
 
-// 1. Get Pre-selected Criteria (Optional)
+// 1. Get Pre-selected Criteria 
 $preselected_id = $_GET['criteria_id'] ?? null;
 $preselected_criteria = null;
 
-// If a criteria ID is passed, fetch its details for breadcrumbs/context
+
 if ($preselected_id) {
     $preselected_criteria = $db->fetchOne("
         SELECT c.criteria_ID, c.criteria_name, d.domain_ID, d.domain_name
@@ -19,8 +18,7 @@ if ($preselected_id) {
     ", [':id' => $preselected_id]);
 }
 
-// 2. Fetch All Active Criteria (Grouped by Domain for the Dropdown)
-// We fetch Domain Name too so we can create <optgroup> in the select box
+// 2. Fetch All Active Criteria 
 $all_criteria = $db->fetchAll("
     SELECT c.criteria_ID, c.criteria_name, d.domain_name 
     FROM criteria c
@@ -58,7 +56,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         setFlashMessage('success', "New element added successfully.");
         
-        // Redirect: If came from a specific criteria view, return there. Else go to main list.
         if ($preselected_id) {
             header("Location: view-element.php?id={$selected_criteria_id}");
         } else {

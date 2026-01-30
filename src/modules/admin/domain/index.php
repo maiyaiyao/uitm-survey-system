@@ -9,8 +9,7 @@ $db = new Database();
 $search = $_GET['search'] ?? '';
 $params = [];
 
-// --- 1. SQL Query Update ---
-// Added GROUP_CONCAT to fetch the list of criteria names separated by '|||'
+
 // --- 1. SQL Query Update ---
 $sql = "
     SELECT d.*, 

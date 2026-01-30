@@ -1,13 +1,10 @@
 <?php
-// Path: src/modules/admin/report/system_readiness.php
 require_once '../../../config/config.php';
-requireRole(['admin', 'auditor']);
+requireRole(['admin']);
 
 $db = new Database();
 
-// ---------------------------------------------------------
 // 1. DATA GATHERING: Audit Readiness Stats
-// ---------------------------------------------------------
 
 // A. Requirements Coverage (Clauses)
 $req_stats = $db->fetchOne("

@@ -1,9 +1,4 @@
 <?php
-/**
- * Handles the POST request to toggle the status of a domain.
- * This file must be saved in the same directory as index.php
- */
-
 require_once '../../../config/config.php';
 
 // Ensure only admins can access this script
@@ -53,7 +48,6 @@ try {
             $db->query($cascadeElements, [$domain_id]);
 
         } elseif ($new_status === 'Active') {
-            // === NEW: ACTIVATION CASCADE ===
             // A. Activate all Criteria under this Domain
             $db->query("UPDATE criteria SET status = 'Active' WHERE domain_ID = ?", [$domain_id]);
             

@@ -1,12 +1,12 @@
 <?php
-// Path: ../../../config/config.php
+
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
-// --- 1. Initialize Database ---
+// 1. Initialize Database
 $db = new Database();
 
-// --- 2. Handle Delete Request (POST) ---
+// 2. Handle Delete Request
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete') {
     $db->beginTransaction();
     try {
@@ -36,14 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 try {
     $current_timestamp = date('Y-m-d H:i:s');
 
-    // === FIX: REMOVED AUTO-ACTIVATION ===
-    // The previous block here was forcing "Draft" surveys to "Active".
-    // It has been removed so your manual "Draft" status sticks.
-
-    // Keep Auto-Completion Logic (Optional: Close expired surveys)
     $db->query("UPDATE survey SET status = 'Completed' WHERE status = 'Active' AND end_date < :now", [':now' => $current_timestamp]);
     
-    // --- START DYNAMIC QUERY BUILDING ---
     // 1. Base Query
     $sql = "SELECT s.*, 
                 u.full_name as created_by_name,
@@ -97,7 +91,7 @@ try {
     setFlashMessage('error', 'Database Error: ' . $e->getMessage());
 }
 
-// --- 5. Helper function for status badges ---
+// 5. Helper function for status badges
 function getStatusBadge($status, $start_date, $end_date) {
     $current_time = time();
     $start_time = strtotime($start_date);
@@ -119,13 +113,13 @@ function getStatusBadge($status, $start_date, $end_date) {
     }
 }
 
-// --- 6. Helper for formatting date ---
+// 6. Helper for formatting date
 function formatShortDate($date) {
     if (!$date) return '-';
     return date('d M Y H:i:A', strtotime($date));
 }
 
-// --- Variables for View ---
+// Variables for View
 $current_user = getCurrentUser();
 $flash = getFlashMessage();
 ?>

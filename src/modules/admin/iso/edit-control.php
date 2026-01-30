@@ -18,7 +18,7 @@ if (!$con) {
     exit;
 }
 
-// Fetch Sections for the dropdown (Filtered by Control type)
+// Fetch Sections for the dropdown 
 $sections = $db->fetchAll("SELECT * FROM section WHERE type = 'Control' ORDER BY sec_ID ASC");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

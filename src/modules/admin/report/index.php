@@ -1,6 +1,6 @@
 <?php
 require_once '../../../config/config.php';
-requireRole(['admin', 'auditor']);
+requireRole(['admin']);
 
 $db = new Database();
 

@@ -1,5 +1,5 @@
 <?php
-// modules/admin/domain/delete-domain.php
+
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -11,7 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             // 1. SECURITY CHECK
-            // Use your actual table name for survey results (e.g., 'audit_results', 'answers')
             $checkSql = "
                 SELECT COUNT(*) as usage_count 
                 FROM response r
@@ -26,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 setFlashMessage('error', "Cannot delete Domain. It contains " . $result['usage_count'] . " survey records.");
             } else {
                 // 2. SAFE TO DELETE
-                // Start Transaction
                 $db->beginTransaction();
 
                 // Delete Elements belonging to this Domain (via Criteria)
@@ -47,15 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
         } catch (Exception $e) {
-            // --- FIX STARTS HERE ---
-            // We removed 'if ($db->inTransaction())' because your class doesn't support it.
-            // Instead, we try to rollback and ignore the error if no transaction was active.
             try {
                 $db->rollBack();
             } catch (Exception $rollbackEx) {
-                // Silently ignore "no active transaction" errors
             }
-            // --- FIX ENDS HERE ---
 
             setFlashMessage('error', "Deletion failed: " . $e->getMessage());
         }

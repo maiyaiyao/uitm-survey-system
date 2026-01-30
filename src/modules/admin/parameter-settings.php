@@ -4,7 +4,7 @@ requireRole(['admin']);
 
 $db = new Database();
 
-// --- Fetch Summary Stats (Kept for the badges in the navigation cards) ---
+// --- Fetch Summary Stats
 try {
     $stats = [
         'domains' => $db->fetchOne("SELECT COUNT(*) as c FROM domain")['c'],

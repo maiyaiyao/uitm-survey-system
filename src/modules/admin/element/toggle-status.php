@@ -1,7 +1,4 @@
 <?php
-/**
- * Handles the POST request to toggle the status of an element.
- */
 
 require_once '../../../config/config.php';
 requireRole(['admin']);
@@ -44,8 +41,7 @@ if (!in_array($new_status, ['Active', 'Inactive'])) {
 $db = new Database();
 
 try {
-    // === VALIDATION ===
-    // If trying to Activate, ensure the Parent Criteria is Active
+
     if ($new_status === 'Active') {
         $parent = $db->fetchOne(
             "SELECT c.status FROM criteria c 

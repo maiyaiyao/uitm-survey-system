@@ -1,5 +1,4 @@
 <?php
-// Path: src/modules/admin/control/add-section.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 

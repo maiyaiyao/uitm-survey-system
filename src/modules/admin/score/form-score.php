@@ -6,14 +6,14 @@ $db = new Database();
 $current_user = getCurrentUser();
 
 $element_id = $_GET['element_id'] ?? null;
-$se_id = $_GET['se_id'] ?? null; // If editing
+$se_id = $_GET['se_id'] ?? null; 
 
 if (!$element_id) {
     setFlashMessage('danger', 'Element ID missing.');
     redirect('index.php');
 }
 
-// Get Element Info (Joined to get Criteria ID for breadcrumbs)
+// Fetch Element Details
 $element = $db->fetchOne("
     SELECT e.*, c.criteria_name, c.criteria_ID, d.domain_ID , d.domain_name
     FROM element e 
@@ -45,12 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             setFlashMessage('success', 'Score description updated successfully.');
         } else {
             // Insert
-            // Check for duplicate
             $check = $db->fetchOne("SELECT se_ID FROM score_element WHERE element_ID = ? AND score_ID = ?", [$element_id, $score_id]);
             if ($check) {
                 setFlashMessage('warning', 'A description for this level already exists. Please edit it instead.');
             } else {
-                // Trigger 'trg_sa_ID' handles ID generation
                 $db->query("INSERT INTO score_element (element_ID, score_ID, details, input_id, input_at, status) VALUES (?, ?, ?, ?, NOW(), 'Active')", 
                     [$element_id, $score_id, $details, $current_user['user_ID']]);
                 setFlashMessage('success', 'Score description added successfully.');
@@ -64,7 +62,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $flash = getFlashMessage();
 
-// Helper to truncate text (if not already defined globally)
 if (!function_exists('truncate')) {
     function truncate($string, $limit = 25, $end = '...') {
         if (mb_strlen($string) <= $limit) return $string;
@@ -220,24 +217,20 @@ if (!function_exists('truncate')) {
         document.addEventListener('DOMContentLoaded', function() {
             let isDirty = false;
             
-            // 1. CHANGE THIS ID to match your HTML form ID
             const form = document.getElementById('scoreForm'); 
 
             if (form) {
-                // A. Detect changes on standard inputs (text, select, checkbox)
                 form.addEventListener('change', () => isDirty = true);
                 form.addEventListener('input', () => isDirty = true);
-                
-                // B. If user clicks "Save" or "Submit", disable the warning
+            
                 form.addEventListener('submit', () => {
                     isDirty = false;
                 });
 
-                // C. The Warning Popup
                 window.addEventListener('beforeunload', function (e) {
                     if (isDirty) {
                         e.preventDefault();
-                        e.returnValue = ''; // Required for Chrome/Edge
+                        e.returnValue = '';
                     }
                 });
             }
@@ -250,7 +243,7 @@ if (!function_exists('truncate')) {
                         const remaining = input.getAttribute('maxlength') - input.value.length;
                         counter.textContent = `${remaining} characters remaining`;
                     };
-                    updateCount(); // Run on load
+                    updateCount(); 
                     input.addEventListener('input', updateCount);
                 }
             });

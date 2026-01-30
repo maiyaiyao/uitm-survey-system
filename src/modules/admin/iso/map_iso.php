@@ -17,10 +17,6 @@ $targetItem = [];
 $mappedItems = [];
 $availableItems = [];
 
-// ---------------------------------------------------------
-// LOGIC HANDLER
-// ---------------------------------------------------------
-
 // 1. FETCH TARGET ISO ITEM
 if ($type === 'section') {
     $targetItem = $db->fetchOne("SELECT sec_ID as id, sec_name as name, 'Section' as label FROM section WHERE sec_ID = :id", [':id' => $id]);
@@ -73,17 +69,13 @@ $queryParams = "";
 if (!empty($search)) $queryParams .= "&search=" . urlencode($search);
 if (!empty($filter)) $queryParams .= "&filter=" . urlencode($filter);
 
-// ---------------------------------------------------------
-// DETERMINE LOCK STATUS
-// ---------------------------------------------------------
+
 $isLocked = false;
 if ($type === 'requirement' && count($mappedItems) > 0) {
     $isLocked = true;
 }
 
-// ---------------------------------------------------------
 // FORM SUBMISSION HANDLER
-// ---------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // ADD / UPDATE MAPPING

@@ -10,7 +10,7 @@ if (!$element_id) {
 
 $db = new Database();
 
-// Get Element Details (Added status to selection if available, assuming element table has 'status')
+// Get Element Details 
 $element = $db->fetchOne("
     SELECT e.*, c.criteria_name, c.criteria_ID, d.domain_ID, d.domain_name
     FROM element e 
@@ -39,7 +39,7 @@ $flash = getFlashMessage();
 
 // Calculate Summary Stats
 $total_scores_defined = count($scores);
-$element_status = $element['status'] ?? 'Active'; // Fallback if status column doesn't exist in your schema
+$element_status = $element['status'] ?? 'Active'; 
 $criteria_name = $element['criteria_name'];
 
 ?>
@@ -76,7 +76,7 @@ $criteria_name = $element['criteria_name'];
         /* Table Styles */
         .table th {
             font-weight: 700;
-            background-color: #9d83b7ff; /* Purple Header */
+            background-color: #9d83b7ff; 
             border-bottom: 2px solid #f0f2f5;
             color: black;
             text-transform: uppercase;

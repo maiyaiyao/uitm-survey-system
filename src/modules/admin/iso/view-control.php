@@ -1,5 +1,4 @@
 <?php
-// Path: src/modules/admin/iso/view-control.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -22,7 +21,6 @@ if (!$section) {
 }
 
 // 2. Fetch Controls (Sub-controls)
-// We use a subquery to count mappings in 'element_control' to determine status
 $controls = $db->fetchAll("
     SELECT sc.*, 
            (SELECT COUNT(*) FROM element_control ec WHERE ec.sub_con_ID = sc.sub_con_ID) as mapping_count

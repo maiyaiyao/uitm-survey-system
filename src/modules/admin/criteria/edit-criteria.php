@@ -1,5 +1,4 @@
 <?php
-// Path: ../../../config/config.php (up three levels from criteria/edit-criteria.php)
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -52,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Domain selection is required.');
         }
 
-        // [UPDATED] Update criteria record including domain_ID
+        // Update criteria record including domain_ID
         $sql = "UPDATE criteria SET 
                     criteria_name = :criteria_name,
                     domain_ID = :domain_id,

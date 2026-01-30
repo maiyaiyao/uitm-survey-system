@@ -1,7 +1,6 @@
 <?php
-// Path: src/modules/admin/report/view-user-response.php
 require_once '../../../config/config.php';
-requireRole(['admin', 'auditor']); // Allow Admins and Auditors
+requireRole(['admin']); 
 
 $db = new Database();
 
@@ -11,12 +10,9 @@ $target_user_id = $_GET['user_id'] ?? null;
 
 if (!$survey_id || !$target_user_id) {
     setFlashMessage('danger', 'Invalid parameters.');
-    // Redirect back to survey list or dashboard
     header("Location: ../survey/index.php");
     exit();
 }
-
-// Fetch Target User Details (for display)
 $target_user = $db->fetchOne("SELECT full_name, primary_email FROM user WHERE user_ID = :uid", [':uid' => $target_user_id]);
 
 // Check assignment
@@ -32,7 +28,7 @@ if (!$assignment) {
     exit();
 }
 
-// --- 2. Data Fetching & Organization ---
+// 2. Data Fetching & Organization 
 
 // Fetch Hierarchical Data
 $sql_structure = "

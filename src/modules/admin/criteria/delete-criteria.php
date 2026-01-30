@@ -1,5 +1,4 @@
 <?php
-// modules/admin/criteria/delete-criteria.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -11,7 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         try {
             // 1. SECURITY CHECK: Check if this Criteria is used in any survey answers.
-            // We join answers -> element -> criteria
             $checkSql = "
                 SELECT COUNT(*) as usage_count 
                 FROM response r

@@ -6,7 +6,7 @@ $db = new Database();
 $flash = getFlashMessage();
 $current_user = getCurrentUser();
 
-// --- 1. Determine Mode (Add vs Edit) ---
+// 1. Determine Mode 
 $edit_id = $_GET['id'] ?? null;
 $edit_data = null;
 $is_edit = false;
@@ -18,13 +18,12 @@ if ($edit_id) {
     }
 }
 
-// --- 2. Handle Form Submission ---
+// 2. Handle Form Submission 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $level = sanitize($_POST['score_level']);
     $desc = sanitize($_POST['desc_level']);
     $post_id = $_POST['score_id'] ?? null;
     
-    // Capture status, default to 'Active' if not provided (e.g. during Insert)
     $status = sanitize($_POST['status'] ?? 'Active'); 
 
     try {
@@ -33,8 +32,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if (!empty($post_id)) {
-            // === UPDATE ===
-            // Added 'status = :status' to the SQL
             $sql = "UPDATE score SET 
                     score_level = :lvl, 
                     desc_level = :desc, 
@@ -52,8 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             setFlashMessage('success', "Score Level updated successfully.");
         } else {
-            // === INSERT ===
-            // Status defaults to 'Active' in the query structure below
             $db->query("INSERT INTO score (score_level, desc_level, input_id, input_at, status) VALUES (?, ?, ?, NOW(), 'Active')", 
                 [$level, $desc, $current_user['user_ID']]);    
             setFlashMessage('success', 'New Global Level added successfully.');
@@ -66,7 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Fetch all levels for the list
 $levels = $db->fetchAll("SELECT * FROM score ORDER BY score_level ASC");
 
 ?>
@@ -241,20 +235,16 @@ $levels = $db->fetchAll("SELECT * FROM score ORDER BY score_level ASC");
         document.addEventListener('DOMContentLoaded', function() {
             let isDirty = false;
             
-            // 1. Target the specific form ID
             const form = document.getElementById('levelForm'); 
 
             if (form) {
-                // A. Detect changes on inputs
                 form.addEventListener('change', () => isDirty = true);
                 form.addEventListener('input', () => isDirty = true);
                 
-                // B. Disable warning on legitimate submit
                 form.addEventListener('submit', () => {
                     isDirty = false;
                 });
 
-                // C. Trigger warning on navigation
                 window.addEventListener('beforeunload', function (e) {
                     if (isDirty) {
                         e.preventDefault();

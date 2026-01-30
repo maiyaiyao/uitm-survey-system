@@ -1,5 +1,4 @@
 <?php
-// Path: src/modules/admin/control/index.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
@@ -10,7 +9,6 @@ $search = $_GET['search'] ?? '';
 $filter_section = $_GET['section'] ?? '';
 
 // --- 2. Fetch Helper Data (Sections for Dropdown) ---
-// We only want sections that are actual controls (type='Control')
 $sections_list = $db->fetchAll("SELECT sec_ID, sec_name FROM section WHERE type = 'Control' ORDER BY sec_ID ASC");
 
 // --- 3. Build Main Query ---

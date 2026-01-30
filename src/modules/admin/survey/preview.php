@@ -1,13 +1,9 @@
 <?php
 require_once '../../../config/config.php';
-// require_once '../../../includes/models/User.php'; // Removed potential error source if file doesn't exist
-
-// Require admin role
 requireRole(['admin']);
 
 $current_user = getCurrentUser();
 
-// --- FIX: Initialize the Database class instance correctly as $db ---
 $db = new Database(); 
 
 // 1. Validate Survey ID
@@ -42,7 +38,7 @@ $sql = "
     ORDER BY d.domain_ID, c.criteria_ID, e.element_ID, s.score_level
 ";
 
-// --- FIX: Use $db->fetchAll and assign to $raw_data to match your loop below ---
+
 $raw_data = $db->fetchAll($sql, [':id' => $survey_id]);
 
 // 4. Group Data for Display
@@ -146,14 +142,14 @@ $currentDir = basename(__DIR__);
             padding: 15px;
             margin-bottom: 10px;
             transition: all 0.2s;
-            cursor: default; /* Changed cursor to default since it's disabled */
+            cursor: default; 
             background-color: #fff;
         }
         /* Adjusted checked state for disabled view */
         .score-input:checked + .score-option {
             background-color: #e7f1ff;
             border-color: #0d6efd;
-            box-shadow: none; /* Removed glow since it's not interactive */
+            box-shadow: none; 
         }
         .score-badge {
             width: 30px;

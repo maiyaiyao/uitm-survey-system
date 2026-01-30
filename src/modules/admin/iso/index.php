@@ -1,5 +1,4 @@
 <?php
-// Path: src/modules/admin/iso/index.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
