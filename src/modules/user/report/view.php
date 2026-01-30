@@ -5,6 +5,7 @@
  * - Element % = Raw Score * 20
  * - Criteria % = Average of Element %
  * - Domain % = Average of Criteria %
+ * UPDATED: Added Department ID filtering to separate reports.
  */
 
 require_once '../../../config/config.php';
@@ -15,26 +16,44 @@ $current_user_id = getCurrentUserId();
 
 // --- 1. Validation ---
 $survey_id = $_GET['id'] ?? null;
+$dept_id   = $_GET['dept_id'] ?? null; // Capture Dept ID
 
 if (!$survey_id) {
     setFlashMessage('danger', 'Invalid survey ID.');
     redirect('index.php');
 }
 
-// Check assignment
-$assignment = $db->fetchOne("
-    SELECT us.*, s.survey_name, s.department, s.end_date, s.survey_description
+// --- 2. Check Assignment (Context-Aware) ---
+// We join Department to get the name and ensure we load the correct assignment row.
+$sql_assign = "
+    SELECT us.*, s.survey_name, s.end_date, s.survey_description, d.dept_name
     FROM user_survey us
     JOIN survey s ON us.survey_ID = s.survey_ID
+    LEFT JOIN department d ON us.dept_ID = d.dept_ID
     WHERE us.survey_ID = :sid AND us.user_ID = :uid
-", [':sid' => $survey_id, ':uid' => $current_user_id]);
+";
+
+$params_assign = [':sid' => $survey_id, ':uid' => $current_user_id];
+
+if ($dept_id) {
+    $sql_assign .= " AND us.dept_ID = :did";
+    $params_assign[':did'] = $dept_id;
+} else {
+    // Fallback for old links (though index.php now prevents this)
+    $sql_assign .= " LIMIT 1"; 
+}
+
+$assignment = $db->fetchOne($sql_assign, $params_assign);
 
 if (!$assignment) {
-    setFlashMessage('danger', 'Survey assignment not found.');
+    setFlashMessage('danger', 'Survey assignment not found for this department.');
     redirect('index.php');
 }
 
-// --- 2. Data Fetching & Organization ---
+// Ensure we have the correct dept_id for subsequent queries if it wasn't in GET
+$dept_id = $assignment['dept_ID']; 
+
+// --- 3. Data Fetching & Organization ---
 
 // Fetch Hierarchical Data
 $sql_structure = "
@@ -54,7 +73,7 @@ $sql_structure = "
 
 $raw_structure = $db->fetchAll($sql_structure, [':sid' => $survey_id]);
 
-// Fetch User Responses
+// Fetch User Responses (Filtered by Dept ID)
 $sql_responses = "
     SELECT 
         r.element_ID, 
@@ -66,9 +85,21 @@ $sql_responses = "
     FROM response r
     LEFT JOIN score_element se ON r.se_ID = se.se_ID
     LEFT JOIN score s ON se.score_ID = s.score_ID
-    WHERE r.user_ID = :uid AND r.survey_ID = :sid
+    WHERE r.user_ID = :uid 
+    AND r.survey_ID = :sid
 ";
-$raw_responses = $db->fetchAll($sql_responses, [':uid' => $current_user_id, ':sid' => $survey_id]);
+
+$params_resp = [':uid' => $current_user_id, ':sid' => $survey_id];
+
+// CRITICAL FIX: Filter responses by Department so scores don't mix
+if ($dept_id) {
+    $sql_responses .= " AND r.dept_ID = :did";
+    $params_resp[':did'] = $dept_id;
+} else {
+    $sql_responses .= " AND r.dept_ID IS NULL";
+}
+
+$raw_responses = $db->fetchAll($sql_responses, $params_resp);
 
 // Map responses by element_ID
 $user_responses = [];
@@ -76,17 +107,17 @@ foreach ($raw_responses as $resp) {
     $user_responses[$resp['element_ID']] = $resp;
 }
 
-// --- 3. Calculation Logic ---
+// --- 4. Calculation Logic ---
 
 $report_data = [];
-$domain_scores = []; // To store average for overall calculation
+$domain_scores = []; 
 
 foreach ($raw_structure as $row) {
     $d_id = $row['domain_ID'];
     $c_id = $row['criteria_ID'];
     $e_id = $row['element_ID'];
     
-    // Initialize structure if not exists
+    // Initialize structure
     if (!isset($report_data[$d_id])) {
         $report_data[$d_id] = [
             'name' => $row['domain_name'],
@@ -129,7 +160,7 @@ foreach ($report_data as $d_id => &$domain) {
             $element_count++;
         }
 
-        // Criteria Average = Sum of Elements / Count
+        // Criteria Average
         $criteria['avg_score'] = ($element_count > 0) ? round($element_sum / $element_count, 2) : 0;
         
         $domain_criteria_sum += $criteria['avg_score'];
@@ -137,7 +168,7 @@ foreach ($report_data as $d_id => &$domain) {
     }
     unset($criteria);
 
-    // Domain Average = Sum of Criteria Averages / Count
+    // Domain Average
     $domain['avg_score'] = ($criteria_count > 0) ? round($domain_criteria_sum / $criteria_count, 2) : 0;
     
     $total_survey_score += $domain['avg_score'];
@@ -225,12 +256,13 @@ $flash = getFlashMessage();
                     <div class="card mb-5 border-0 shadow-sm rounded-4 bg-white">
                         <div class="card-body p-4">
                             <div class="row align-items-center">
-                                <div class="col-md-8">
+                                
+                                <div class="col-md-6 text-center"> 
                                     <h5 class="text-uppercase text-muted fw-bold small mb-2"><?php echo htmlspecialchars($assignment['survey_name']); ?></h5>
                                     <h2 class="fw-bold mb-1">Overall Maturity Score</h2>
                                     <p class="text-muted mb-3">Average across all domains.</p>
                                     
-                                    <div class="d-flex align-items-center mt-4">
+                                    <div class="d-flex align-items-center justify-content-center mt-4">
                                         <?php $ov_style = getScoreClass($overall_score); ?>
                                         <div class="display-3 fw-bold text-<?php echo $ov_style['color']; ?> me-3"><?php echo $overall_score; ?>%</div>
                                         <div>
@@ -240,15 +272,20 @@ $flash = getFlashMessage();
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 border-start">
+
+                                <div class="col-md-6 border-start ps-5">
                                     <ul class="list-unstyled mb-0">
-                                        <li><strong>Domain Breakdown:</strong></li>
+                                        <li class="mb-3"><strong>Domain Breakdown:</strong></li>
                                         <?php foreach ($report_data as $domain): 
                                             $d_style = getScoreClass($domain['avg_score']);
                                         ?>
                                             <li class="d-flex justify-content-between align-items-center mt-2 text-sm">
-                                                <span class="text-muted text-truncate" style="max-width: 150px;"><?php echo htmlspecialchars($domain['name']); ?></span>
-                                                <span class="fw-bold text-<?php echo $d_style['color']; ?>"><?php echo $domain['avg_score']; ?>%</span>
+                                                <span class="text-muted me-3">
+                                                    <?php echo htmlspecialchars($domain['name']); ?>
+                                                </span>
+                                                <span class="fw-bold text-<?php echo $d_style['color']; ?>">
+                                                    <?php echo $domain['avg_score']; ?>%
+                                                </span>
                                             </li>
                                         <?php endforeach; ?>
                                     </ul>

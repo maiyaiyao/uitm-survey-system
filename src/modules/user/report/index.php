@@ -1,7 +1,7 @@
 <?php
 /**
  * User Reports & Certificates Hub
- * Allows users to view past performance and print completion certificates.
+ * UPDATED: Added Department column and context-aware linking.
  */
 
 require_once '../../../config/config.php';
@@ -11,15 +11,17 @@ $db = new Database();
 $user_ID = getCurrentUserId();
 
 // --- 1. Fetch Completed Surveys ---
-// Since user_survey doesn't have a timestamp, we fetch the latest 'input_at' 
-// from the response table to determine when they finished.
-$sql = "SELECT s.survey_ID, s.survey_name, s.department, s.end_date, 
+// UPDATED SQL: Fetch from 'user_survey' to get specific department context.
+$sql = "SELECT s.survey_ID, s.survey_name, s.end_date, 
+               d.dept_name, us.dept_ID,
                (SELECT MAX(r.input_at) 
                 FROM response r 
-                WHERE r.survey_ID = s.survey_ID AND r.user_ID = us.user_ID
+                WHERE r.survey_ID = s.survey_ID 
+                AND r.user_ID = us.user_ID
                ) as completion_date
-        FROM survey s
-        INNER JOIN user_survey us ON s.survey_ID = us.survey_ID
+        FROM user_survey us
+        JOIN survey s ON us.survey_ID = s.survey_ID
+        LEFT JOIN department d ON us.dept_ID = d.dept_ID
         WHERE us.user_ID = :uid 
         AND us.status = 'Completed'
         ORDER BY completion_date DESC";
@@ -62,7 +64,7 @@ $completed_surveys = $db->fetchAll($sql, [':uid' => $user_ID]);
                                     <li class="breadcrumb-item active text-dark" aria-current="page">My Reports</li>
                                 </ol>
                             </nav>
-                            <h3 class="fw-bold mb-1">Reports & Certificates</h3>
+                            <h3 class="fw-bold mb-1">Reports</h3>
                             <p class="text-muted mb-0">Manage your survey records and download completion proofs.</p>
                         </div>
                     </div>
@@ -116,11 +118,17 @@ $completed_surveys = $db->fetchAll($sql, [':uid' => $user_ID]);
                                                         <span class="small text-muted">ID: <?php echo $row['survey_ID']; ?></span>
                                                     </div>
                                                 </td>
+
                                                 <td>
-                                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill">
-                                                        <?php echo htmlspecialchars($row['department']); ?>
-                                                    </span>
+                                                    <?php if(!empty($row['dept_name'])): ?>
+                                                        <span class="badge bg-light text-primary border border-primary-subtle rounded-pill">
+                                                            <i class="bi bi-building me-1"></i> <?php echo htmlspecialchars($row['dept_name']); ?>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-light text-secondary border rounded-pill">General</span>
+                                                    <?php endif; ?>
                                                 </td>
+
                                                 <td>
                                                     <div class="d-flex align-items-center text-muted">
                                                         <i class="bi bi-calendar-check me-2"></i>
