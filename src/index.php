@@ -22,8 +22,6 @@ if (isLoggedIn()) {
     }
     exit;
 }
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,17 +87,16 @@ if (isLoggedIn()) {
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 <div class="landing-card row g-0 overflow-hidden">
-                    <!-- Left Section -->
-                    <div class="col-md-5 logo-section d-flex flex-column align-items-center justify-content-center text-center">
+                    <div class="col-md-5 logo-section d-flex flex-column align-items-center justify-content-center text-center">                      
                         <i class="bi bi-shield-check" style="font-size: 5rem;"></i>
+                            
                         <h2 class="mt-3 fw-bold">UiTM</h2>
                     </div>
 
-                    <!-- Right Section -->
                     <div class="col-md-7 p-5">
                         <h1 class="mb-4 fw-bold">Welcome to UiTM Cybersecurity Maturity System</h1>
                         <p class="text-muted mb-4">
-                            The Cybersecurity Maturity System System designed for 
+                            The Cybersecurity Maturity System designed for 
                             Universiti Teknologi MARA to manage cybersecurity survey and compliance.
                         </p>
                         
@@ -128,12 +125,11 @@ if (isLoggedIn()) {
                         </div>
 
                         <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                            <!-- Login Button -->
-                            <a href="<?php echo BASE_URL; ?>/modules/auth/login.php" class="btn btn-custom w-100">
+                            <a href="modules/auth/login.php" class="btn btn-custom w-100">
                                 <i class="bi bi-box-arrow-in-right me-2"></i>Login to System
                             </a>
-                            <!-- Register Button (New) -->
-                            <a href="<?php echo BASE_URL; ?>/modules/auth/register.php" class="btn btn-outline-custom w-100">
+
+                            <a href="modules/auth/register.php" class="btn btn-outline-custom w-100">
                                 <i class="bi bi-person-plus-fill me-2"></i>Register New Account
                             </a>
                         </div>
@@ -143,3 +139,8 @@ if (isLoggedIn()) {
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
