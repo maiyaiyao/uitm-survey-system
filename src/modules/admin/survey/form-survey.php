@@ -1,12 +1,11 @@
 <?php
-
+// Path: src/modules/admin/survey/form-survey.php
 require_once '../../../config/config.php';
 requireRole(['admin']);
 
 $db = new Database();
 $current_user = getCurrentUser();
 
-// --- 1. Determine Mode & Initialize Variables ---
 $survey_id = isset($_GET['id']) ? $_GET['id'] : (isset($_GET['survey_id']) ? $_GET['survey_id'] : null);
 $is_edit = !empty($survey_id);
 
@@ -14,17 +13,15 @@ $is_edit = !empty($survey_id);
 $survey_data = [
     'survey_name' => '',
     'org_ID' => '',
-    'department' => '', // Legacy field
     'start_date' => '',
     'end_date' => '',
     'status' => 'Draft',
     'survey_description' => ''
 ];
-
 $linked_domain_ids = []; 
 $linked_dept_ids = [];
+$existing_emails_str = ''; 
 
-// Helper to format datetime
 function formatDateTimeForInput($dateString) {
     if (empty($dateString)) return "";
     $timestamp = strtotime($dateString);
@@ -32,42 +29,35 @@ function formatDateTimeForInput($dateString) {
 }
 
 try {
-    // Fetch Data for Dropdowns/Checkboxes
     $organizations = $db->fetchAll("SELECT * FROM organization WHERE status = 'Active' ORDER BY org_name ASC");
     $all_departments = $db->fetchAll("SELECT * FROM department WHERE status = 'Active' ORDER BY dept_name ASC");
     $all_domains = $db->fetchAll("SELECT domain_ID, domain_name, status FROM domain ORDER BY domain_name");
 
-    // Fetch Existing Survey Data
     if ($is_edit) {
         $survey_data = $db->fetchOne("SELECT * FROM survey WHERE survey_ID = :id", [':id' => $survey_id]);
-        
         if (!$survey_data) {
             setFlashMessage('error', "Error: Survey not found.");
-            header('Location: index.php');
-            exit();
+            header('Location: index.php'); exit();
         }
 
-        // Fetch Linked Domains
-        $linked_domain_rows = $db->fetchAll("SELECT domain_id FROM survey_domain WHERE survey_id = :id", [':id' => $survey_id]);
-        $linked_domain_ids = array_column($linked_domain_rows, 'domain_id');
-
-        // Fetch Linked Departments
-        $linked_dept_rows = $db->fetchAll("SELECT dept_ID FROM survey_department WHERE survey_ID = :id", [':id' => $survey_id]);
-        $linked_dept_ids = array_column($linked_dept_rows, 'dept_ID');
+        $linked_domain_ids = array_column($db->fetchAll("SELECT domain_id FROM survey_domain WHERE survey_id = :id", [':id' => $survey_id]), 'domain_id');
+        $linked_dept_ids = array_column($db->fetchAll("SELECT dept_ID FROM survey_department WHERE survey_ID = :id", [':id' => $survey_id]), 'dept_ID');
+        
+        // Fetch users linked to this survey (for display in the input box)
+        $linked_users = $db->fetchAll("SELECT DISTINCT u.primary_email FROM user u JOIN user_survey us ON u.user_ID = us.user_ID WHERE us.survey_ID = :id", [':id' => $survey_id]);
+        $existing_emails_str = implode(",", array_column($linked_users, 'primary_email'));
     }
 
 } catch (Exception $e) {
     setFlashMessage('error', 'Database Error: ' . $e->getMessage());
-    header('Location: index.php');
-    exit();
+    header('Location: index.php'); exit();
 }
 
-// --- 2. Handle Form Submission (POST) ---
+// --- 2. Handle POST ---
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $conn = $db->getConnection();
         
-        // Sanitize & Prepare Inputs
         $post_data = [
             'survey_name' => sanitize($_POST['survey_name']),
             'org_ID' => !empty($_POST['org_ID']) ? (int)$_POST['org_ID'] : null,
@@ -76,161 +66,112 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'status' => sanitize($_POST['status']),
             'survey_description' => sanitize($_POST['survey_description']),
             'domain_ids' => $_POST['domain_ids'] ?? [],
-            'dept_ids' => $_POST['dept_ids'] ?? []
+            'dept_ids' => $_POST['dept_ids'] ?? [], 
+            'allowed_emails' => $_POST['allowed_emails'] ?? ''
         ];
 
-        // Validation
+        // Validations
         if (empty($post_data['survey_name'])) throw new Exception('Survey Name is required.');
         if (empty($post_data['org_ID'])) throw new Exception('Organization is required.');
         if (empty($post_data['dept_ids'])) throw new Exception('At least one Department is required.');
         if (empty($post_data['domain_ids'])) throw new Exception('At least one Domain is required.');
-        if (empty($post_data['start_date']) || empty($post_data['end_date'])) throw new Exception('Start and End dates are required.');
-
-        // Fetch Organization Name 
-        $orgInfo = $db->fetchOne("SELECT org_name FROM organization WHERE org_ID = ?", [$post_data['org_ID']]);
-        $legacy_dept_name = $orgInfo ? $orgInfo['org_name'] : '';
 
         $user_id_system = $current_user ? $current_user['user_ID'] : 'SYSTEM';
-
-        // Start Transaction
         $db->beginTransaction();
 
+        // A. Insert/Update Survey
         if ($is_edit) {
-
-            $sql_update = "UPDATE survey SET 
-                            survey_name = :name, org_ID = :org, department = :dept_name,
-                            start_date = :start, end_date = :end, status = :status, 
-                            survey_description = :desc, updated_id = :uid, updated_by = NOW() 
-                           WHERE survey_ID = :sid";
-            
-            $db->query($sql_update, [
-                ':name' => $post_data['survey_name'], ':org' => $post_data['org_ID'], ':dept_name' => $legacy_dept_name,
-                ':start' => $post_data['start_date'], ':end' => $post_data['end_date'], 
-                ':status' => $post_data['status'], ':desc' => $post_data['survey_description'],
-                ':uid' => $user_id_system, ':sid' => $survey_id
+            $db->query("UPDATE survey SET survey_name=:name, org_ID=:org, start_date=:start, end_date=:end, status=:status, survey_description=:desc, updated_id=:uid, updated_by=NOW() WHERE survey_ID=:sid", [
+                ':name' => $post_data['survey_name'], ':org' => $post_data['org_ID'], ':start' => $post_data['start_date'], ':end' => $post_data['end_date'], ':status' => $post_data['status'], ':desc' => $post_data['survey_description'], ':uid' => $user_id_system, ':sid' => $survey_id
             ]);
-
-            // Clear existing links to rebuild
             $db->query("DELETE FROM survey_domain WHERE survey_id = :sid", [':sid' => $survey_id]);
             $db->query("DELETE FROM survey_department WHERE survey_id = :sid", [':sid' => $survey_id]);
-            
             $target_survey_id = $survey_id;
             $success_msg = "Survey updated successfully.";
-
         } else {
-            // CREATE
-            $last_id_row = $db->fetchOne("SELECT survey_ID FROM survey ORDER BY survey_ID DESC LIMIT 1");
-            $new_id_num = 1;
-            if ($last_id_row) {
-                $last_id_num = (int) substr($last_id_row['survey_ID'], 2);
-                $new_id_num = $last_id_num + 1;
-            }
-            $target_survey_id = 'SV' . str_pad($new_id_num, 3, '0', STR_PAD_LEFT);
-
-            $sql_insert = "INSERT INTO survey (
-                                survey_ID, survey_name, org_ID, department, start_date, end_date, 
-                                status, survey_description, created_by, created_at, updated_id, updated_by
-                           ) VALUES (
-                                :sid, :name, :org, :dept_name, :start, :end, 
-                                :status, :desc, :cid, NOW(), :uid, NOW()
-                           )";
-            
-            $db->query($sql_insert, [
-                ':sid' => $target_survey_id, ':name' => $post_data['survey_name'], 
-                ':org' => $post_data['org_ID'], ':dept_name' => $legacy_dept_name,
-                ':start' => $post_data['start_date'], ':end' => $post_data['end_date'], 
-                ':status' => $post_data['status'], ':desc' => $post_data['survey_description'],
-                ':cid' => $user_id_system, ':uid' => $user_id_system
+            // FIX: Removed manual 'SV' ID generation.
+            // Using AUTO_INCREMENT from database.
+            $db->query("INSERT INTO survey (survey_name, org_ID, start_date, end_date, status, survey_description, created_by, created_at, updated_id, updated_by) VALUES (:name, :org, :start, :end, :status, :desc, :cid, NOW(), :uid, NOW())", [
+                ':name' => $post_data['survey_name'], 
+                ':org' => $post_data['org_ID'], 
+                ':start' => $post_data['start_date'], 
+                ':end' => $post_data['end_date'], 
+                ':status' => $post_data['status'], 
+                ':desc' => $post_data['survey_description'], 
+                ':cid' => $user_id_system, 
+                ':uid' => $user_id_system
             ]);
             
+            // Get the ID automatically created by MySQL
+            $target_survey_id = $db->getConnection()->lastInsertId();
             $success_msg = "Survey created successfully.";
         }
 
-        // --- 1. Link Domains ---
-        $sql_domain = "INSERT INTO survey_domain (survey_id, domain_id) VALUES (:sid, :did)";
-        foreach ($post_data['domain_ids'] as $did) {
-            $db->query($sql_domain, [':sid' => $target_survey_id, ':did' => sanitize($did)]);
-        }
+        // B. Save Domains & Depts
+        foreach ($post_data['domain_ids'] as $did) $db->query("INSERT INTO survey_domain (survey_id, domain_id) VALUES (:sid, :did)", [':sid' => $target_survey_id, ':did' => sanitize($did)]);
+        foreach ($post_data['dept_ids'] as $did) $db->query("INSERT INTO survey_department (survey_ID, dept_ID) VALUES (:sid, :did)", [':sid' => $target_survey_id, ':did' => sanitize($did)]);
 
-        //  2. Link Departments
-        $sql_dept = "INSERT INTO survey_department (survey_ID, dept_ID) VALUES (:sid, :did)";
-        foreach ($post_data['dept_ids'] as $did) {
-            $db->query($sql_dept, [':sid' => $target_survey_id, ':did' => sanitize($did)]);
-        }
-
-        // 3. AUTO-ASSIGN USERS 
-        // Find all Active users with their specific Department IDs
-        $dept_placeholders = implode(',', array_fill(0, count($post_data['dept_ids']), '?'));
+        // C. Process Users
         
-        $sql_find_users = "SELECT u.user_ID, ud.dept_ID 
-                           FROM user u
-                           JOIN user_department ud ON u.user_ID = ud.user_ID
-                           WHERE u.org_ID = ? 
-                           AND u.status = 'Active'
-                           AND ud.dept_ID IN ($dept_placeholders)";
-        
-        $params = array_merge([$post_data['org_ID']], $post_data['dept_ids']);
-        $target_users = $db->fetchAll($sql_find_users, $params); 
+        $email_list = preg_split('/[\s,]+/', $post_data['allowed_emails'], -1, PREG_SPLIT_NO_EMPTY);
+        $email_list = array_unique($email_list);
+        $use_email_filter = !empty($email_list);
 
-        // Fetch existing participants to sync 
-        $current_rows = $db->fetchAll("SELECT user_ID, dept_ID FROM user_survey WHERE survey_ID = :sid", [':sid' => $target_survey_id]);
-        
-        // Create unique keys "USER_ID-DEPT_ID" for comparison
-        $new_keys = [];
-        foreach($target_users as $t) { $new_keys[] = $t['user_ID'] . '-' . $t['dept_ID']; }
-        
-        $current_keys = [];
-        foreach($current_rows as $c) { $current_keys[] = $c['user_ID'] . '-' . $c['dept_ID']; }
+        // Get existing assignments
+        $current_assignments = $db->fetchAll("SELECT CONCAT(user_ID, '-', dept_ID) as key_id FROM user_survey WHERE survey_ID = :sid", [':sid' => $target_survey_id]);
+        $existing_keys = array_column($current_assignments, 'key_id');
+        $users_added_count = 0;
 
-        // Calculate Diff
-        $keys_to_add = array_diff($new_keys, $current_keys);
-        $keys_to_remove = array_diff($current_keys, $new_keys);
-
-        // Perform Additions
-        if (!empty($keys_to_add)) {
-            $sql_add = "INSERT INTO user_survey (survey_ID, user_ID, dept_ID, status) VALUES (:sid, :uid, :did, 'Pending')";
+        foreach ($post_data['dept_ids'] as $target_dept_id) {
             
-            foreach ($keys_to_add as $key) {
-                list($uid, $did) = explode('-', $key); // Split back into IDs
-                $db->query($sql_add, [
-                    ':sid' => $target_survey_id, 
-                    ':uid' => $uid, 
-                    ':did' => $did
-                ]);
+            // Query strictly relies on user_department table
+            $sql_users = "SELECT DISTINCT u.user_ID 
+                          FROM user u
+                          JOIN user_department ud ON u.user_ID = ud.user_ID
+                          WHERE u.org_ID = ? 
+                          AND u.status = 'Active'
+                          AND ud.dept_ID = ?";
+            
+            $params = [$post_data['org_ID'], $target_dept_id];
+            
+            if ($use_email_filter) {
+                $placeholders = implode(',', array_fill(0, count($email_list), '?'));
+                $sql_users .= " AND u.primary_email IN ($placeholders)";
+                $params = array_merge($params, $email_list);
             }
-        }
 
-        // Perform Removals (Only remove if they haven't started yet to be safe, or strict sync)
-        if (!empty($keys_to_remove)) {
-            $sql_remove = "DELETE FROM user_survey WHERE survey_ID = :sid AND user_ID = :uid AND dept_ID = :did";
-            
-            foreach ($keys_to_remove as $key) {
-                list($uid, $did) = explode('-', $key);
-                $db->query($sql_remove, [
-                    ':sid' => $target_survey_id, 
-                    ':uid' => $uid, 
-                    ':did' => $did
-                ]);
+            $target_users = $db->fetchAll($sql_users, $params);
+
+            foreach ($target_users as $user) {
+                $uid = $user['user_ID'];
+                $key = $uid . '-' . $target_dept_id;
+
+                if (!in_array($key, $existing_keys)) {
+                    $db->query("INSERT INTO user_survey (survey_ID, user_ID, dept_ID, status) VALUES (:sid, :uid, :did, 'Pending')", [
+                        ':sid' => $target_survey_id,
+                        ':uid' => $uid,
+                        ':did' => $target_dept_id
+                    ]);
+                    $users_added_count++;
+                }
             }
         }
 
         $db->commit();
-        
+        $success_msg .= " (Assigned " . $users_added_count . " new tasks).";
         setFlashMessage('success', $success_msg);
-        header('Location: index.php');
-        exit();
+        header('Location: index.php'); exit();
 
     } catch (Exception $e) {
-        $db->rollBack();
+        if ($conn->inTransaction()) $db->rollBack();
         setFlashMessage('error', 'Error: ' . $e->getMessage());
         
-        // Restore form data
         $survey_data = array_merge($survey_data, $_POST);
-        $linked_domain_ids = $_POST['domain_ids'] ?? [];
         $linked_dept_ids = $_POST['dept_ids'] ?? [];
+        $linked_domain_ids = $_POST['domain_ids'] ?? [];
+        $existing_emails_str = $_POST['allowed_emails'] ?? '';
     }
 }
-
 $flash = getFlashMessage();
 ?>
 <!DOCTYPE html>
