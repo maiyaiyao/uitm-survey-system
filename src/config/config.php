@@ -1,22 +1,20 @@
 <?php
-/**
- * Application Configuration
- * UiTM ISO 27001 Audit System
- */
+
+// Application Configuration
 
 // Start session if not started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Error reporting (disable in production)
+// Error reporting for development 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Application settings
-define('APP_NAME', 'UiTM ISO 27001 Level Assessment System');
+define('APP_NAME', 'UiTM Cybersecurity Maturity System');
 define('APP_VERSION', '1.0.0');
-define('APP_ENV', 'development'); // change to 'production' when live
+define('APP_ENV', 'development');
 
 // URL Configuration
 define('BASE_URL', 'http://localhost:8080');
@@ -30,11 +28,11 @@ define('MODULES_PATH', ROOT_PATH . '/modules');
 define('UPLOADS_PATH', ROOT_PATH . '/uploads');
 
 // Security settings
-define('SESSION_TIMEOUT', 3600); // 1 hour in seconds
+define('SESSION_TIMEOUT', 3600); //1 hour
 define('PASSWORD_MIN_LENGTH', 8);
 
 // Google OAuth Configuration
-define('GOOGLE_CLIENT_ID', '473209254883-du60i9kkr345qpc52d7g36ph8mh29c29.apps.googleusercontent.com'); // Get from Google Cloud Console
+define('GOOGLE_CLIENT_ID', '473209254883-du60i9kkr345qpc52d7g36ph8mh29c29.apps.googleusercontent.com'); // Google Cloud Console
 define('GOOGLE_CLIENT_SECRET', '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');
 define('GOOGLE_REDIRECT_URI', BASE_URL . '/modules/auth/google-callback.php');
 
