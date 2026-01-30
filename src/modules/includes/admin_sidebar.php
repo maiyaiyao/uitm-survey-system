@@ -442,7 +442,7 @@
             </div>
             
             <div class="nav-item">
-                <a class="nav-link <?php echo is_nav_active($current_page, '/report/index.php'); ?>" 
+                <a class="nav-link <?php echo is_module_active($current_page, '/report/'); ?>" 
                    href="<?php echo BASE_URL; ?>/modules/admin/report/index.php" title="Analytics">
                     <div class="nav-link-icon"><i class="bi bi-file-earmark-bar-graph-fill"></i></div>
                     <span>Analytics</span>
@@ -475,12 +475,10 @@
     </div>
 </div>
 
-<!-- Mobile Menu Toggle Button -->
 <button id="mobileMenuToggle" title="Menu">
     <i class="bi bi-list"></i>
 </button>
 
-<!-- Sidebar Overlay for Mobile -->
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <script>
