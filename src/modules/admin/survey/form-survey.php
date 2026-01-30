@@ -14,7 +14,7 @@ $is_edit = !empty($survey_id);
 $survey_data = [
     'survey_name' => '',
     'org_ID' => '',
-    'department' => '', // Legacy text column support
+    'department' => '', // Legacy field
     'start_date' => '',
     'end_date' => '',
     'status' => 'Draft',
@@ -86,11 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($post_data['domain_ids'])) throw new Exception('At least one Domain is required.');
         if (empty($post_data['start_date']) || empty($post_data['end_date'])) throw new Exception('Start and End dates are required.');
 
-        // Get Org Name to populate the 'department' text column in 'survey' table (Legacy/Display support)
+        // Get Org Name for legacy/display purposes
         $orgInfo = $db->fetchOne("SELECT org_name FROM organization WHERE org_ID = ?", [$post_data['org_ID']]);
-        $legacy_dept_val = $orgInfo ? substr($orgInfo['org_name'], 0, 50) : ''; 
+        $legacy_dept_name = $orgInfo ? $orgInfo['org_name'] : '';
 
-        $user_id_system = $current_user ? $current_user['user_ID'] : NULL; // Allow NULL if system action
+        $user_id_system = $current_user ? $current_user['user_ID'] : 'SYSTEM';
 
         // --- Start Transaction ---
         $db->beginTransaction();
@@ -98,21 +98,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($is_edit) {
             // === UPDATE ===
             $sql_update = "UPDATE survey SET 
-                            survey_name = :name, org_ID = :org, department = :legacy_dept,
+                            survey_name = :name, org_ID = :org, department = :dept_name,
                             start_date = :start, end_date = :end, status = :status, 
                             survey_description = :desc, updated_id = :uid, updated_by = NOW() 
                            WHERE survey_ID = :sid";
             
             $db->query($sql_update, [
-                ':name' => $post_data['survey_name'], 
-                ':org' => $post_data['org_ID'], 
-                ':legacy_dept' => $legacy_dept_val,
-                ':start' => $post_data['start_date'], 
-                ':end' => $post_data['end_date'], 
-                ':status' => $post_data['status'], 
-                ':desc' => $post_data['survey_description'],
-                ':uid' => $user_id_system, 
-                ':sid' => $survey_id
+                ':name' => $post_data['survey_name'], ':org' => $post_data['org_ID'], ':dept_name' => $legacy_dept_name,
+                ':start' => $post_data['start_date'], ':end' => $post_data['end_date'], 
+                ':status' => $post_data['status'], ':desc' => $post_data['survey_description'],
+                ':uid' => $user_id_system, ':sid' => $survey_id
             ]);
 
             // Clear existing links to rebuild
@@ -124,11 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         } else {
             // === CREATE ===
-            // Manual ID Generation for 'SVxxx'
             $last_id_row = $db->fetchOne("SELECT survey_ID FROM survey ORDER BY survey_ID DESC LIMIT 1");
             $new_id_num = 1;
             if ($last_id_row) {
-                // Extract number from 'SV001'
                 $last_id_num = (int) substr($last_id_row['survey_ID'], 2);
                 $new_id_num = $last_id_num + 1;
             }
@@ -138,21 +131,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 survey_ID, survey_name, org_ID, department, start_date, end_date, 
                                 status, survey_description, created_by, created_at, updated_id, updated_by
                            ) VALUES (
-                                :sid, :name, :org, :legacy_dept, :start, :end, 
+                                :sid, :name, :org, :dept_name, :start, :end, 
                                 :status, :desc, :cid, NOW(), :uid, NOW()
                            )";
             
             $db->query($sql_insert, [
-                ':sid' => $target_survey_id, 
-                ':name' => $post_data['survey_name'], 
-                ':org' => $post_data['org_ID'], 
-                ':legacy_dept' => $legacy_dept_val,
-                ':start' => $post_data['start_date'], 
-                ':end' => $post_data['end_date'], 
-                ':status' => $post_data['status'], 
-                ':desc' => $post_data['survey_description'],
-                ':cid' => $user_id_system, 
-                ':uid' => $user_id_system
+                ':sid' => $target_survey_id, ':name' => $post_data['survey_name'], 
+                ':org' => $post_data['org_ID'], ':dept_name' => $legacy_dept_name,
+                ':start' => $post_data['start_date'], ':end' => $post_data['end_date'], 
+                ':status' => $post_data['status'], ':desc' => $post_data['survey_description'],
+                ':cid' => $user_id_system, ':uid' => $user_id_system
             ]);
             
             $success_msg = "Survey created successfully.";
@@ -170,59 +158,65 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $db->query($sql_dept, [':sid' => $target_survey_id, ':did' => sanitize($did)]);
         }
 
-        // --- 3. AUTO-ASSIGN USERS ---
-        // We fetch users who belong to the selected Org AND (Primary Dept OR Secondary Dept matches)
-        // This ensures comprehensive coverage based on both 'user' and 'user_department' tables.
-        
+        // --- 3. AUTO-ASSIGN USERS (FIXED) ---
+        // Find all Active users with their specific Department IDs
         $dept_placeholders = implode(',', array_fill(0, count($post_data['dept_ids']), '?'));
-        $params = array_merge([$post_data['org_ID']], $post_data['dept_ids'], $post_data['dept_ids']); // Twice for OR condition
-
-        $sql_find_users = "
-            SELECT DISTINCT u.user_ID 
-            FROM user u
-            LEFT JOIN user_department ud ON u.user_ID = ud.user_ID
-            WHERE u.org_ID = ? 
-            AND u.status = 'Active'
-            AND (
-                u.dept_ID IN ($dept_placeholders) 
-                OR 
-                ud.dept_ID IN ($dept_placeholders)
-            )
-        ";
         
-        $target_users = $db->fetchAll($sql_find_users, $params);
-        $new_user_ids = array_column($target_users, 'user_ID');
+        $sql_find_users = "SELECT u.user_ID, ud.dept_ID 
+                           FROM user u
+                           JOIN user_department ud ON u.user_ID = ud.user_ID
+                           WHERE u.org_ID = ? 
+                           AND u.status = 'Active'
+                           AND ud.dept_ID IN ($dept_placeholders)";
+        
+        $params = array_merge([$post_data['org_ID']], $post_data['dept_ids']);
+        $target_users = $db->fetchAll($sql_find_users, $params); // Returns rows like [user_ID=>1, dept_ID=>5]
 
-        // Fetch existing participants to sync (Avoid duplicates)
-        $current_users = $db->fetchAll("SELECT user_ID FROM user_survey WHERE survey_ID = :sid", [':sid' => $target_survey_id]);
-        $current_user_ids = array_column($current_users, 'user_ID');
+        // Fetch existing participants to sync (We check user+dept pair to be precise)
+        $current_rows = $db->fetchAll("SELECT user_ID, dept_ID FROM user_survey WHERE survey_ID = :sid", [':sid' => $target_survey_id]);
+        
+        // Create unique keys "USER_ID-DEPT_ID" for comparison
+        $new_keys = [];
+        foreach($target_users as $t) { $new_keys[] = $t['user_ID'] . '-' . $t['dept_ID']; }
+        
+        $current_keys = [];
+        foreach($current_rows as $c) { $current_keys[] = $c['user_ID'] . '-' . $c['dept_ID']; }
 
         // Calculate Diff
-        $users_to_add = array_diff($new_user_ids, $current_user_ids);
-        $users_to_remove = array_diff($current_user_ids, $new_user_ids);
+        $keys_to_add = array_diff($new_keys, $current_keys);
+        $keys_to_remove = array_diff($current_keys, $new_keys);
 
-        // Perform Sync
-        if (!empty($users_to_add)) {
-            // NOTE: 'user_survey_ID' is omitted. The database Trigger 'trg_generate_user_survey_id' will auto-generate it.
-            $sql_add = "INSERT INTO user_survey (survey_ID, user_ID, status) VALUES (:sid, :uid, 'Pending')";
-            foreach ($users_to_add as $uid) {
-                $db->query($sql_add, [':sid' => $target_survey_id, ':uid' => $uid]);
+        // Perform Additions
+        if (!empty($keys_to_add)) {
+            $sql_add = "INSERT INTO user_survey (survey_ID, user_ID, dept_ID, status) VALUES (:sid, :uid, :did, 'Pending')";
+            
+            foreach ($keys_to_add as $key) {
+                list($uid, $did) = explode('-', $key); // Split back into IDs
+                $db->query($sql_add, [
+                    ':sid' => $target_survey_id, 
+                    ':uid' => $uid, 
+                    ':did' => $did
+                ]);
             }
         }
 
-        if (!empty($users_to_remove)) {
-            // Strict sync: Remove users who no longer match the criteria
-            $sql_remove = "DELETE FROM user_survey WHERE survey_ID = :sid AND user_ID = :uid";
-            foreach ($users_to_remove as $uid) {
-                $db->query($sql_remove, [':sid' => $target_survey_id, ':uid' => $uid]);
+        // Perform Removals (Only remove if they haven't started yet to be safe, or strict sync)
+        if (!empty($keys_to_remove)) {
+            // Strict sync: Remove users who are no longer in the selected departments
+            $sql_remove = "DELETE FROM user_survey WHERE survey_ID = :sid AND user_ID = :uid AND dept_ID = :did";
+            
+            foreach ($keys_to_remove as $key) {
+                list($uid, $did) = explode('-', $key);
+                $db->query($sql_remove, [
+                    ':sid' => $target_survey_id, 
+                    ':uid' => $uid, 
+                    ':did' => $did
+                ]);
             }
         }
 
         $db->commit();
         
-        // Append count info to success message
-        $success_msg .= " (Assigned to " . count($new_user_ids) . " users).";
-
         setFlashMessage('success', $success_msg);
         header('Location: index.php');
         exit();
@@ -249,6 +243,7 @@ $flash = getFlashMessage();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
+        /* Styles */
         html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
         .main-content-wrapper { margin-left: 16.66667%; width: 83.33333%; }
         @media (max-width: 991.98px) {
@@ -256,6 +251,7 @@ $flash = getFlashMessage();
             .main-content-wrapper { margin-left: 0; width: 100%; }
         }
         .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); }
+        
         .domain-checkbox-group {
             max-height: 250px; overflow-y: auto; border: 1px solid #dee2e6;
             border-radius: 0.375rem; padding: 1rem; background-color: #fff;

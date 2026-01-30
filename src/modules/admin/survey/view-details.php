@@ -15,11 +15,15 @@ if (!$survey_id) {
 $survey = $db->fetchOne("
     SELECT s.*, 
            uc.full_name AS created_by_name,
-           uu.full_name AS updated_by_name
+           uu.full_name AS updated_by_name,
+           GROUP_CONCAT(d.dept_name SEPARATOR ', ') as department_list
     FROM survey s
     LEFT JOIN user uc ON s.created_by = uc.user_ID
     LEFT JOIN user uu ON s.updated_id = uu.user_ID
+    LEFT JOIN survey_department sd ON s.survey_ID = sd.survey_ID
+    LEFT JOIN department d ON sd.dept_ID = d.dept_ID
     WHERE s.survey_ID = :id
+    GROUP BY s.survey_ID
 ", [':id' => $survey_id]);
 
 if (!$survey) {
@@ -36,20 +40,29 @@ $domains = $db->fetchAll("
     ORDER BY d.domain_name ASC
 ", [':id' => $survey_id]);
 
-// 3. Fetch Linked Participants (Users)
-// UPDATED: Added u.user_ID to the SELECT list so we can create the link
+// 3. Fetch Linked Participants (Assignments)
+// UPDATED LOGIC: 
+// - Removed GROUP BY to separate multiple assignments for the same user.
+// - Joined 'department' on 'us.dept_ID' to get the specific target department.
 $participants = $db->fetchAll("
-    SELECT u.user_ID, u.full_name, u.primary_email, u.department, us.status as completion_status
+    SELECT 
+        us.user_survey_ID,
+        u.user_ID, 
+        u.full_name, 
+        u.primary_email, 
+        d.dept_name,
+        us.status as completion_status
     FROM user_survey us
     JOIN user u ON us.user_ID = u.user_ID
+    LEFT JOIN department d ON us.dept_ID = d.dept_ID
     WHERE us.survey_ID = :id
-    ORDER BY u.full_name ASC
+    ORDER BY u.full_name ASC, d.dept_name ASC
 ", [':id' => $survey_id]);
 
-// Calculate Stats
-$total_participants = count($participants);
+// Calculate Stats (Based on Assignments, not unique Users)
+$total_assignments = count($participants);
 $completed_count = count(array_filter($participants, fn($p) => $p['completion_status'] === 'Completed'));
-$completion_rate = ($total_participants > 0) ? round(($completed_count / $total_participants) * 100) : 0;
+$completion_rate = ($total_assignments > 0) ? round(($completed_count / $total_assignments) * 100) : 0;
 
 // Helper: Status Badge
 function getStatusBadge($status) {
@@ -150,7 +163,12 @@ $flash = getFlashMessage();
                                             </div>
                                             <div class="mb-4">
                                                 <div class="info-label mb-1">Target Department</div>
-                                                <div class="info-value"><?php echo htmlspecialchars($survey['department']); ?></div>
+                                                <div class="info-value">
+                                                    <?php 
+                                                        $depts = !empty($survey['department_list']) ? $survey['department_list'] : 'All Departments';
+                                                        echo htmlspecialchars($depts); 
+                                                    ?>
+                                                </div>
                                             </div>
                                             <div class="mb-4">
                                                 <div class="info-label mb-1">Current Status</div>
@@ -209,7 +227,7 @@ $flash = getFlashMessage();
 
                                     <div class="row text-center mt-3">
                                         <div class="col-6 border-end">
-                                            <div class="h4 fw-bold mb-0"><?php echo $total_participants; ?></div>
+                                            <div class="h4 fw-bold mb-0"><?php echo $total_assignments; ?></div>
                                             <div class="small text-muted text-uppercase">Assigned</div>
                                         </div>
                                         <div class="col-6">
@@ -265,7 +283,7 @@ $flash = getFlashMessage();
                                         <table class="table table-hover align-middle mb-0">
                                             <thead class="table-light sticky-top">
                                                 <tr>
-                                                    <th class="ps-4">Name</th>
+                                                    <th class="ps-4">Name / Department</th>
                                                     <th>Email</th>
                                                     <th class="text-end pe-4">Status</th>
                                                 </tr>
@@ -278,7 +296,7 @@ $flash = getFlashMessage();
                                                         <tr>
                                                             <td class="ps-4">
                                                                 <?php if ($p['completion_status'] !== 'Pending'): ?>
-                                                                    <a href="../report/view-user-response.php?survey_id=<?php echo $survey_id; ?>&user_id=<?php echo $p['user_ID']; ?>" 
+                                                                    <a href="../report/view-user-response.php?survey_id=<?php echo $survey_id; ?>&user_id=<?php echo $p['user_ID']; ?>&dept_id=<?php echo $p['dept_ID'] ?? ''; ?>" 
                                                                        class="fw-bold text-primary text-decoration-none" title="View Detailed Response">
                                                                         <?php echo htmlspecialchars($p['full_name']); ?>
                                                                         <i class="bi bi-box-arrow-up-right small ms-1"></i>
@@ -286,7 +304,10 @@ $flash = getFlashMessage();
                                                                 <?php else: ?>
                                                                     <div class="fw-bold text-dark"><?php echo htmlspecialchars($p['full_name']); ?></div>
                                                                 <?php endif; ?>
-                                                                <div class="small text-muted"><?php echo htmlspecialchars($p['department'] ?? '-'); ?></div>
+                                                                <div class="small text-muted">
+                                                                    <i class="bi bi-building me-1"></i> 
+                                                                    <?php echo htmlspecialchars($p['dept_name'] ?? 'General'); ?>
+                                                                </div>
                                                             </td>
                                                             <td class="small text-muted"><?php echo htmlspecialchars($p['primary_email']); ?></td>
                                                             <td class="text-end pe-4">

@@ -1,12 +1,14 @@
 <?php
 require_once '../../../config/config.php';
-require_once '../../../includes/models/User.php';
+// require_once '../../../includes/models/User.php'; // Removed potential error source if file doesn't exist
 
 // Require admin role
 requireRole(['admin']);
 
 $current_user = getCurrentUser();
-$pdo = (new Database())->getConnection();
+
+// --- FIX: Initialize the Database class instance correctly as $db ---
+$db = new Database(); 
 
 // 1. Validate Survey ID
 if (!isset($_GET['id'])) {
@@ -15,10 +17,9 @@ if (!isset($_GET['id'])) {
 }
 $survey_id = $_GET['id'];
 
-// 2. Fetch Survey Details
-$stmt_survey = $pdo->prepare("SELECT * FROM survey WHERE survey_ID = ?");
-$stmt_survey->execute([$survey_id]);
-$survey = $stmt_survey->fetch(PDO::FETCH_ASSOC);
+// 2. Fetch Survey Details (Fixed to use $db wrapper)
+$survey = $db->fetchOne("SELECT * FROM survey WHERE survey_ID = :id", [':id' => $survey_id]);
+
 if (!$survey) {
     die("Survey not found.");
 }
@@ -37,15 +38,12 @@ $sql = "
     JOIN element e ON c.criteria_ID = e.criteria_ID
     LEFT JOIN score_element se ON e.element_ID = se.element_ID
     LEFT JOIN score s ON se.score_ID = s.score_ID
-    WHERE sd.survey_ID = ? 
-    AND c.status = 'Active' 
-    AND e.status = 'Active'
-    ORDER BY d.domain_ID, c.criteria_ID, e.element_ID, s.score_level ASC
+    WHERE sd.survey_id = :id
+    ORDER BY d.domain_ID, c.criteria_ID, e.element_ID, s.score_level
 ";
 
-$stmt_data = $pdo->prepare($sql);
-$stmt_data->execute([$survey_id]);
-$raw_data = $stmt_data->fetchAll(PDO::FETCH_ASSOC);
+// --- FIX: Use $db->fetchAll and assign to $raw_data to match your loop below ---
+$raw_data = $db->fetchAll($sql, [':id' => $survey_id]);
 
 // 4. Group Data for Display
 $survey_structure = [];
@@ -87,6 +85,9 @@ foreach ($raw_data as $row) {
 // --- PAGING LOGIC ---
 $domain_ids = array_keys($survey_structure);
 $total_domains = count($domain_ids);
+
+$domain = null;
+$current_domain_id = null;
 
 // Get current page from URL, default to 1
 $survey_page = isset($_GET['page']) ? (int)$_GET['page'] : 1; 
@@ -191,7 +192,7 @@ $currentDir = basename(__DIR__);
                             <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">Survey Management</a></li>
                             
                             <li class="breadcrumb-item active text-dark" aria-current="page" 
-                                title="Survey: <?php echo htmlspecialchars($survey['survey_name']); ?>"> Survey: <?php echo htmlspecialchars(truncate($survey['survey_name'], 30)); ?>
+                                title="Survey: <?php echo htmlspecialchars($survey['survey_name']); ?>"> Survey: <?php echo htmlspecialchars(strlen($survey['survey_name']) > 30 ? substr($survey['survey_name'],0,30)."..." : $survey['survey_name']); ?>
                             </li>
                         </ol>
                     </nav>
@@ -212,7 +213,10 @@ $currentDir = basename(__DIR__);
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <span class="badge bg-primary-subtle text-primary-emphasis mb-2"><?php echo htmlspecialchars($survey['department']); ?></span>
+                                    <span class="badge bg-primary-subtle text-primary-emphasis mb-2"><?php 
+                                        // Handle optional department field safely
+                                        echo htmlspecialchars($survey['department'] ?? 'General'); 
+                                    ?></span>
                                     <h1 class="h3 mb-1"><?php echo htmlspecialchars($survey['survey_name']); ?></h1>
                                     <p class="text-muted mb-0"><?php echo htmlspecialchars($survey['survey_description']); ?></p>
                                 </div>
@@ -235,7 +239,7 @@ $currentDir = basename(__DIR__);
                                 <div class="card-body text-center p-5">
                                     <div class="alert alert-warning d-inline-block">
                                         <i class="bi bi-exclamation-triangle me-2"></i>
-                                        No domains or criteria found for this survey. Please <a href="edit.php?id=<?php echo htmlspecialchars($survey_id); ?>">configure the survey</a> first.
+                                        No domains or criteria found for this survey. Please <a href="form-survey.php?id=<?php echo htmlspecialchars($survey_id); ?>">configure the survey</a> first.
                                     </div>
                                 </div>
                             </div>

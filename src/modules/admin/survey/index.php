@@ -12,10 +12,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     try {
         $survey_id_to_delete = $_POST['survey_ID'];
         
-        // 1. Delete links from 'user_survey' bridge table (as per ERD)
+        // 1. Delete links from 'user_survey' bridge table
         $db->query("DELETE FROM user_survey WHERE survey_ID = :sid", [':sid' => $survey_id_to_delete]);
 
-        // 2. (Domain deletion removed)
+        // 2. Delete links from 'survey_department' bridge table
+        $db->query("DELETE FROM survey_department WHERE survey_ID = :sid", [':sid' => $survey_id_to_delete]);
 
         // 3. Delete from 'surveys' table
         $db->query("DELETE FROM survey WHERE survey_ID = :sid", [':sid' => $survey_id_to_delete]);
@@ -34,51 +35,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // --- 3. Fetch Data for View (GET) ---
 try {
     $current_timestamp = date('Y-m-d H:i:s');
-    // Auto-update statuses before we fetch (keep this!)
+
+    // === FIX: REMOVED AUTO-ACTIVATION ===
+    // The previous block here was forcing "Draft" surveys to "Active".
+    // It has been removed so your manual "Draft" status sticks.
+
+    // Keep Auto-Completion Logic (Optional: Close expired surveys)
     $db->query("UPDATE survey SET status = 'Completed' WHERE status = 'Active' AND end_date < :now", [':now' => $current_timestamp]);
-
-    // --- START FILTER LOGIC ---
     
-    // Updated query to fetch Creator and Updater names
+    // --- START DYNAMIC QUERY BUILDING ---
+    // 1. Base Query
     $sql = "SELECT s.*, 
-                   uc.full_name AS creator_name,
-                   uu.full_name AS updater_name
+                u.full_name as created_by_name,
+                u2.full_name as updated_by_name,
+                GROUP_CONCAT(DISTINCT d.dept_name SEPARATOR ', ') as department_list,
+                o.org_name
             FROM survey s
-            LEFT JOIN user uc ON s.created_by = uc.user_ID
-            LEFT JOIN user uu ON s.updated_id = uu.user_ID
-            WHERE 1=1";
-            
-    $params = [];
+            LEFT JOIN user u ON s.created_by = u.user_ID
+            LEFT JOIN user u2 ON s.updated_id = u2.user_ID
+            LEFT JOIN organization o ON s.org_ID = o.org_ID
+            LEFT JOIN survey_department sd ON s.survey_ID = sd.survey_ID
+            LEFT JOIN department d ON sd.dept_ID = d.dept_ID "; 
 
-    // Filters
+    $params = [];
+    $conditions = [];
+
+    // 2. Apply Filters
     if (!empty($_GET['search'])) {
-        $sql .= " AND s.survey_name LIKE :search";
+        $conditions[] = "s.survey_name LIKE :search";
         $params[':search'] = "%" . $_GET['search'] . "%";
     }
 
     if (!empty($_GET['department'])) {
-        $sql .= " AND s.department LIKE :dept";
+        $conditions[] = "d.dept_name LIKE :dept";
         $params[':dept'] = "%" . $_GET['department'] . "%";
     }
 
     if (!empty($_GET['status'])) {
-        $sql .= " AND s.status = :status";
+        $conditions[] = "s.status = :status";
         $params[':status'] = $_GET['status'];
     }
 
-    $sql .= " ORDER BY (CASE WHEN s.status = 'Archived' THEN 1 ELSE 0 END) ASC, s.updated_by DESC, s.created_at DESC";
+    if (!empty($conditions)) {
+        $sql .= " WHERE " . implode(" AND ", $conditions);
+    }
 
-    $db_surveys = $db->fetchAll($sql, $params); 
+    // 3. Apply Grouping
+    $sql .= " GROUP BY s.survey_ID";
+
+    // 4. Apply Ordering
+    $sql .= " ORDER BY 
+                    CASE WHEN s.status = 'Archived' THEN 1 ELSE 0 END ASC, 
+                    s.updated_by DESC, 
+                    s.created_at DESC";
     
-    // (Domain data fetching removed)
+    // 5. Execute Final Query
+    $db_surveys = $db->fetchAll($sql, $params); 
 
 } catch (Exception $e) {
-    // Handle database read error
     $db_surveys = [];
     setFlashMessage('error', 'Database Error: ' . $e->getMessage());
 }
-
-// --- 4. (Domain helper function removed) ---
 
 // --- 5. Helper function for status badges ---
 function getStatusBadge($status, $start_date, $end_date) {
@@ -111,9 +128,6 @@ function formatShortDate($date) {
 // --- Variables for View ---
 $current_user = getCurrentUser();
 $flash = getFlashMessage();
-$currentPage = basename(__FILE__); 
-$currentDir = basename(__DIR__); 
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -124,83 +138,31 @@ $currentDir = basename(__DIR__);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
-        /* Page Layout */
-        html, body { 
-            height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; 
-        }
-        
-        /* Sidebar Adjustment for Fixed Layout */
+        html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
         .sidebar { position: fixed; top: 0; bottom: 0; left: 0; z-index: 100; padding: 0; }
         .main-content-wrapper { margin-left: 16.66667%; width: 83.33333%; }
-        
         @media (max-width: 991.98px) {
             .sidebar { position: relative; width: 100%; height: auto; }
             .main-content-wrapper { margin-left: 0; width: 100%; }
         }
-
-        /* Table Styles */
-        .table th {
-            font-weight: 700;
-            background-color: #9d83b7ff; /* Purple Header */
-            border-bottom: 2px solid #f0f2f5;
-            color: black;
-            text-transform: uppercase;
-            font-size: 0.75rem;
-            padding: 1rem;
-        }
-        .table td {
-            padding: 1rem;
-            vertical-align: top;
-            color: #67748e; /* Specific Grey Text */
-            font-size: 0.875rem;
-        }
-        .table-hover tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-
-        /* Card Styles */
-        .card {
-            border: none;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-        }
-
-        /* Column Specifics */
+        .table th { font-weight: 700; background-color: #9d83b7ff; border-bottom: 2px solid #f0f2f5; color: black; text-transform: uppercase; font-size: 0.75rem; padding: 1rem; }
+        .table td { padding: 1rem; vertical-align: top; color: #67748e; font-size: 0.875rem; }
+        .table-hover tbody tr:hover { background-color: #f8f9fa; }
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08); }
         .col-name { min-width: 230px; }
         .col-desc { max-width: 250px; }
         .col-audit { min-width: 160px; }
         .col-dates { min-width: 140px; }
-
-        /* Description Text Styling */
-        .desc-text {
-            cursor: pointer;
-            color: #495057;
-            transition: color 0.2s;
-        }
-        .desc-text:hover {
-            color: #667eea;
-        }
-
-        /* User/Audit Meta Data */
-        .user-meta {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.3;
-        }
-        .user-meta .name {
-            font-weight: 600;
-            color: #344767;
-        }
-        .user-meta .date {
-            font-size: 0.75rem;
-            color: #adb5bd;
-        }
+        .desc-text { cursor: pointer; color: #495057; transition: color 0.2s; }
+        .desc-text:hover { color: #667eea; }
+        .user-meta { display: flex; flex-direction: column; line-height: 1.3; }
+        .user-meta .name { font-weight: 600; color: #344767; }
+        .user-meta .date { font-size: 0.75rem; color: #adb5bd; }
     </style>
 </head>
 <body>
     <div class="container-fluid p-0 h-100">
         <div class="row g-0 h-100">
-            
             <div class="col-md-2 col-lg-2 sidebar">
                 <?php include_once __DIR__ . '/../../includes/admin_sidebar.php'; ?>
             </div>
@@ -257,11 +219,11 @@ $currentDir = basename(__DIR__);
                                 <form method="GET" action="">
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Search Name</label>
-                                        <input type="text" name="search" class="form-control" value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
+                                        <input type="text" name="search" class="form-control" placeholder="Survey Name..." value="<?php echo htmlspecialchars($_GET['search'] ?? ''); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Department</label>
-                                        <input type="text" name="department" class="form-control" value="<?php echo htmlspecialchars($_GET['department'] ?? ''); ?>">
+                                        <input type="text" name="department" class="form-control" placeholder="e.g. HR, IT..." value="<?php echo htmlspecialchars($_GET['department'] ?? ''); ?>">
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label fw-bold">Status</label>
@@ -286,7 +248,7 @@ $currentDir = basename(__DIR__);
                                     <tr>
                                         <th class="ps-4 col-name">Survey Name</th>
                                         <th class="col-desc">Description</th>
-                                        <th>Department</th>
+                                        <th>Organization</th>
                                         <th class="col-dates">Duration</th>
                                         <th class="col-audit">Audit Info</th>
                                         <th class="text-center">Status</th>
@@ -305,7 +267,6 @@ $currentDir = basename(__DIR__);
                                         </tr>
                                     <?php else: ?>
                                         <?php foreach ($db_surveys as $survey): 
-                                            // Define URL for row click
                                             $viewDetailsUrl = "view-details.php?id=" . $survey['survey_ID'];
                                         ?>
                                             <tr onclick="window.location.href='<?php echo $viewDetailsUrl; ?>';" style="cursor: pointer; transition: background-color 0.2s;">
@@ -314,7 +275,6 @@ $currentDir = basename(__DIR__);
                                                         <span class="fw-bold text-dark"><?php echo htmlspecialchars($survey['survey_name']); ?></span>
                                                     </div>
                                                 </td>
-
                                                 <td class="col-desc">
                                                     <div class="desc-text" 
                                                          onclick="event.stopPropagation();"
@@ -327,17 +287,18 @@ $currentDir = basename(__DIR__);
                                                             echo htmlspecialchars(mb_strimwidth($desc, 0, 50, "...")); 
                                                         ?>
                                                         <?php if(strlen($desc) > 50): ?>
-                                                            <small class="text-primary d-block mt-1 fw-bold" style="font-size: 0.75rem;">
-                                                                View Full
-                                                            </small>
+                                                            <small class="text-primary d-block mt-1 fw-bold" style="font-size: 0.75rem;">View Full</small>
                                                         <?php endif; ?>
                                                     </div>
                                                 </td>
-
-                                                <td>
-                                                    <span class="text-secondary text-sm font-weight-bold"><?php echo htmlspecialchars($survey['department']); ?></span>
+                                                 <td>
+                                                    <span class="fw-bold text-dark small">
+                                                        <?php echo htmlspecialchars($survey['org_name'] ?? 'No Org'); ?>
+                                                    </span>
+                                                    <div class="text-xs text-muted">
+                                                        <?php echo htmlspecialchars(mb_strimwidth($survey['department_list'] ?? '', 0, 30, '...')); ?>
+                                                    </div>
                                                 </td>
-
                                                 <td class="col-dates">
                                                     <div class="d-flex flex-column gap-1">
                                                         <small class="text-success fw-semibold">
@@ -350,26 +311,23 @@ $currentDir = basename(__DIR__);
                                                         </small>
                                                     </div>
                                                 </td>
-
                                                 <td class="col-audit">
                                                     <div class="user-meta mb-2">
                                                         <span class="text-xs text-dark text-uppercase fw-bold">Created</span>
-                                                        <span class="name"><?= htmlspecialchars($survey['creator_name'] ?? 'System') ?></span>
+                                                        <span class="name"><?= htmlspecialchars($survey['created_by_name'] ?? 'System') ?></span>
                                                         <span class="date"><?= date('d M Y', strtotime($survey['created_at'])) ?></span>
                                                     </div>
-                                                    <?php if (!empty($survey['updater_name']) && $survey['updated_by'] != $survey['created_at']): ?>
+                                                    <?php if (!empty($survey['updated_by_name']) && $survey['updated_by'] != $survey['created_at']): ?>
                                                         <div class="user-meta">
                                                             <span class="text-xs text-dark text-uppercase fw-bold">Updated</span>
-                                                            <span class="name"><?= htmlspecialchars($survey['updater_name']) ?></span>
+                                                            <span class="name"><?= htmlspecialchars($survey['updated_by_name']) ?></span>
                                                             <span class="date"><?= date('d M Y', strtotime($survey['updated_by'])) ?></span>
                                                         </div>
                                                     <?php endif; ?>
                                                 </td>
-
                                                 <td class="text-center">
                                                     <?php echo getStatusBadge($survey['status'], $survey['start_date'], $survey['end_date']); ?>
                                                 </td>
-                                                
                                                 <td class="text-end pe-4" onclick="event.stopPropagation();">
                                                     <div class="d-flex justify-content-end gap-1" style="overflow-x: auto;">
                                                         <a href="form-survey.php?id=<?php echo htmlspecialchars($survey['survey_ID']); ?>" 
@@ -448,27 +406,22 @@ $currentDir = basename(__DIR__);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Description Modal Logic
         const descModal = document.getElementById('descriptionModal');
         if (descModal) {
             descModal.addEventListener('show.bs.modal', event => {
                 const trigger = event.relatedTarget;
                 const title = trigger.getAttribute('data-survey-title');
                 const desc = trigger.getAttribute('data-survey-desc');
-                
                 document.getElementById('modalSurveyTitle').textContent = title;
                 document.getElementById('modalSurveyDesc').textContent = desc || 'No description provided.';
             });
         }
-
-        // Delete Modal Logic
         const deleteModal = document.getElementById('deleteModal');
         if (deleteModal) {
             deleteModal.addEventListener('show.bs.modal', event => {
                 const button = event.relatedTarget;
                 const surveyId = button.getAttribute('data-bs-survey-id');
                 const surveyName = button.getAttribute('data-bs-survey-name');
-
                 document.getElementById('delete_survey_ID').value = surveyId;
                 document.getElementById('deleteSurveyName').textContent = surveyName;
             });
