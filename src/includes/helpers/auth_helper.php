@@ -1,11 +1,9 @@
 <?php
-/**
- * Authentication Helper Functions
- */
 
-/**
- * Login user and create session
- */
+ // Authentication Helper Functions
+ 
+ //Login user and create session
+
 
 function loginUser($user) {
     $_SESSION['user_ID'] = $user['user_ID'];
@@ -16,7 +14,6 @@ function loginUser($user) {
     // Get roles from database
     $userModel = new User();
     $_SESSION['roles'] = !empty($user['roles']) ? $user['roles'] : 'user';
-    //$_SESSION['roles'] = $userModel->getUserRoles($user['user_ID']); 
 
     // Update last login
     $userModel->updateLastLogin($user['user_ID']);
@@ -92,7 +89,7 @@ function requireRole($requiredRoles) {
         }
     }
 
-    // Access denied - redirect to login (with loop prevention)
+    // Access denied - redirect to login
     $currentUri = $_SERVER['REQUEST_URI'];
     if (strpos($currentUri, '/modules/auth/login.php') === false) {
         setFlashMessage('danger', 'You do not have permission to access this page. Please log in.');
@@ -143,11 +140,9 @@ function getPrimaryRole() {
         if (in_array('admin', $roles)) {
             return 'admin';
         }
-           
-           // Use the first non-empty role as the primary role, or fallback to 'user'
+
         return !empty($roles) ? $roles[0] : 'user';
     }
-        // Fallback to the default role if fetching failed
     return 'user'; 
 }
    

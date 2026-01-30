@@ -9,85 +9,63 @@ class User {
     private $conn;
 
     public function __construct() {
-        // Assuming your Database class is correctly defined elsewhere
         $this->db = new Database(); 
-        // Assuming $this->db->getConnection() returns a PDO connection object
         $this->conn = $this->db->getConnection(); 
     }
 
-    /**
-     * Create new user
-     * Handles both email/password (with hashed password) and Google (with null password) users.
-     * @param array $data Must contain 'primary_email', 'full_name'. Can contain 'password', 'google_sub_id', 'email_verified', and other user fields.
-     * @return string|false The last inserted user_ID or false on failure.
-     */
-    /**
-     * Create new user
-     */
-    public function create($data) {
-        $sql = "INSERT INTO user (
-                    primary_email, 
-                    password, 
-                    google_sub_id, 
-                    full_name, 
-                    email_verified, 
-                    department, 
-                    status, 
-                    user_position, 
-                    user_phone_company, 
-                    user_handphone_no, 
-                    org_ID, 
-                    dept_ID,
-                    created_at, 
-                    updated_at
-                ) 
-                VALUES (
-                    :primary_email, 
-                    :password, 
-                    :google_sub_id, 
-                    :full_name, 
-                    :email_verified, 
-                    :department, 
-                    :status, 
-                    :user_position, 
-                    :user_phone_company, 
-                    :user_handphone_no,
-                    :org_ID, 
-                    :dept_ID,
-                    NOW(), 
-                    NOW()
-                )";
-        
-        $stmt = $this->conn->prepare($sql);
-        
-        try {
-            $stmt->execute([
-                ':primary_email'     => $data['primary_email'], 
-                ':password'          => $data['password'] ?? null,
-                ':google_sub_id'     => $data['google_sub_id'] ?? null,
-                ':full_name'         => $data['full_name'],
-                ':email_verified'    => $data['email_verified'] ?? 'Not Verified',
-                ':department'        => null, // Legacy column set to null
-                ':status'            => $data['status'] ?? 'Active',
-                ':user_position'     => $data['user_position'] ?? null,
-                ':user_phone_company'=> $data['user_phone_company'] ?? null,
-                ':user_handphone_no' => $data['user_handphone_no'] ?? null,
-                ':org_ID'            => isset($data['org_ID']) && $data['org_ID'] > 0 ? $data['org_ID'] : null,
-                ':dept_ID'           => isset($data['dept_ID']) && $data['dept_ID'] > 0 ? $data['dept_ID'] : null,
-            ]);
-            
-            return $this->conn->lastInsertId();
-        } catch (PDOException $e) {
-            // error_log("User Create Error: " . $e->getMessage());
-            return false;
-        }
-    }
+/**
+ * Create basic user profile
+ */
+public function create($data) {
+    // We removed 'department' and 'dept_ID' because they don't exist in the 'user' table
+    $sql = "INSERT INTO user (
+                primary_email, password, full_name, status, 
+                email_verified, user_position, user_phone_company, 
+                user_handphone_no, org_ID, created_at, updated_at
+            ) 
+            VALUES (
+                :primary_email, :password, :full_name, :status, 
+                :email_verified, :user_position, :user_phone_company, 
+                :user_handphone_no, :org_ID, NOW(), NOW()
+            )";
 
-    /**
-     * Create a new user account specifically from Google OAuth data and assign default role (ID 2).
-     * @param array $data Google user data (primary_email, full_name, google_sub_id)
-     * @return string|false The new user_ID or false on failure.
-     */
+    $stmt = $this->conn->prepare($sql);
+
+    $stmt->execute([
+        ':primary_email'      => $data['primary_email'],
+        ':password'           => $data['password'] ?? null,
+        ':full_name'          => $data['full_name'],
+        ':status'             => $data['status'] ?? 'Active',
+        ':email_verified'     => $data['email_verified'] ?? 'Not Verified',
+        ':user_position'      => $data['user_position'] ?? null,
+        ':user_phone_company' => $data['user_phone_company'] ?? null,
+        ':user_handphone_no'  => $data['user_handphone_no'] ?? null,
+        ':org_ID'             => (isset($data['org_ID']) && $data['org_ID'] > 0) ? $data['org_ID'] : null
+    ]);
+
+    return $this->conn->lastInsertId();
+}
+
+/**
+ * Assign multiple departments to a user (Bridge Table logic)
+ */
+public function assignDepartments($user_ID, array $dept_ids) {
+    $sql = "INSERT INTO user_department (user_ID, dept_ID, is_primary, assigned_at) 
+            VALUES (:uid, :did, :is_prim, NOW())";
+    $stmt = $this->conn->prepare($sql);
+
+    foreach ($dept_ids as $index => $did) {
+        if (empty($did)) continue;
+        $stmt->execute([
+            ':uid'     => $user_ID,
+            ':did'     => $did,
+            ':is_prim' => ($index === 0) ? 1 : 0 
+        ]);
+    }
+    return true;
+}
+
+
     public function createGoogleUser(array $data) {
         $userData = [
             // Changed key to 'primary_email'
@@ -160,10 +138,9 @@ class User {
     }
 
 
-    /**
-     * Find user by email
-     * @param string $primary_email The email address to search for.
-     */
+
+    //Find user by email
+    
     public function findByEmail($primary_email) {
         // Note: GROUP_CONCAT is used to fetch all roles efficiently
         $sql = "SELECT u.*, GROUP_CONCAT(r.role_name) as roles 
@@ -174,7 +151,7 @@ class User {
                 GROUP BY u.user_ID";
         
         $stmt = $this->conn->prepare($sql);
-        // Changed binding parameter name to :primary_email
+
         $stmt->execute([':primary_email' => $primary_email]); 
         return $stmt->fetch();
     }

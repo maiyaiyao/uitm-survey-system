@@ -1,8 +1,5 @@
 <?php
-/**
- * Main Entry Point
- * UiTM ISO 27001 Audit System
- */
+
 
 require_once 'config/config.php';
 
