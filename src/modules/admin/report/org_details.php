@@ -5,7 +5,6 @@ requireRole(['admin']);
 
 $db = new Database();
 $org_id = $_GET['org_id'] ?? null;
-$maxScale = 5;
 
 if (!$org_id) {
     setFlashMessage('error', "Invalid Organization ID.");
@@ -34,37 +33,39 @@ $overallScore = 0;
 
 if ($selected_survey_id) {
     // A. Domain Scores
+    // Logic: Average of raw scores (1-5) multiplied by 20 to get 0-100%
     $domainScores = $db->fetchAll("
         SELECT 
             dm.domain_name,
-            AVG(r.score) as raw_domain_score
+            AVG(r.score) * 20 as domain_score_pct
         FROM response r
         JOIN element e ON r.element_ID = e.element_ID
         JOIN criteria c ON e.criteria_ID = c.criteria_ID
         JOIN domain dm ON c.domain_ID = dm.domain_ID
         WHERE r.survey_ID = :sid
         GROUP BY dm.domain_ID
-        ORDER BY raw_domain_score DESC
+        ORDER BY domain_score_pct DESC
     ", [':sid' => $selected_survey_id]);
 
     // B. Department Breakdown
+    // UPDATED LOGIC: Join Response directly to Department (r.dept_ID)
+    // This ensures that if a user has multiple assignments, the score goes to the correct department.
     $deptScores = $db->fetchAll("
         SELECT 
             d.dept_name,
             COUNT(DISTINCT r.user_ID) as user_count,
-            AVG(r.score) as raw_dept_score
+            AVG(r.score) * 20 as dept_score_pct
         FROM department d
-        JOIN user u ON d.dept_ID = u.dept_ID
-        JOIN response r ON u.user_ID = r.user_ID
+        JOIN response r ON d.dept_ID = r.dept_ID
         WHERE r.survey_ID = :sid AND d.org_ID = :oid
         GROUP BY d.dept_ID
-        ORDER BY raw_dept_score DESC
+        ORDER BY dept_score_pct DESC
     ", [':sid' => $selected_survey_id, ':oid' => $org_id]);
 
-    // C. Calculate Overall Score (Avg of Domain Avgs)
+    // C. Calculate Overall Score (Average of the Domain Percentages)
     if (!empty($domainScores)) {
-        $sum = array_sum(array_column($domainScores, 'raw_domain_score'));
-        $overallScore = ($sum / count($domainScores) / $maxScale) * 100;
+        $sum = array_sum(array_column($domainScores, 'domain_score_pct'));
+        $overallScore = $sum / count($domainScores);
     }
 }
 
@@ -135,7 +136,8 @@ function getColor($pct) {
                         <h5 class="fw-bold mb-3">Domain Performance</h5>
                         <div class="d-flex flex-column gap-3">
                             <?php foreach($domainScores as $ds): 
-                                $pct = ($ds['raw_domain_score'] / $maxScale) * 100; 
+                                // Logic Fix: Use the SQL calculated percentage directly
+                                $pct = $ds['domain_score_pct']; 
                             ?>
                                 <div>
                                     <div class="d-flex justify-content-between small mb-1">
@@ -165,7 +167,8 @@ function getColor($pct) {
                                 </thead>
                                 <tbody>
                                     <?php foreach($deptScores as $dt): 
-                                        $pct = ($dt['raw_dept_score'] / $maxScale) * 100;
+                                        // Logic Fix: Use the SQL calculated percentage directly
+                                        $pct = $dt['dept_score_pct'];
                                     ?>
                                         <tr>
                                             <td class="ps-4 fw-semibold"><?php echo htmlspecialchars($dt['dept_name']); ?></td>

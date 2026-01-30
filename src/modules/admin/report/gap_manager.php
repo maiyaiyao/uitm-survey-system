@@ -52,7 +52,7 @@ $findings = $db->fetchAll("
 // Dropdowns
 $domains = $db->fetchAll("SELECT domain_ID, domain_name FROM domain WHERE status='Active'");
 $surveys = $db->fetchAll("SELECT survey_ID, survey_name FROM survey ORDER BY created_at DESC");
-$users = $db->fetchAll("SELECT user_ID, full_name, department FROM user WHERE status='Active' ORDER BY full_name");
+$users = $db->fetchAll("SELECT user_ID, full_name FROM user WHERE status='Active' ORDER BY full_name");
 ?>
 <!DOCTYPE html>
 <html lang="en">
