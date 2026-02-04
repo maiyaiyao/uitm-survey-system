@@ -41,18 +41,33 @@ $unmapped_count = $total - $mapped_count;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
+        /* --- Styles from ISO Index Page --- */
+        
+        /* Layout & General */
         html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; }
         .main-content-wrapper { margin-left: 270px; width: calc(100% - 270px); transition: margin-left 0.3s ease; }
         @media (max-width: 991.98px) { .main-content-wrapper { margin-left: 0; width: 100%; } }
         .main-content { padding: 2rem; }
-        .stat-card { border: none; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); background: white; padding: 1.5rem; }
-        .stat-value { font-size: 2rem; font-weight: 700; color: #343a40; margin-bottom: 0; }
-        .stat-value.text-success { color: #198754 !important; }
-        .stat-value.text-warning { color: #fd7e14 !important; }
-        .table-card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); overflow: hidden; }
-        .table th { background-color: #9d83b7ff; color: black; font-weight: 700; text-transform: uppercase; font-size: 0.75rem; padding: 1rem; }
-        .table td { vertical-align: middle; padding: 1rem; font-size: 0.9rem; color: #525f7f; }
+
+        /* Table Styles */
+        .table th { font-weight: 700; background-color: #9d83b7ff; border-bottom: 2px solid #f0f2f5; color: black; text-transform: uppercase; font-size: 0.75rem; padding: 1rem; }
+        .table td { padding: 1rem; vertical-align: middle; color: #67748e; font-size: 0.875rem; }
         .table-hover tbody tr:hover { background-color: #f8f9fa; }
+
+        /* Card & Button Styles */
+        .card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); }
+        .btn-gradient-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; color: white; }
+        .btn-gradient-primary:hover { color: white; opacity: 0.9; }
+
+        /* Specific styles for this page's stats */
+        .stat-card { border: none; border-radius: 16px; box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); background: white; padding: 1.5rem; transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .stat-value { font-size: 2rem; font-weight: 700; color: #343a40; margin-bottom: 0; }
+        .stat-label { color: #8898aa; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* Search Input Styling */
+        .search-input { border-radius: 50px; padding-left: 20px; border: 1px solid #e9ecef; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .search-input:focus { box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11); border-color: #5e72e4; }
     </style>
 </head>
 <body>
@@ -66,79 +81,115 @@ $unmapped_count = $total - $mapped_count;
             <div class="col main-content-wrapper">
                 <div class="main-content">
                     
+                    <nav aria-label="breadcrumb" class="mb-4">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="../dashboard.php" class="text-decoration-none text-secondary">Dashboard</a></li>
+                            <li class="breadcrumb-item"><a href="../parameter-settings.php" class="text-decoration-none text-secondary">Parameter Settings</a></li>
+                            <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">ISO Standards</a></li>
+                            <li class="breadcrumb-item active text-dark">Section <?php echo htmlspecialchars($sec_id); ?></li>
+                        </ol>
+                    </nav>
+
                     <?php 
                     $msg = getFlashMessage();
-                    if ($msg): ?>
-                        <div class="alert alert-<?php echo ($msg['type']=='error')?'danger':$msg['type']; ?> alert-dismissible fade show mb-4" role="alert">
+                    if ($msg): 
+                        $alertClass = ($msg['type'] === 'error') ? 'danger' : $msg['type'];
+                    ?>
+                        <div class="alert alert-<?php echo $alertClass; ?> alert-dismissible fade show shadow-sm mb-4" role="alert">
+                            <?php if($msg['type'] === 'success'): ?>
+                                <i class="bi bi-check-circle-fill me-2"></i>
+                            <?php else: ?>
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <?php endif; ?>
                             <?php echo $msg['message']; ?>
                             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                         </div>
                     <?php endif; ?>
 
                     <div class="d-flex align-items-center mb-4">
-                        <a href="index.php" class="text-decoration-none text-secondary me-3">
-                            <i class="bi bi-arrow-left fs-4"></i>
+                        <a href="index.php" class="btn btn-white shadow-sm rounded-circle me-3 text-secondary" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-arrow-left fs-5"></i>
                         </a>
                         <div>
-                            <nav aria-label="breadcrumb">
-                                <ol class="breadcrumb mb-1">
-                                    <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-secondary">ISO Standards</a></li>
-                                    <li class="breadcrumb-item active">Section <?php echo htmlspecialchars($sec_id); ?></li>
-                                </ol>
-                            </nav>
-                            <h2 class="fw-bold mb-0">
-                                <span class="badge bg-primary me-2"><?php echo htmlspecialchars($sec_id); ?></span>
+                            <h2 class="fw-bold mb-0 text-dark">
+                                <span class="badge bg-primary rounded-3 me-2" style="font-size: 0.6em; vertical-align: middle;"><?php echo htmlspecialchars($sec_id); ?></span>
                                 <?php echo htmlspecialchars($section['sec_name']); ?>
                             </h2>
-                            <p class="text-muted mt-1 mb-0">Requirements (Clauses) for this section</p>
+                            <p class="text-muted mt-1 mb-0">Manage requirements (clauses) for this section.</p>
                         </div>
                     </div>
 
                     <div class="row g-4 mb-4">
-                        <div class="col-md-4"><div class="stat-card"><div class="text-muted small fw-bold mb-1">TOTAL</div><div class="stat-value"><?php echo $total; ?></div></div></div>
-                        <div class="col-md-4"><div class="stat-card"><div class="text-muted small fw-bold mb-1">MAPPED</div><div class="stat-value text-success"><?php echo $mapped_count; ?></div></div></div>
-                        <div class="col-md-4"><div class="stat-card"><div class="text-muted small fw-bold mb-1">UNMAPPED</div><div class="stat-value text-warning"><?php echo $unmapped_count; ?></div></div></div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-label mb-2">Total Requirements</div>
+                                <div class="stat-value"><?php echo $total; ?></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-label mb-2 text-success">Mapped</div>
+                                <div class="stat-value text-success"><?php echo $mapped_count; ?></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card">
+                                <div class="stat-label mb-2 text-warning">Unmapped</div>
+                                <div class="stat-value text-warning"><?php echo $unmapped_count; ?></div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-4">
-                        <input type="text" id="searchInput" class="form-control form-control-lg shadow-sm border-0" placeholder="Search requirements...">
+                        <input type="text" id="searchInput" class="form-control form-control-lg search-input" placeholder="Search requirements...">
                     </div>
 
-                    <div class="card table-card">
-                        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                            <h6 class="mb-0 fw-bold">Requirements List</h6>
-                            <span class="text-muted small"><?php echo $total; ?> found</span>
+                    <div class="card border-0 shadow-sm rounded-4">
+                        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-bold">Requirements List</h5>
+                            <span class="badge bg-light text-secondary border"><?php echo $total; ?> records</span>
                         </div>
                         <div class="table-responsive">
                             <table class="table table-hover align-middle mb-0" id="reqTable">
                                 <thead>
                                     <tr>
-                                        <th class="ps-4" style="width: 10%;">ID</th>
-                                        <th style="width: 50%;">Requirement Name</th>
+                                        <th class="ps-4" style="width: 15%;">ID</th>
+                                        <th style="width: 45%;">Requirement Name</th>
                                         <th style="width: 20%;">Status</th>
                                         <th class="text-end pe-4" style="width: 20%;">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (empty($requirements)): ?>
-                                        <tr><td colspan="4" class="text-center py-5 text-muted">No requirements found.</td></tr>
+                                        <tr>
+                                            <td colspan="4" class="text-center py-5 text-muted">
+                                                <i class="bi bi-inbox display-4 d-block mb-2"></i>
+                                                No requirements found for this section.
+                                            </td>
+                                        </tr>
                                     <?php else: ?>
                                         <?php foreach ($requirements as $req): ?>
                                             <?php $isMapped = !empty($req['criteria_ID']); ?>
                                             <tr>
                                                 <td class="ps-4 fw-bold text-dark"><?php echo htmlspecialchars($req['sub_req_ID']); ?></td>
-                                                <td class="fw-medium text-dark"><?php echo htmlspecialchars($req['sub_req_name']); ?></td>
+                                                <td class="fw-semibold text-secondary"><?php echo htmlspecialchars($req['sub_req_name']); ?></td>
                                                 <td>
                                                     <?php if ($isMapped): ?>
-                                                        <span class="text-success fw-bold small"><i class="bi bi-circle-fill me-1" style="font-size: 6px; vertical-align: middle;"></i> Mapped</span>
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill">
+                                                            <i class="bi bi-check-circle-fill me-1"></i> Mapped
+                                                        </span>
                                                     <?php else: ?>
-                                                        <span class="badge bg-secondary text-white-50">Unmapped</span>
+                                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle rounded-pill">Unmapped</span>
                                                     <?php endif; ?>
                                                 </td>
                                                 <td class="text-end pe-4">
-                                                    <a href="edit-requirement.php?id=<?php echo urlencode($req['sub_req_ID']); ?>" class="btn btn-sm btn-link text-primary me-1" title="Edit"><i class="bi bi-pencil"></i></a>
+                                                    <a href="edit-requirement.php?id=<?php echo urlencode($req['sub_req_ID']); ?>" 
+                                                       class="btn btn-sm btn-link text-primary" 
+                                                       title="Edit">
+                                                        <i class="bi bi-pencil-square"></i>
+                                                    </a>
                                                     <button type="button" class="btn btn-sm btn-link text-danger" 
-                                                            onclick="openDeleteModal('requirement', '<?php echo $req['sub_req_ID']; ?>')" 
+                                                            onclick="confirmDelete('requirement', '<?php echo $req['sub_req_ID']; ?>')" 
                                                             title="Delete">
                                                         <i class="bi bi-trash"></i>
                                                     </button>
@@ -150,6 +201,7 @@ $unmapped_count = $total - $mapped_count;
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -157,7 +209,7 @@ $unmapped_count = $total - $mapped_count;
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content border-0 shadow rounded-4">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title fw-bold text-danger">Confirm Delete</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -191,7 +243,7 @@ $unmapped_count = $total - $mapped_count;
         });
 
         // Open Delete Modal
-        function openDeleteModal(type, id) {
+        function confirmDelete(type, id) {
             document.getElementById('delType').value = type;
             document.getElementById('delId').value = id;
             var deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
